@@ -70,7 +70,7 @@ OB_LOAM_API OB_CONST int64 ob_get_system_info (ob_system_info what);
 /**
  * On x86 processors, returns the values of ECX (in upper 32 bits) and
  * EDX (in lower 32 bits) when CPUID is called with EAX=1.  On non-x86
- * processors, returns 0.  See http://www.sandpile.org/ia32/cpuid.htm
+ * processors, returns 0.  See http://www.sandpile.org/x86/cpuid.htm
  */
 OB_LOAM_API OB_CONST unt64 ob_x86_features (void);
 
