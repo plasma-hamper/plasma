@@ -53,6 +53,10 @@ OB_LOAM_API ob_retort ob_micro_sleep (unt32 micro_seconds);
  * internally, or the result is undefined.
  * 80 bytes is a safe output buffer size.
  *
+ * The string will look something like "Dec 20, 2024 13:30:53.63 ".
+ * For unknown/historical reasons, the string ends with a trailing
+ * space.
+ *
  * \note Although \a tv is in UTC, the string representation
  * is in local time.  Therefore, the current time zone is used
  * implicitly.
@@ -63,6 +67,10 @@ OB_LOAM_API void ob_format_time (char *buf, size_t bufsiz,
 /**
  * Format the time, specified by \a seconds since Epoch Time, as a string
  * into \a buf (of length \a bufsiz).
+ *
+ * The string will look something like "Dec 20, 2024 13:30:53.63 ".
+ * For unknown/historical reasons, the string ends with a trailing
+ * space.
  *
  * \note Although \a seconds is in UTC, the string representation
  * is in local time.  Therefore, the current time zone is used
@@ -82,6 +90,9 @@ OB_LOAM_API void ob_format_time_f (char *buf, size_t bufsiz,
  *     ob_format_time_f (ctime, sizeof (ctime), cur_time);
  *     ob_strptime (ctime, &echo_time);
  *     EXPECT_LT (cur_time - echo_time, 0.01);
+ *
+ * The input string should look something like
+ * "Dec 20, 2024 13:30:53.63".  Any trailing space will be ignored.
  *
  * \note Although \a seconds is in UTC, the string representation
  * is in local time.  Therefore, the current time zone is used
