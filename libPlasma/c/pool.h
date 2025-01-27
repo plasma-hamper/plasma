@@ -918,8 +918,8 @@ OB_PLASMA_API ob_retort pool_await_multi (pool_gang gang,
 /**
  * A signal-safe and thread-safe function to interrupt any call to
  * pool_await_next_multi() on this gang. For each time that this
- * function is called, one call to await_next_multi() will return with a
- * pool_retort of POOL_AWAIT_WOKEN.
+ * function is called, one call to pool_await_next_multi() will return
+ * with a pool_retort of POOL_AWAIT_WOKEN.
  *
  * Unlike bare pool hoses, all gangs have wakeup enabled. Thus there is
  * no need for an equivalent of pool_hose_enable_wakeup() for gangs.
