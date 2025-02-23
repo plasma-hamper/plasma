@@ -47,7 +47,7 @@ static inline unt64 ob_swap64 (unt64 x)
   return __builtin_bswap64 (x);
 #else
   // Inspired by:
-  // http://blogs.sun.com/DanX/entry/optimizing_byte_swapping_for_fun
+  // https://web.archive.org/web/20090805070309/http://blogs.sun.com/DanX/entry/optimizing_byte_swapping_for_fun
   // (see "I rewrote it to this a less elegant, but faster implementation:")
   return ((x << 56) | ((x << 40) & OB_CONST_U64 (0xff000000000000))
           | ((x << 24) & OB_CONST_U64 (0xff0000000000))
