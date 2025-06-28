@@ -487,17 +487,17 @@ straightforward when both the client and the server are version 1 or
 greater.
 
 The 88 byte handshake message used by version 1 and higher is in fact
-a valid request message encoded with protocol version 0, slaw version
-1.  It requests that the pool named "^/^/^/^" be deleted, and contains
-the version numbers embedded in its rude data.  Since this is an
-invalid pool name since it contains a slash, a version 0 server which
-receives this handshake from a version 1 or higher client will send
-back an error response protein using protocol 0.  Since this protein
-is significantly smaller than `2**48` bytes, the first two bytes of the
-8-byte big endian length will be 0, which means the version 1 client
-will receive 0 for pv and sv, which it can use to recognize a version
-0 server.  At this point, the client should disconnect and reconnect
-using protocol version 0.
+a valid request message encoded with protocol version 0, slaw
+version 1.  It requests that the pool named "^/^/^/^" be deleted, and
+contains the version numbers embedded in its rude data.  Since this is
+an invalid pool name since it contains a slash, a version 0 server
+which receives this handshake from a version 1 or higher client will
+send back an error response protein using protocol 0.  Since this
+protein is significantly smaller than `2**48` bytes, the first two
+bytes of the 8-byte big endian length will be 0, which means the
+version 1 client will receive 0 for pv and sv, which it can use to
+recognize a version 0 server.  At this point, the client should
+disconnect and reconnect using protocol version 0.
 
 On the other hand, a version 1 or higher server can detect a version 0
 client if the first bytes sent do not match the 88-byte handshake.  If
