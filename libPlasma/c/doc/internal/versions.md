@@ -49,11 +49,11 @@ TCP protocol version
 This is the version number for the protocol used to talk to the pool
 server.
 
-The legacy protocol is version 0, and requires the use of slaw version
-1.  Since protocol version 0 was not explicitly numbered and did not
-support a mechanism to negotiate the protocol version number, a rather
-sneaky mechanism is used to disambiguate protocol 0 from later
-protocols.
+The legacy protocol is version 0, and requires the use of slaw
+version 1.  Since protocol version 0 was not explicitly numbered
+and did not support a mechanism to negotiate the protocol version
+number, a rather sneaky mechanism is used to disambiguate protocol
+0 from later protocols.
 
 Protocol 1 and later support an explicit, straightforward mechanism
 for negotiating the protocol version.  They also support specifying
@@ -91,10 +91,10 @@ pool directory version
 This version number indicates how the pools directory is laid out.
 (i. e. what the files are named and where they are located)
 
-For bizarre historical reasons, the pool directory versions are 4 and
-5.  They are also given symbolic names by #defines in pool_impl.h:
-version 4 is POOL_DIRECTORY_VERSION_CONFIG_IN_FILE and version 5 is
-POOL_DIRECTORY_VERSION_CONFIG_IN_MMAP.
+For bizarre historical reasons, the pool directory versions are 4
+and 5.  They are also given symbolic names by #defines in
+pool_impl.h: version 4 is POOL_DIRECTORY_VERSION_CONFIG_IN_FILE
+and version 5 is POOL_DIRECTORY_VERSION_CONFIG_IN_MMAP.
 
 In both types, there is a pool.conf file which contains configuration
 information for the pool, including the pool directory version

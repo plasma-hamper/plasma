@@ -235,7 +235,7 @@ static void constructor_time_init (void)
  * installing the callbacks after they might have already started using
  * OpenSSL.  See my rant which includes a paragraph about why OpenSSL's
  * thread safety mechanism sucks when using OpenSSL from multiple libraries:
- * http://lists.randombit.net/pipermail/cryptography/2012-October/003380.html
+ * https://web.archive.org/web/20121101024358/http://lists.randombit.net/pipermail/cryptography/2012-October/003380.html
  */
 OB_PRE_POST (constructor_time_init (), THREAD_cleanup ());
 
