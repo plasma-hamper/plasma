@@ -109,3 +109,23 @@ obj-*-linux-*/
 
 # Common cmake dirs
 build
+
+# Build artifacts
+.ninja_deps
+.ninja_log
+*.backup
+build_bu/
+obenv
+yotest
+
+# CMake generated files
+CTestTestfile.cmake
+CTestCustom.cmake
+OblongConfig.cmake
+
+# Generated directories
+**/generated/
+libProtist/
+
+# Generated scripts
+libPlasma/ruby/gembuild/build.sh
