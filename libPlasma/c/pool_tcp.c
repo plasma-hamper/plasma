@@ -34,9 +34,9 @@
 #endif
 
 // Rate limiting for socket close warnings
-static unt64 last_close_warning_time = 0;
+static float64 last_close_warning_time = 0;
 static unt64 close_warning_count = 0;
-static const unt64 WARNING_THROTTLE_MS = 5000 * OB_MILLI_TIME;  // 5 seconds
+static const float64 WARNING_THROTTLE_SECS = 5.0;  // 5 seconds
 
 #ifdef _MSC_VER
 
@@ -200,9 +200,9 @@ ob_retort pool_tcp_send_nbytes (ob_sock_t sock, const void *buf, size_t len,
           if (nwritten == -1 && erryes == EPIPE)
             {
               close_warning_count++;
-              unt64 now = ob_current_time();
+              float64 now = ob_current_time();
               
-              if (now - last_close_warning_time > WARNING_THROTTLE_MS)
+              if (now - last_close_warning_time > WARNING_THROTTLE_SECS)
                 {
                   char sock_info[256];
                   get_socket_info(sock, sock_info, sizeof(sock_info));
@@ -212,9 +212,9 @@ ob_retort pool_tcp_send_nbytes (ob_sock_t sock, const void *buf, size_t len,
                   if (count > 1)
                     {
                       OB_LOG_WARNING_CODE (0x20108027,
-                                           "socket was closed unexpectedly %s (occurred %llu times in last %d seconds)",
+                                           "socket was closed unexpectedly %s (occurred %llu times in last %.0f seconds)",
                                            sock_info, (unsigned long long)count, 
-                                           (int)(WARNING_THROTTLE_MS / OB_MILLI_TIME / 1000));
+                                           WARNING_THROTTLE_SECS);
                     }
                   else
                     {
@@ -313,9 +313,9 @@ ob_retort pool_tcp_recv_nbytes (ob_sock_t sock, void *buf, size_t len,
           if (nread == 0)
             {
               close_warning_count++;
-              unt64 now = ob_current_time();
+              float64 now = ob_current_time();
               
-              if (now - last_close_warning_time > WARNING_THROTTLE_MS)
+              if (now - last_close_warning_time > WARNING_THROTTLE_SECS)
                 {
                   char sock_info[256];
                   get_socket_info(sock, sock_info, sizeof(sock_info));
@@ -325,9 +325,9 @@ ob_retort pool_tcp_recv_nbytes (ob_sock_t sock, void *buf, size_t len,
                   if (count > 1)
                     {
                       OB_LOG_WARNING_CODE (0x20108028,
-                                           "socket was closed unexpectedly %s (occurred %llu times in last %d seconds)",
+                                           "socket was closed unexpectedly %s (occurred %llu times in last %.0f seconds)",
                                            sock_info, (unsigned long long)count,
-                                           (int)(WARNING_THROTTLE_MS / OB_MILLI_TIME / 1000));
+                                           WARNING_THROTTLE_SECS);
                     }
                   else
                     {
