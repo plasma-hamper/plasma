@@ -11,6 +11,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <errno.h>
+#include "plasma_config.h"
 #include "libLoam/c/ob-sys.h"
 #include "libLoam/c/ob-log.h"
 #include "libLoam/c/ob-file.h"
@@ -25,6 +26,9 @@
 #include "libPlasma/c/protein.h"
 #define EINTR_WANT_CONNECT 1
 #include "libPlasma/c/eintr-helper.h"
+#ifndef _MSC_VER
+#include <netinet/tcp.h>
+#endif
 
 #ifdef _MSC_VER
 
@@ -681,6 +685,64 @@ ob_retort ob_common_sockopts (ob_sock_t fd)
                          ob_sockmsg ());
       return POOL_SOCK_BADTH;
     }
+
+#ifdef PLASMA_ENABLE_TCP_OPTIMIZATIONS
+#ifndef _MSC_VER
+  // Increase socket buffer sizes for large transfers
+  int bufsize = PLASMA_TCP_BUFFER_SIZE;
+  if (setsockopt (fd, SOL_SOCKET, SO_RCVBUF, EVIL_SOCKOPT_CAST (&bufsize),
+                  sizeof (bufsize))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108026, "setsockopt/SO_RCVBUF: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+  
+  if (setsockopt (fd, SOL_SOCKET, SO_SNDBUF, EVIL_SOCKOPT_CAST (&bufsize),
+                  sizeof (bufsize))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108027, "setsockopt/SO_SNDBUF: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+
+#ifdef HAVE_TCP_USER_TIMEOUT
+  // Set TCP timeout for large transfers
+  int timeout_ms = PLASMA_TCP_TIMEOUT_MS;
+  if (setsockopt (fd, IPPROTO_TCP, TCP_USER_TIMEOUT, EVIL_SOCKOPT_CAST (&timeout_ms),
+                  sizeof (timeout_ms))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108028, "setsockopt/TCP_USER_TIMEOUT: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+#endif
+
+#ifdef HAVE_TCP_KEEPINTVL
+  // Reduce keepalive interval to 30 seconds
+  int keepintvl = 30;
+  if (setsockopt (fd, IPPROTO_TCP, TCP_KEEPINTVL, EVIL_SOCKOPT_CAST (&keepintvl),
+                  sizeof (keepintvl))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108029, "setsockopt/TCP_KEEPINTVL: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+#endif
+
+#ifdef HAVE_TCP_KEEPIDLE
+  // Start keepalive after 60 seconds of idle
+  int keepidle = 60;
+  if (setsockopt (fd, IPPROTO_TCP, TCP_KEEPIDLE, EVIL_SOCKOPT_CAST (&keepidle),
+                  sizeof (keepidle))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x2010802a, "setsockopt/TCP_KEEPIDLE: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+#endif
+#endif // !_MSC_VER
+#endif // PLASMA_ENABLE_TCP_OPTIMIZATIONS
 
   return ob_nosigpipe_sockopt (fd);
 }

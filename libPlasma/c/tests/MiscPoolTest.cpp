@@ -8,6 +8,7 @@
 // and gtest provides a nice way to mush them into one file while
 // still keeping them logically separate.
 
+#include "plasma_config.h"
 #include "plasma-gtest-helpers.h"
 #include <gtest/gtest.h>
 #include <tests/ob-test-helpers.h>
@@ -28,6 +29,8 @@
 #include <set>
 #include <vector>
 #include <algorithm>
+
+#include <random>
 
 // Although pool_participate can take "participate options", we've never
 // tried giving it anything other than NULL.  This is understandable, since
@@ -324,7 +327,13 @@ TEST (MiscPoolTest, GangManipulation)
                                          cmd.create_options));
       sharks_slaw.push_back (pool_name);
     }
-  std::random_shuffle (jets_hoses.begin (), jets_hoses.end ());
+#ifdef HAVE_STD_SHUFFLE
+   std::shuffle(jets_hoses.begin(), jets_hoses.end(), std::mt19937{std::random_device{}()});
+#else
+   std::random_shuffle (jets_hoses.begin (), jets_hoses.end ());
+#endif
+
+
   for (int i = 0; i < 3; i++)
     {
       pool_hose ph = jets_hoses.back ();
@@ -343,7 +352,12 @@ TEST (MiscPoolTest, GangManipulation)
       EXPECT_TORTEQ (OB_OK, pool_join_gang (gang, ph));
     }
   EXPECT_EQ (5, pool_gang_count (gang));
+#ifdef HAVE_STD_SHUFFLE
+  std::shuffle(sharks_hoses.begin(), sharks_hoses.end(), std::mt19937{std::random_device{}()});
+#else
   std::random_shuffle (sharks_hoses.begin (), sharks_hoses.end ());
+#endif
+
   for (HoseVector::iterator it = sharks_hoses.begin ();
        it != sharks_hoses.end (); it++)
     {

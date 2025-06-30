@@ -1,6 +1,7 @@
 
 /* (c)  oblong industries */
 
+#include "plasma_config.h"
 #include "libLoam/c/ob-rand.h"
 #include "libLoam/c/ob-sys.h"
 #include "libLoam/c/ob-util.h"
@@ -18,6 +19,8 @@
 
 #include <algorithm>
 #include <unordered_set>
+
+#include <random>
 
 
 using namespace oblong::loam;
@@ -335,7 +338,12 @@ TEST (ObRetortTest, RetortsInASet)
   std::vector<ObRetort> vec;
   vec.resize (st.size ());
   std::copy (st.begin (), st.end (), vec.begin ());
+#ifdef HAVE_STD_SHUFFLE
+  std::shuffle(vec.begin(), vec.end(), std::mt19937{std::random_device{}()});
+#else
   std::random_shuffle (vec.begin (), vec.end ());
+#endif
+
 
   for (std::vector<ObRetort>::iterator it = vec.begin (); it != vec.end ();
        it++)

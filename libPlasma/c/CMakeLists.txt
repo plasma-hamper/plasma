@@ -127,6 +127,12 @@ ObGeneratePC (
 include_directories(${Loam_SOURCE_DIR})
 include_directories(${Plasma_SOURCE_DIR})
 
+# Add ICU include directories
+if(APPLE)
+  set(ICU_ROOT /opt/homebrew/opt/icu4c)
+  include_directories(${ICU_ROOT}/include)
+endif()
+
 add_library(Plasma ${LIBRARY_TYPE} ${Plasma_SOURCES})
 target_link_libraries(Plasma ${Plasma_LINK_LIBS})
 set_target_properties(Plasma PROPERTIES

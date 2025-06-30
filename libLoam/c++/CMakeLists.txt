@@ -125,6 +125,12 @@ ObGeneratePC (
 
 include_directories(${Loam++_SOURCE_DIR})
 
+# Add ICU include directories
+if(APPLE)
+  set(ICU_ROOT /opt/homebrew/opt/icu4c)
+  include_directories(${ICU_ROOT}/include)
+endif()
+
 add_library(Loam++ ${LIBRARY_TYPE} ${Loam++_SOURCES})
 target_link_libraries(Loam++ ${Loam++_LINK_LIBS})
 set_target_properties(Loam++ PROPERTIES

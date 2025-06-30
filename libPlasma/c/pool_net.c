@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <assert.h>
 
+#include "plasma_config.h"
 #include "libLoam/c/ob-sys.h"
 #include "libLoam/c/ob-endian.h"
 #include "libLoam/c/ob-log.h"
@@ -333,6 +334,15 @@ static ob_retort _pool_net_send_op (pool_net_data *net, int op_num,
       return pret;
     }
 
+#ifdef PLASMA_ENABLE_LARGE_TRANSFER_LOGGING
+  // Log large protein sends
+  if (len > PLASMA_LARGE_TRANSFER_THRESHOLD)
+    {
+      ob_log (OBLV_INFO, 0x20106002, "Sending large protein: %lld bytes (%.2f MB) for op %d\n",
+              (long long) len, len / (1024.0 * 1024.0), op_num);
+    }
+#endif
+
   pret = net->send_nbytes (net->connfd, op_prot, len, *net->wakeup_handle_loc);
 
   protein_free (op_prot);
@@ -364,6 +374,15 @@ ob_retort pool_net_recv_op (pool_net_data *net, int *op_num, protein *ret_prot)
   // Avoid DoS or bug due to unrealistic length
   if (len > MAX_SLAW_SIZE)
     return POOL_PROTOCOL_ERROR;
+
+#ifdef PLASMA_ENABLE_LARGE_TRANSFER_LOGGING
+  // Log large protein receives
+  if (len > PLASMA_LARGE_TRANSFER_THRESHOLD)
+    {
+      ob_log (OBLV_INFO, 0x20106003, "Receiving large protein: %llu bytes (%.2f MB)\n",
+              (unsigned long long) len, len / (1024.0 * 1024.0));
+    }
+#endif
 
   // Now we can allocate the right amount of space for the protein
   char *raw_prot = (char *) malloc (len);
