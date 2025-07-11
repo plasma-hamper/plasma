@@ -2,8 +2,34 @@ cmake_minimum_required (VERSION 3.6.2)
 
 project(g-speak CXX C)
 
-# Select C++11 dialect
-set(CMAKE_CXX_STANDARD 11)
+# Compatibility options
+option(PLASMA_LEGACY_MODE "Build for compatibility with older systems" OFF)
+option(PLASMA_ENABLE_TCP_OPTIMIZATIONS "Enable TCP performance optimizations" ON)
+option(PLASMA_ENABLE_LARGE_TRANSFER_LOGGING "Enable logging for transfers >1MB" ON)
+
+# Auto-detect if legacy mode needed
+if(NOT DEFINED PLASMA_LEGACY_MODE)
+    # Check compiler version
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
+        set(PLASMA_LEGACY_MODE ON)
+        message(STATUS "GCC < 5.0 detected - enabling legacy compatibility mode")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.4")
+        set(PLASMA_LEGACY_MODE ON)
+        message(STATUS "Clang < 3.4 detected - enabling legacy compatibility mode")
+    elseif(DEFINED ENV{PLASMA_LEGACY_BUILD})
+        set(PLASMA_LEGACY_MODE ON)
+        message(STATUS "PLASMA_LEGACY_BUILD environment variable set - enabling legacy compatibility mode")
+    endif()
+endif()
+
+# Select C++ dialect based on mode
+if(PLASMA_LEGACY_MODE)
+    set(CMAKE_CXX_STANDARD 11)
+    message(STATUS "Building in legacy compatibility mode (C++11)")
+else()
+    set(CMAKE_CXX_STANDARD 17)
+    message(STATUS "Building with modern features (C++17)")
+endif()
 set(CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -16,6 +42,7 @@ INCLUDE("ObBoilerplate")
 INCLUDE("ObGenerateProject")
 # Short name
 SET(TOP_TEMPLATE ${CMAKE_SOURCE_DIR}/samples/obi-template)
+
 
 set(top_srcdir "${g-speak_SOURCE_DIR}")
 set(abs_top_srcdir "${g-speak_SOURCE_DIR}")
@@ -97,6 +124,44 @@ add_definitions("-DBOOST_SYSTEM_NO_DEPRECATED")
 
 INCLUDE(CheckIncludeFileCXX)
 INCLUDE(CheckIncludeFile)
+INCLUDE(CheckCXXSourceCompiles)
+INCLUDE(CheckSymbolExists)
+INCLUDE(CheckCXXCompilerFlag)
+
+# Feature detection for compatibility
+if(PLASMA_LEGACY_MODE)
+    set(PLASMA_LEGACY_BUILD 1)
+endif()
+
+# Check for C++ features
+check_cxx_source_compiles("
+    #include <random>
+    #include <algorithm>
+    #include <vector>
+    int main() { 
+        std::vector<int> v = {1,2,3,4,5};
+        std::mt19937 gen;
+        std::shuffle(v.begin(), v.end(), gen);
+        return 0; 
+    }" HAVE_STD_SHUFFLE)
+
+check_cxx_source_compiles("
+    #include <random>
+    int main() { 
+        std::mt19937 gen;
+        return 0; 
+    }" HAVE_STD_MT19937)
+
+# Check for TCP features
+if(NOT WIN32)
+    check_symbol_exists(TCP_USER_TIMEOUT "netinet/tcp.h" HAVE_TCP_USER_TIMEOUT)
+    check_symbol_exists(TCP_KEEPINTVL "netinet/tcp.h" HAVE_TCP_KEEPINTVL)
+    check_symbol_exists(TCP_KEEPIDLE "netinet/tcp.h" HAVE_TCP_KEEPIDLE)
+endif()
+
+# Configure plasma_config.h
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/plasma_config.h.in 
+               ${CMAKE_CURRENT_BINARY_DIR}/plasma_config.h)
 if (UNIX)
   set(OPENSSL_LIBRARIES "-lssl -lcrypto")
   set(OPENSSL_FOUND TRUE)
@@ -265,6 +330,8 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DQUOTED_PREFIX=\\\"${CMAKE_INSTALL_PREFIX}\
 
 # Let source files use top-relative include path
 include_directories(${g-speak_BINARY_DIR})
+# Include directory for generated plasma_config.h
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${g-speak_SOURCE_DIR})
 include_directories(${g-speak_SOURCE_DIR}/system)
 include_directories(SYSTEM ${g-speak_SOURCE_DIR}/gtest/include)

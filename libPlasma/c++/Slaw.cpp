@@ -5,6 +5,9 @@
 #include "SlawIterator.h"
 #include "libPlasma/c++/PlasmaStreams.h"
 
+
+#include "compat.h"
+
 #include <libPlasma/c/protein.h>
 #include <libPlasma/c/slaw-io.h>
 
@@ -1091,3 +1094,5 @@ static const char *plasmaxx_error_string (ob_retort err)
 
 static ob_retort dummy_plasmaxx OB_UNUSED =
   ob_add_error_names (plasmaxx_error_string);
+
+PLASMA_RESTORE_WARNINGS

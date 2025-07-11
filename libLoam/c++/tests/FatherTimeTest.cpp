@@ -3,11 +3,14 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
+#include "plasma_config.h"
 #include "libLoam/c/ob-rand.h"
 #include "libLoam/c/ob-time.h"
 #include "libLoam/c/ob-util.h"
 #include "libLoam/c++/FatherTime.h"
 #include "libLoam/c++/ObTrove.h"
+
+#include <random>
 
 using namespace oblong::loam;
 
@@ -51,7 +54,12 @@ static void waste_time ()
   for (int i = 0; i < enuf; i++)
     vals[i] = i;
 
+#ifdef HAVE_STD_SHUFFLE
+  std::shuffle(vals + 0, vals + enuf, std::mt19937{std::random_device{}()});
+#else
   std::random_shuffle (vals + 0, vals + enuf);
+#endif
+
   ObTrove<int32> trov (vals, enuf);
   trov.Sort (cmp);
 

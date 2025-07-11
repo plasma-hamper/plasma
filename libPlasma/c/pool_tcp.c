@@ -11,6 +11,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <errno.h>
+#include "plasma_config.h"
 #include "libLoam/c/ob-sys.h"
 #include "libLoam/c/ob-log.h"
 #include "libLoam/c/ob-file.h"
@@ -25,6 +26,17 @@
 #include "libPlasma/c/protein.h"
 #define EINTR_WANT_CONNECT 1
 #include "libPlasma/c/eintr-helper.h"
+#ifndef _MSC_VER
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
+
+// Rate limiting for socket close warnings
+static float64 last_close_warning_time = 0;
+static unt64 close_warning_count = 0;
+static const float64 WARNING_THROTTLE_SECS = 5.0;  // 5 seconds
 
 #ifdef _MSC_VER
 
@@ -35,6 +47,87 @@
 #define winsock_shutdown()
 
 #endif
+
+/// Helper function to get socket address info for logging
+static void get_socket_info (ob_sock_t sock, char *buf, size_t buflen)
+{
+#ifndef _MSC_VER
+  struct sockaddr_storage local_addr, peer_addr;
+  socklen_t addrlen = sizeof(local_addr);
+  
+  buf[0] = '\0';
+  
+  // Get local address
+  if (getsockname(sock, (struct sockaddr *)&local_addr, &addrlen) == 0)
+    {
+      char local_str[INET6_ADDRSTRLEN + 16];  // IP + port
+      char peer_str[INET6_ADDRSTRLEN + 16];
+      
+      // Format local address
+      if (local_addr.ss_family == AF_INET)
+        {
+          struct sockaddr_in *addr4 = (struct sockaddr_in *)&local_addr;
+          char ip[INET_ADDRSTRLEN];
+          inet_ntop(AF_INET, &addr4->sin_addr, ip, sizeof(ip));
+          snprintf(local_str, sizeof(local_str), "%s:%d", ip, ntohs(addr4->sin_port));
+        }
+      else if (local_addr.ss_family == AF_INET6)
+        {
+          struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)&local_addr;
+          char ip[INET6_ADDRSTRLEN];
+          inet_ntop(AF_INET6, &addr6->sin6_addr, ip, sizeof(ip));
+          snprintf(local_str, sizeof(local_str), "[%s]:%d", ip, ntohs(addr6->sin6_port));
+        }
+      else
+        {
+          snprintf(local_str, sizeof(local_str), "<unknown family %d>", local_addr.ss_family);
+        }
+      
+      // Get peer address
+      addrlen = sizeof(peer_addr);
+      if (getpeername(sock, (struct sockaddr *)&peer_addr, &addrlen) == 0)
+        {
+          // Format peer address
+          if (peer_addr.ss_family == AF_INET)
+            {
+              struct sockaddr_in *addr4 = (struct sockaddr_in *)&peer_addr;
+              char ip[INET_ADDRSTRLEN];
+              inet_ntop(AF_INET, &addr4->sin_addr, ip, sizeof(ip));
+              snprintf(peer_str, sizeof(peer_str), "%s:%d", ip, ntohs(addr4->sin_port));
+            }
+          else if (peer_addr.ss_family == AF_INET6)
+            {
+              struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)&peer_addr;
+              char ip[INET6_ADDRSTRLEN];
+              inet_ntop(AF_INET6, &addr6->sin6_addr, ip, sizeof(ip));
+              snprintf(peer_str, sizeof(peer_str), "[%s]:%d", ip, ntohs(addr6->sin6_port));
+            }
+          else
+            {
+              snprintf(peer_str, sizeof(peer_str), "<unknown family %d>", peer_addr.ss_family);
+            }
+          
+          snprintf(buf, buflen, " (fd %d: %s -> %s)",
+                   sock, local_str, peer_str);
+        }
+      else
+        {
+          // getpeername failed, socket might be disconnected
+          int err = errno;
+          snprintf(buf, buflen, " (fd %d: %s -> <disconnected: %s>)",
+                   sock, local_str, strerror(err));
+        }
+    }
+  else
+    {
+      // getsockname failed
+      int err = errno;
+      snprintf(buf, buflen, " (fd %d: <getsockname failed: %s>)", sock, strerror(err));
+    }
+#else
+  snprintf(buf, buflen, " (fd %d)", sock);
+#endif
+}
 
 /// Implement the send and receive functions, needed by the generic
 /// network pools layer.  See pool_net.[ch] for details.
@@ -106,17 +199,42 @@ ob_retort pool_tcp_send_nbytes (ob_sock_t sock, const void *buf, size_t len,
           // it's likely the other end closed the socket for some reason
           if (nwritten == -1 && erryes == EPIPE)
             {
-              OB_LOG_WARNING_CODE (0x20108027,
-                                   "socket was closed unexpectedly");
+              close_warning_count++;
+              float64 now = ob_current_time();
+              
+              if (now - last_close_warning_time > WARNING_THROTTLE_SECS)
+                {
+                  char sock_info[256];
+                  get_socket_info(sock, sock_info, sizeof(sock_info));
+                  unt64 count = close_warning_count;
+                  close_warning_count = 0;
+                  
+                  if (count > 1)
+                    {
+                      OB_LOG_WARNING_CODE (0x20108027,
+                                           "socket was closed unexpectedly %s (occurred %llu times in last %.0f seconds)",
+                                           sock_info, (unsigned long long)count, 
+                                           WARNING_THROTTLE_SECS);
+                    }
+                  else
+                    {
+                      OB_LOG_WARNING_CODE (0x20108027,
+                                           "socket was closed unexpectedly %s",
+                                           sock_info);
+                    }
+                  last_close_warning_time = now;
+                }
               pret = POOL_UNEXPECTED_CLOSE;
             }
           else
             {
+              char sock_info[256];
+              get_socket_info(sock, sock_info, sizeof(sock_info));
               OB_LOG_WARNING_CODE (0x20108000,
                                    "send() returned %" OB_FMT_SIZE "d with "
                                    "errno '%s' with %" OB_FMT_SIZE
-                                   "d bytes left\n",
-                                   nwritten, strerror (erryes), nleft);
+                                   "d bytes left %s\n",
+                                   nwritten, strerror (erryes), nleft, sock_info);
               pret = POOL_SEND_BADTH;
             }
           errno = erryes;
@@ -194,17 +312,42 @@ ob_retort pool_tcp_recv_nbytes (ob_sock_t sock, void *buf, size_t len,
           // it's likely the other end closed the socket for some reason
           if (nread == 0)
             {
-              OB_LOG_WARNING_CODE (0x20108028,
-                                   "socket was closed unexpectedly");
+              close_warning_count++;
+              float64 now = ob_current_time();
+              
+              if (now - last_close_warning_time > WARNING_THROTTLE_SECS)
+                {
+                  char sock_info[256];
+                  get_socket_info(sock, sock_info, sizeof(sock_info));
+                  unt64 count = close_warning_count;
+                  close_warning_count = 0;
+                  
+                  if (count > 1)
+                    {
+                      OB_LOG_WARNING_CODE (0x20108028,
+                                           "socket was closed unexpectedly %s (occurred %llu times in last %.0f seconds)",
+                                           sock_info, (unsigned long long)count,
+                                           WARNING_THROTTLE_SECS);
+                    }
+                  else
+                    {
+                      OB_LOG_WARNING_CODE (0x20108028,
+                                           "socket was closed unexpectedly %s",
+                                           sock_info);
+                    }
+                  last_close_warning_time = now;
+                }
               pret = POOL_UNEXPECTED_CLOSE;
             }
           else
             {
+              char sock_info[256];
+              get_socket_info(sock, sock_info, sizeof(sock_info));
               OB_LOG_WARNING_CODE (0x20108001,
                                    "recv() returned %" OB_FMT_SIZE "d with "
                                    "errno '%s' with %" OB_FMT_SIZE
-                                   "d bytes left\n",
-                                   nread, strerror (erryes), nleft);
+                                   "d bytes left %s\n",
+                                   nread, strerror (erryes), nleft, sock_info);
               pret = POOL_RECV_BADTH;
             }
           errno = erryes;
@@ -681,6 +824,64 @@ ob_retort ob_common_sockopts (ob_sock_t fd)
                          ob_sockmsg ());
       return POOL_SOCK_BADTH;
     }
+
+#ifdef PLASMA_ENABLE_TCP_OPTIMIZATIONS
+#ifndef _MSC_VER
+  // Increase socket buffer sizes for large transfers
+  int bufsize = PLASMA_TCP_BUFFER_SIZE;
+  if (setsockopt (fd, SOL_SOCKET, SO_RCVBUF, EVIL_SOCKOPT_CAST (&bufsize),
+                  sizeof (bufsize))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108026, "setsockopt/SO_RCVBUF: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+  
+  if (setsockopt (fd, SOL_SOCKET, SO_SNDBUF, EVIL_SOCKOPT_CAST (&bufsize),
+                  sizeof (bufsize))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108027, "setsockopt/SO_SNDBUF: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+
+#ifdef HAVE_TCP_USER_TIMEOUT
+  // Set TCP timeout for large transfers
+  int timeout_ms = PLASMA_TCP_TIMEOUT_MS;
+  if (setsockopt (fd, IPPROTO_TCP, TCP_USER_TIMEOUT, EVIL_SOCKOPT_CAST (&timeout_ms),
+                  sizeof (timeout_ms))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108028, "setsockopt/TCP_USER_TIMEOUT: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+#endif
+
+#ifdef HAVE_TCP_KEEPINTVL
+  // Reduce keepalive interval to 30 seconds
+  int keepintvl = 30;
+  if (setsockopt (fd, IPPROTO_TCP, TCP_KEEPINTVL, EVIL_SOCKOPT_CAST (&keepintvl),
+                  sizeof (keepintvl))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x20108029, "setsockopt/TCP_KEEPINTVL: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+#endif
+
+#ifdef HAVE_TCP_KEEPIDLE
+  // Start keepalive after 60 seconds of idle
+  int keepidle = 60;
+  if (setsockopt (fd, IPPROTO_TCP, TCP_KEEPIDLE, EVIL_SOCKOPT_CAST (&keepidle),
+                  sizeof (keepidle))
+      != 0)
+    {
+      OB_LOG_WARNING_CODE (0x2010802a, "setsockopt/TCP_KEEPIDLE: '%s' (continuing anyway)\n",
+                           ob_sockmsg ());
+    }
+#endif
+#endif // !_MSC_VER
+#endif // PLASMA_ENABLE_TCP_OPTIMIZATIONS
 
   return ob_nosigpipe_sockopt (fd);
 }
