@@ -56,6 +56,7 @@
 #include "libLoam/c/ob-pthread.h"
 #include "libLoam/c/ob-util.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 static ob_retort update_reseed_time (void);
