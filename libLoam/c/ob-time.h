@@ -9,6 +9,7 @@
 #include "libLoam/c/ob-retorts.h"
 
 #include <stdlib.h> /* for struct timeval */
+#include <sys/time.h>
 
 #ifdef __cplusplus
 extern "C" {
