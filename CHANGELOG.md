@@ -50,3 +50,7 @@
   - Make logging conditional:
     - Large transfer logging checks `PLASMA_ENABLE_LARGE_TRANSFER_LOGGING`
     - Uses configurable `PLASMA_LARGE_TRANSFER_THRESHOLD` (1MB)
+
+* Fix emscripten build.  Also, just generally be more correct in which
+  header files we include in order to get `struct timeval`.
+  [#2](https://github.com/plasma-hamper/plasma/pull/2)
