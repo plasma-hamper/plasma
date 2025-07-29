@@ -19,13 +19,13 @@
 #define OB_ARGUMENT_PARSING_FAILED -(OB_RETORTS_LOAMXX_FIRST + 0)
 /// Indicates construction of an object failed. Object should be treated
 /// as invalid.
-#define OB_CONSTRUCTION_FAILED -(OB_RETORTS_LOAMXX_FIRST + 1)
+#define OB_CONSTRUCTION_FAILED     -(OB_RETORTS_LOAMXX_FIRST + 1)
 
 
 // ---------- success codes (positive) ----------
 
 /// return this as the sole action of a pseudoabstract interface definition...
-#define OB_ABSTRACT_OK (OB_RETORTS_LOAMXX_FIRST + 15)
+#define OB_ABSTRACT_OK             (OB_RETORTS_LOAMXX_FIRST + 15)
 
 
 
