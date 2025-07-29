@@ -776,6 +776,7 @@ OB_LOAM_API ob_retort ob_log_add_rule (ob_log_level *lvl, ob_log_rule rul);
 // 0x87?????? = AVAILABLE
 // 0x88?????? = projects/video
 // 0x93?????? = projects/bgt                        (in mezzanine repo)
+// 0xA0?????? = hs-plasma
 
 // These are just for backwards compatibility.  There are better-named
 // macros above that do the same things.

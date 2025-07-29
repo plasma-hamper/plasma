@@ -194,7 +194,15 @@ typedef int64 ob_retort;
 #define OB_RETORTS_TWILLIG2_LAST OB_CONST_RETORT (1599999)
 //@}
 
-// so add additional ranges for other libraries here, starting at 1600000
+/**
+ * hs-plasma
+ */
+//@{
+#define OB_RETORTS_HASKELL_FIRST OB_CONST_RETORT (1600000)
+#define OB_RETORTS_HASKELL_LAST  OB_CONST_RETORT (1699999)
+//@}
+
+// so add additional ranges for other libraries here, starting at 1700000
 
 /**
  * \cond INTERNAL
