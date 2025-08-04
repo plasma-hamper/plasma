@@ -54,3 +54,6 @@
 * Fix emscripten build.  Also, just generally be more correct in which
   header files we include in order to get `struct timeval`.
   [#2](https://github.com/plasma-hamper/plasma/pull/2)
+
+* Allocate log codes and retorts for Haskell binding.
+  [#12](https://github.com/plasma-hamper/plasma/pull/12)
