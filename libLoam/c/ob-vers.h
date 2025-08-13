@@ -79,21 +79,21 @@ OB_LOAM_API OB_CONST unt64 ob_x86_features (void);
  * ob_x86_features().
  */
 //@{
-#define OB_X86_FEATURE_SSE (OB_CONST_U64 (1) << 25)
-#define OB_X86_FEATURE_SSE2 (OB_CONST_U64 (1) << 26)
-#define OB_X86_FEATURE_SSE3 (OB_CONST_U64 (1) << 32)
+#define OB_X86_FEATURE_SSE       (OB_CONST_U64 (1) << 25)
+#define OB_X86_FEATURE_SSE2      (OB_CONST_U64 (1) << 26)
+#define OB_X86_FEATURE_SSE3      (OB_CONST_U64 (1) << 32)
 #define OB_X86_FEATURE_PCLMULQDQ (OB_CONST_U64 (1) << 33)
-#define OB_X86_FEATURE_SSSE3 (OB_CONST_U64 (1) << 41)
-#define OB_X86_FEATURE_FMA3 (OB_CONST_U64 (1) << 44)
-#define OB_X86_FEATURE_CX16 (OB_CONST_U64 (1) << 45)
-#define OB_X86_FEATURE_SSE41 (OB_CONST_U64 (1) << 51)
-#define OB_X86_FEATURE_SSE42 (OB_CONST_U64 (1) << 52)
-#define OB_X86_FEATURE_MOVBE (OB_CONST_U64 (1) << 54)
-#define OB_X86_FEATURE_POPCNT (OB_CONST_U64 (1) << 55)
-#define OB_X86_FEATURE_AES (OB_CONST_U64 (1) << 57)
-#define OB_X86_FEATURE_AVX (OB_CONST_U64 (1) << 60)
-#define OB_X86_FEATURE_CVT16 (OB_CONST_U64 (1) << 61)
-#define OB_X86_FEATURE_RDRND (OB_CONST_U64 (1) << 62)
+#define OB_X86_FEATURE_SSSE3     (OB_CONST_U64 (1) << 41)
+#define OB_X86_FEATURE_FMA3      (OB_CONST_U64 (1) << 44)
+#define OB_X86_FEATURE_CX16      (OB_CONST_U64 (1) << 45)
+#define OB_X86_FEATURE_SSE41     (OB_CONST_U64 (1) << 51)
+#define OB_X86_FEATURE_SSE42     (OB_CONST_U64 (1) << 52)
+#define OB_X86_FEATURE_MOVBE     (OB_CONST_U64 (1) << 54)
+#define OB_X86_FEATURE_POPCNT    (OB_CONST_U64 (1) << 55)
+#define OB_X86_FEATURE_AES       (OB_CONST_U64 (1) << 57)
+#define OB_X86_FEATURE_AVX       (OB_CONST_U64 (1) << 60)
+#define OB_X86_FEATURE_CVT16     (OB_CONST_U64 (1) << 61)
+#define OB_X86_FEATURE_RDRND     (OB_CONST_U64 (1) << 62)
 //@}
 
 /**
@@ -101,7 +101,8 @@ OB_LOAM_API OB_CONST unt64 ob_x86_features (void);
  * using the OB_CHECK_ABI() macro instead?  It's much better, because
  * you don't have to give it any arguments!
  */
-OB_LOAM_API ob_retort ob_check_abi (const char *file, const char *abi_string,
+OB_LOAM_API ob_retort ob_check_abi (const char *file,
+                                    const char *abi_string,
                                     const char *gs_version,
                                     int64 compiler_abi_version);
 
