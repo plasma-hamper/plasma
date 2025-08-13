@@ -26,21 +26,21 @@
 #define SLAW_TAG_PREFIX "tag:oblong.com,2009:slaw/"
 #define YAML_TAG_PREFIX "tag:yaml.org,2002:"
 
-#define SLAW_MAP_TAG (yaml_char_t *) YAML_TAG_PREFIX "map"
-#define SLAW_OMAP_TAG (yaml_char_t *) YAML_TAG_PREFIX "omap"
-#define SLAW_LIST_TAG (yaml_char_t *) YAML_TAG_PREFIX "seq"
-#define SLAW_ARRAY_TAG (yaml_char_t *) SLAW_TAG_PREFIX "array"
+#define SLAW_MAP_TAG         (yaml_char_t *) YAML_TAG_PREFIX "map"
+#define SLAW_OMAP_TAG        (yaml_char_t *) YAML_TAG_PREFIX "omap"
+#define SLAW_LIST_TAG        (yaml_char_t *) YAML_TAG_PREFIX "seq"
+#define SLAW_ARRAY_TAG       (yaml_char_t *) SLAW_TAG_PREFIX "array"
 #define SLAW_MULTIVECTOR_TAG (yaml_char_t *) SLAW_TAG_PREFIX "multivector"
-#define SLAW_VECTOR_TAG (yaml_char_t *) SLAW_TAG_PREFIX "vector"
-#define SLAW_COMPLEX_TAG (yaml_char_t *) SLAW_TAG_PREFIX "complex"
-#define SLAW_NULL_TAG (yaml_char_t *) YAML_TAG_PREFIX "null"
-#define SLAW_STRING_TAG (yaml_char_t *) YAML_TAG_PREFIX "str"
-#define SLAW_PROTEIN_TAG (yaml_char_t *) SLAW_TAG_PREFIX "protein"
-#define SLAW_NONSTD_TAG (yaml_char_t *) SLAW_TAG_PREFIX "nonstd"
-#define SLAW_CONS_TAG (yaml_char_t *) SLAW_TAG_PREFIX "cons"
-#define SLAW_BOOL_TAG (yaml_char_t *) YAML_TAG_PREFIX "bool"
-#define SLAW_BINARY_TAG (yaml_char_t *) YAML_TAG_PREFIX "binary"
-#define SLAW_BADUTF8_TAG (yaml_char_t *) SLAW_TAG_PREFIX "badutf8"
+#define SLAW_VECTOR_TAG      (yaml_char_t *) SLAW_TAG_PREFIX "vector"
+#define SLAW_COMPLEX_TAG     (yaml_char_t *) SLAW_TAG_PREFIX "complex"
+#define SLAW_NULL_TAG        (yaml_char_t *) YAML_TAG_PREFIX "null"
+#define SLAW_STRING_TAG      (yaml_char_t *) YAML_TAG_PREFIX "str"
+#define SLAW_PROTEIN_TAG     (yaml_char_t *) SLAW_TAG_PREFIX "protein"
+#define SLAW_NONSTD_TAG      (yaml_char_t *) SLAW_TAG_PREFIX "nonstd"
+#define SLAW_CONS_TAG        (yaml_char_t *) SLAW_TAG_PREFIX "cons"
+#define SLAW_BOOL_TAG        (yaml_char_t *) YAML_TAG_PREFIX "bool"
+#define SLAW_BINARY_TAG      (yaml_char_t *) YAML_TAG_PREFIX "binary"
+#define SLAW_BADUTF8_TAG     (yaml_char_t *) SLAW_TAG_PREFIX "badutf8"
 
 /* If you were to read the YAML spec:
  *
@@ -389,9 +389,9 @@ static unt64 base64_to_bin_convert (unt64 base64_len, const char *base64,
 }
 
 typedef enum {
-  NOT_IN_A_MAP = 10,
+  NOT_IN_A_MAP         = 10,
   INSIDE_UNORDERED_MAP = 20,
-  INSIDE_ORDERED_MAP = 30
+  INSIDE_ORDERED_MAP   = 30
 } mappiness;
 
 typedef struct sly_emitter_info
@@ -1213,42 +1213,42 @@ static ob_retort sly_write_slaw_to_yaml (sly_emitter_info *emitter, bslaw s)
 
 // yaml => events
 
-#define SE_ARRAY OB_CONST_U64 (0x32b9c7ec210c1a04)
-#define SE_BADUTF8 OB_CONST_U64 (0xa71e08969f161fb7)
-#define SE_BINARY OB_CONST_U64 (0x5cafcc4621b348fa)
-#define SE_BOOL OB_CONST_U64 (0xb6492c832b82f189)
-#define SE_COMPLEX OB_CONST_U64 (0x2195c54d76476112)
-#define SE_CONS OB_CONST_U64 (0xf7b4a5d51438b792)
-#define SE_DESCRIPS OB_CONST_U64 (0x3f8d4bbcea903711)
-#define SE_F32 OB_CONST_U64 (0x479db3b52758c108)
-#define SE_F64 OB_CONST_U64 (0xcd876fe462578c4f)
-#define SE_I16 OB_CONST_U64 (0xa8024548a1ca2305)
-#define SE_I32 OB_CONST_U64 (0xa489c4c31b630c5a)
-#define SE_I64 OB_CONST_U64 (0xc940065b925d3a15)
-#define SE_I8 OB_CONST_U64 (0xa266b0470338e398)
-#define SE_INGESTS OB_CONST_U64 (0x16a60446ba1f5119)
-#define SE_MAP OB_CONST_U64 (0xb17678ff2f939aa2)
-#define SE_MULTIVECTOR OB_CONST_U64 (0x5b6eb1410fe7bd04)
+#define SE_ARRAY        OB_CONST_U64 (0x32b9c7ec210c1a04)
+#define SE_BADUTF8      OB_CONST_U64 (0xa71e08969f161fb7)
+#define SE_BINARY       OB_CONST_U64 (0x5cafcc4621b348fa)
+#define SE_BOOL         OB_CONST_U64 (0xb6492c832b82f189)
+#define SE_COMPLEX      OB_CONST_U64 (0x2195c54d76476112)
+#define SE_CONS         OB_CONST_U64 (0xf7b4a5d51438b792)
+#define SE_DESCRIPS     OB_CONST_U64 (0x3f8d4bbcea903711)
+#define SE_F32          OB_CONST_U64 (0x479db3b52758c108)
+#define SE_F64          OB_CONST_U64 (0xcd876fe462578c4f)
+#define SE_I16          OB_CONST_U64 (0xa8024548a1ca2305)
+#define SE_I32          OB_CONST_U64 (0xa489c4c31b630c5a)
+#define SE_I64          OB_CONST_U64 (0xc940065b925d3a15)
+#define SE_I8           OB_CONST_U64 (0xa266b0470338e398)
+#define SE_INGESTS      OB_CONST_U64 (0x16a60446ba1f5119)
+#define SE_MAP          OB_CONST_U64 (0xb17678ff2f939aa2)
+#define SE_MULTIVECTOR  OB_CONST_U64 (0x5b6eb1410fe7bd04)
 #define SE_NON_SPECIFIC OB_CONST_U64 (0x095934e7f55b39ba)
-#define SE_NONSTD OB_CONST_U64 (0xd70c69f2b823fb40)
-#define SE_NULL OB_CONST_U64 (0x9e34c34e89b60f38)
-#define SE_OMAP OB_CONST_U64 (0x42443404839a2550)
-#define SE_PROTEIN OB_CONST_U64 (0xdf8a6b35e9acd602)
-#define SE_RUDE_DATA OB_CONST_U64 (0xf5cb44dedc2dd3d4)
-#define SE_SEQ OB_CONST_U64 (0xd7ec31d8a099ef3c)
-#define SE_STRING OB_CONST_U64 (0x2e7062203251384f)
-#define SE_STR OB_CONST_U64 (0x6e17023b1ba5ddbf)
-#define SE_U16 OB_CONST_U64 (0x2cdc5570e3b4f4c0)
-#define SE_U32 OB_CONST_U64 (0xa1d53e6f55db8ac8)
-#define SE_U64 OB_CONST_U64 (0x2c67cbce14289d59)
-#define SE_U8 OB_CONST_U64 (0x9cdaf818f6756e1a)
-#define SE_VECTOR OB_CONST_U64 (0x64fdc5a5ca6cd3c6)
+#define SE_NONSTD       OB_CONST_U64 (0xd70c69f2b823fb40)
+#define SE_NULL         OB_CONST_U64 (0x9e34c34e89b60f38)
+#define SE_OMAP         OB_CONST_U64 (0x42443404839a2550)
+#define SE_PROTEIN      OB_CONST_U64 (0xdf8a6b35e9acd602)
+#define SE_RUDE_DATA    OB_CONST_U64 (0xf5cb44dedc2dd3d4)
+#define SE_SEQ          OB_CONST_U64 (0xd7ec31d8a099ef3c)
+#define SE_STRING       OB_CONST_U64 (0x2e7062203251384f)
+#define SE_STR          OB_CONST_U64 (0x6e17023b1ba5ddbf)
+#define SE_U16          OB_CONST_U64 (0x2cdc5570e3b4f4c0)
+#define SE_U32          OB_CONST_U64 (0xa1d53e6f55db8ac8)
+#define SE_U64          OB_CONST_U64 (0x2c67cbce14289d59)
+#define SE_U8           OB_CONST_U64 (0x9cdaf818f6756e1a)
+#define SE_VECTOR       OB_CONST_U64 (0x64fdc5a5ca6cd3c6)
 
 /* keep track of our element, position, and context
  * using a stack of v3unt64. */
-#define CURRENT_ELEMENT x
+#define CURRENT_ELEMENT  x
 #define CURRENT_POSITION y
-#define CURRENT_CONTEXT z
+#define CURRENT_CONTEXT  z
 
 /* All this does is call ob_city_hash64 on a NUL-terminated string. */
 static inline unt64 sly_hash (const yaml_char_t *s)
