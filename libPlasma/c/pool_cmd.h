@@ -155,12 +155,12 @@ OB_PLASMA_API int check_for_leaked_file_descriptors_scoped (mainish_function,
 
 // Distinguished status codes for calling exit() with.  More exciting
 // (and useful to scripts) than just EXIT_SUCCESS(0) and EXIT_FAILURE(1).
-#define EXIT_NOPOOL 10     // POOL_NO_SUCH_POOL
-#define EXIT_EXISTS 12     // POOL_EXISTS
+#define EXIT_NOPOOL    10  // POOL_NO_SUCH_POOL
+#define EXIT_EXISTS    12  // POOL_EXISTS
 #define EXIT_NOPROTEIN 14  // POOL_NO_SUCH_PROTEIN
-#define EXIT_BADPNAME 16   // POOL_POOLNAME_BADTH
-#define EXIT_BADPTYPE 18   // POOL_TYPE_BADTH
-#define EXIT_INUSE 20      // POOL_IN_USE
+#define EXIT_BADPNAME  16  // POOL_POOLNAME_BADTH
+#define EXIT_BADPTYPE  18  // POOL_TYPE_BADTH
+#define EXIT_INUSE     20  // POOL_IN_USE
 
 // Convert a retort to an exit code suitable for returning from main().
 OB_PLASMA_API int pool_cmd_retort_to_exit_code (ob_retort tort);
