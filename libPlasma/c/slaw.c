@@ -2229,7 +2229,7 @@ static const slaw_handler ovew_handler = {NULL,
 
 #define _FW(...) func (whither, __VA_ARGS__)
 
-static void slaw_spew_numeric_ovewview (bslaw s, fwfunc func, FILE *whither)
+static void slaw_spew_numeric_ovewview (bslaw s, fwfunc func, void *whither)
 {
   int slinc =
     slaw_is_numeric_8 (s)
@@ -2306,7 +2306,7 @@ static void slaw_spew_internal (bslaw s, fwfunc func, void *whither,
       free (down);
     }
   else if (slaw_is_numeric (s))
-    slaw_spew_numeric_ovewview (s, func, (FILE *) whither);
+    slaw_spew_numeric_ovewview (s, func, whither);
   else if (slaw_is_list_or_map (s))
     {
       unt64 q, n = slaw_list_count (s);
@@ -2353,14 +2353,13 @@ static void slaw_spew_internal (bslaw s, fwfunc func, void *whither,
       if (rudeLen > 0)
         {
           int64 i;
-          _FW ("%srude data: %" OB_FMT_64 "d bytes", prolo, rudeLen);
-          for (i = 0; i < rudeLen; i++)
+          char  rudeBuf[OB_HEX_LINE_LEN];
+          _FW ("%srude data: %" OB_FMT_64 "d bytes\n", prolo, rudeLen);
+          for (i = 0; i < rudeLen; i += 16)
             {
-              if (i % 16 == 0)
-                _FW ("\n%s", prolo);
-              _FW (" %02x", rude[i]);
+              ob_fmt_hex_line (rudeBuf, rude + i, (size_t) (rudeLen - i));
+              _FW ("%s %s\n", prolo, rudeBuf);
             }
-          _FW ("\n");
         }
       _FW ("%s ))", prolo);
     }
