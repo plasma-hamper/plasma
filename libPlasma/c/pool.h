@@ -260,8 +260,8 @@ OB_PLASMA_API ob_retort pool_check_in_use_ctx (const char *pool_name,
  * be NULL.
  *
  * If the connection is successful, the associated index will be set
- * to its newest value, and OB_OK is returned. Possible error
- * conditions include:
+ * to one past its newest value (as if pool_runout() had been called),
+ * and OB_OK is returned.  Possible error conditions include:
  *  - OB_ARGUMENT_WAS_NULL if \a ret_ph is \c NULL.
  *  - OB_NO_MEM on memory allocation errors.
  *  - POOL_POOLNAME_BADTH if \a pool_name is not a legal pool name
