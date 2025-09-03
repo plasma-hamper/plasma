@@ -11,6 +11,7 @@
 * Improve source code formatting
   [#7](https://github.com/plasma-hamper/plasma/pull/7)
   [#10](https://github.com/plasma-hamper/plasma/pull/10)
+  [#13](https://github.com/plasma-hamper/plasma/pull/13)
 
 * Added new retort `OB_PARSE_ERROR`, and return it from
   `ob_strptime()` when the input string is malformed.  (Previously,
