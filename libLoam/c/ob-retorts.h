@@ -70,32 +70,32 @@ typedef int64 ob_retort;
 
 /** defined in this file; generally useful */
 //@{
-#define OB_RETORTS_COMMON_FIRST OB_CONST_RETORT (0)
-#define OB_RETORTS_COMMON_LAST OB_CONST_RETORT (99999)
+#define OB_RETORTS_COMMON_FIRST   OB_CONST_RETORT (0)
+#define OB_RETORTS_COMMON_LAST    OB_CONST_RETORT (99999)
 //@}
 
 /**
  * reserved for use by the application
  */
 //@{
-#define OB_RETORTS_APP_FIRST OB_CONST_RETORT (100000)
-#define OB_RETORTS_APP_LAST OB_CONST_RETORT (199999)
+#define OB_RETORTS_APP_FIRST      OB_CONST_RETORT (100000)
+#define OB_RETORTS_APP_LAST       OB_CONST_RETORT (199999)
 //@}
 
 /**
  * libPlasma/c
  */
 //@{
-#define OB_RETORTS_PLASMA_FIRST OB_CONST_RETORT (200000)
-#define OB_RETORTS_PLASMA_LAST OB_CONST_RETORT (299999)
+#define OB_RETORTS_PLASMA_FIRST   OB_CONST_RETORT (200000)
+#define OB_RETORTS_PLASMA_LAST    OB_CONST_RETORT (299999)
 //@}
 
 /**
  * libMedia (formerly libVid)
  */
 //@{
-#define OB_RETORTS_VIDEO_FIRST OB_CONST_RETORT (300000)
-#define OB_RETORTS_VIDEO_LAST OB_CONST_RETORT (399999)
+#define OB_RETORTS_VIDEO_FIRST    OB_CONST_RETORT (300000)
+#define OB_RETORTS_VIDEO_LAST     OB_CONST_RETORT (399999)
 //@}
 
 /**
@@ -103,23 +103,23 @@ typedef int64 ob_retort;
  */
 //@{
 #define OB_RETORTS_BASEMENT_FIRST OB_CONST_RETORT (400000)
-#define OB_RETORTS_BASEMENT_LAST OB_CONST_RETORT (499999)
+#define OB_RETORTS_BASEMENT_LAST  OB_CONST_RETORT (499999)
 //@}
 
 /**
  * libImpetus
  */
 //@{
-#define OB_RETORTS_IMPETUS_FIRST OB_CONST_RETORT (500000)
-#define OB_RETORTS_IMPETUS_LAST OB_CONST_RETORT (599999)
+#define OB_RETORTS_IMPETUS_FIRST  OB_CONST_RETORT (500000)
+#define OB_RETORTS_IMPETUS_LAST   OB_CONST_RETORT (599999)
 //@}
 
 /**
  * libNoodoo
  */
 //@{
-#define OB_RETORTS_NOODOO_FIRST OB_CONST_RETORT (600000)
-#define OB_RETORTS_NOODOO_LAST OB_CONST_RETORT (699999)
+#define OB_RETORTS_NOODOO_FIRST   OB_CONST_RETORT (600000)
+#define OB_RETORTS_NOODOO_LAST    OB_CONST_RETORT (699999)
 //@}
 
 /**
@@ -127,31 +127,31 @@ typedef int64 ob_retort;
  */
 //@{
 #define OB_RETORTS_AFFERENT_FIRST OB_CONST_RETORT (700000)
-#define OB_RETORTS_AFFERENT_LAST OB_CONST_RETORT (799999)
+#define OB_RETORTS_AFFERENT_LAST  OB_CONST_RETORT (799999)
 //@}
 
 /**
  * system/libProtist
  */
 //@{
-#define OB_RETORTS_PROTIST_FIRST OB_CONST_RETORT (800000)
-#define OB_RETORTS_PROTIST_LAST OB_CONST_RETORT (899999)
+#define OB_RETORTS_PROTIST_FIRST  OB_CONST_RETORT (800000)
+#define OB_RETORTS_PROTIST_LAST   OB_CONST_RETORT (899999)
 //@}
 
 /**
  * libLoam/c++
  */
 //@{
-#define OB_RETORTS_LOAMXX_FIRST OB_CONST_RETORT (900000)
-#define OB_RETORTS_LOAMXX_LAST OB_CONST_RETORT (999999)
+#define OB_RETORTS_LOAMXX_FIRST   OB_CONST_RETORT (900000)
+#define OB_RETORTS_LOAMXX_LAST    OB_CONST_RETORT (999999)
 //@}
 
 /**
  * libGanglia
  */
 //@{
-#define OB_RETORTS_GANGLIA_FIRST OB_CONST_RETORT (1000000)
-#define OB_RETORTS_GANGLIA_LAST OB_CONST_RETORT (1099999)
+#define OB_RETORTS_GANGLIA_FIRST  OB_CONST_RETORT (1000000)
+#define OB_RETORTS_GANGLIA_LAST   OB_CONST_RETORT (1099999)
 //@}
 
 /**
@@ -159,7 +159,7 @@ typedef int64 ob_retort;
  */
 //@{
 #define OB_RETORTS_PLASMAXX_FIRST OB_CONST_RETORT (1100000)
-#define OB_RETORTS_PLASMAXX_LAST OB_CONST_RETORT (1199999)
+#define OB_RETORTS_PLASMAXX_LAST  OB_CONST_RETORT (1199999)
 //@}
 
 /**
@@ -167,23 +167,23 @@ typedef int64 ob_retort;
  */
 //@{
 #define OB_RETORTS_RESOURCE_FIRST OB_CONST_RETORT (1200000)
-#define OB_RETORTS_RESOURCE_LAST OB_CONST_RETORT (1299999)
+#define OB_RETORTS_RESOURCE_LAST  OB_CONST_RETORT (1299999)
 //@}
 
 /**
  * libSplotch
  */
 //@{
-#define OB_RETORTS_SPLOTCH_FIRST OB_CONST_RETORT (1300000)
-#define OB_RETORTS_SPLOTCH_LAST OB_CONST_RETORT (1399999)
+#define OB_RETORTS_SPLOTCH_FIRST  OB_CONST_RETORT (1300000)
+#define OB_RETORTS_SPLOTCH_LAST   OB_CONST_RETORT (1399999)
 //@}
 
 /**
  * libNoodoo2
  */
 //@{
-#define OB_RETORTS_NOODOO2_FIRST OB_CONST_RETORT (1400000)
-#define OB_RETORTS_NOODOO2_LAST OB_CONST_RETORT (1499999)
+#define OB_RETORTS_NOODOO2_FIRST  OB_CONST_RETORT (1400000)
+#define OB_RETORTS_NOODOO2_LAST   OB_CONST_RETORT (1499999)
 //@}
 
 /**
@@ -191,15 +191,15 @@ typedef int64 ob_retort;
  */
 //@{
 #define OB_RETORTS_TWILLIG2_FIRST OB_CONST_RETORT (1500000)
-#define OB_RETORTS_TWILLIG2_LAST OB_CONST_RETORT (1599999)
+#define OB_RETORTS_TWILLIG2_LAST  OB_CONST_RETORT (1599999)
 //@}
 
 /**
  * hs-plasma
  */
 //@{
-#define OB_RETORTS_HASKELL_FIRST OB_CONST_RETORT (1600000)
-#define OB_RETORTS_HASKELL_LAST  OB_CONST_RETORT (1699999)
+#define OB_RETORTS_HASKELL_FIRST  OB_CONST_RETORT (1600000)
+#define OB_RETORTS_HASKELL_LAST   OB_CONST_RETORT (1699999)
 //@}
 
 // so add additional ranges for other libraries here, starting at 1700000
@@ -209,14 +209,14 @@ typedef int64 ob_retort;
  * Windows errors take 32 bits, so we allocate the highest-numbered
  * 4294967296 retorts to encapsulate Windows errors.
  */
-#define OB_RETORTS_WIN32_FIRST OB_CONST_I64 (0x7fffffff00000000)
-#define OB_RETORTS_WIN32_LAST OB_CONST_I64 (0x7fffffffffffffff)
+#define OB_RETORTS_WIN32_FIRST    OB_CONST_I64 (0x7fffffff00000000)
+#define OB_RETORTS_WIN32_LAST     OB_CONST_I64 (0x7fffffffffffffff)
 /** \endcond */
 
 /* common codes */
 
 /** The canonical success code, which conveys no further information. */
-#define OB_OK OB_CONST_RETORT (0)
+#define OB_OK                OB_CONST_RETORT (0)
 
 // 1-199 reserved for local use
 // (that means they should not be defined here or in any other core header file)
@@ -226,12 +226,12 @@ typedef int64 ob_retort;
 /**
  * malloc failed, or similar
  */
-#define OB_NO_MEM OB_CONST_RETORT (-201)
+#define OB_NO_MEM            OB_CONST_RETORT (-201)
 
 /**
  * out-of-bounds access
  */
-#define OB_BAD_INDEX OB_CONST_RETORT (-202)
+#define OB_BAD_INDEX         OB_CONST_RETORT (-202)
 
 /**
  * function was not expecting a NULL argument, but it was nice enough
@@ -242,33 +242,33 @@ typedef int64 ob_retort;
 /**
  * not the droids you're looking for
  */
-#define OB_NOT_FOUND OB_CONST_RETORT (-204)
+#define OB_NOT_FOUND         OB_CONST_RETORT (-204)
 
 /**
  * argument badness other than NULL or out-of-bounds
  */
-#define OB_INVALID_ARGUMENT OB_CONST_RETORT (-205)
+#define OB_INVALID_ARGUMENT  OB_CONST_RETORT (-205)
 
 /**
  * There was no way to determine what the error was, or the error is
  * so esoteric that nobody has bothered allocating a code for it yet.
  */
-#define OB_UNKNOWN_ERR OB_CONST_RETORT (-220)
+#define OB_UNKNOWN_ERR       OB_CONST_RETORT (-220)
 
 /**
  * wrong parentage
  */
-#define OB_INADEQUATE_CLASS OB_CONST_RETORT (-221)
+#define OB_INADEQUATE_CLASS  OB_CONST_RETORT (-221)
 
 /**
  * You tried to add something that was already there.
  */
-#define OB_ALREADY_PRESENT OB_CONST_RETORT (-222)
+#define OB_ALREADY_PRESENT   OB_CONST_RETORT (-222)
 
 /**
  * There was nothing there.  (e. g. popping from an empty stack)
  */
-#define OB_EMPTY OB_CONST_RETORT (-223)
+#define OB_EMPTY             OB_CONST_RETORT (-223)
 
 /**
  * You tried to do something that was not allowed.
@@ -278,15 +278,15 @@ typedef int64 ob_retort;
 /**
  * The link to whatever-you-were-talking-to has been severed
  */
-#define OB_DISCONNECTED OB_CONST_RETORT (-260)
+#define OB_DISCONNECTED      OB_CONST_RETORT (-260)
 
 /** Illegal mixing of different versions of g-speak headers and shared libs. */
-#define OB_VERSION_MISMATCH OB_CONST_RETORT (-261)
+#define OB_VERSION_MISMATCH  OB_CONST_RETORT (-261)
 
 /**
  * Unable to parse the given string.
  */
-#define OB_PARSE_ERROR OB_CONST_RETORT (-270)
+#define OB_PARSE_ERROR       OB_CONST_RETORT (-270)
 
 // >>> add new error codes here <<<
 
@@ -295,21 +295,21 @@ typedef int64 ob_retort;
 /**
  * not an error, but don't continue
  */
-#define OB_STOP OB_CONST_RETORT (300)
+#define OB_STOP              OB_CONST_RETORT (300)
 
 /**
  * Things are already in the state you requested them to be in.
  */
-#define OB_NOTHING_TO_DO OB_CONST_RETORT (301)
+#define OB_NOTHING_TO_DO     OB_CONST_RETORT (301)
 
 /** Success, and the answer was "yes" */
-#define OB_YES OB_CONST_RETORT (302)
+#define OB_YES               OB_CONST_RETORT (302)
 
 /** Success, and the answer was "no" */
-#define OB_NO OB_CONST_RETORT (303)
+#define OB_NO                OB_CONST_RETORT (303)
 
 /** Situation is fine, but you've proceeded far enough. */
-#define OB_BOUNCE OB_CONST_RETORT (304)
+#define OB_BOUNCE            OB_CONST_RETORT (304)
 
 // >>> add new success codes here <<<
 
@@ -342,9 +342,9 @@ typedef int64 ob_retort;
 #define OB_SHARED_ERRNOS OB_CONST_U64 (0x7fbff77fe)
 
 // These retort ranges are inside the "common" range.
-#define OB_RETORTS_ERRNO_SHARED OB_CONST_RETORT (90000)   // thru 90999
-#define OB_RETORTS_ERRNO_LINUX OB_CONST_RETORT (91000)    // thru 91999
-#define OB_RETORTS_ERRNO_MACOSX OB_CONST_RETORT (92000)   // thru 92999
+#define OB_RETORTS_ERRNO_SHARED  OB_CONST_RETORT (90000)  // thru 90999
+#define OB_RETORTS_ERRNO_LINUX   OB_CONST_RETORT (91000)  // thru 91999
+#define OB_RETORTS_ERRNO_MACOSX  OB_CONST_RETORT (92000)  // thru 92999
 #define OB_RETORTS_ERRNO_WINDOWS OB_CONST_RETORT (93000)  // thru 93999
 /** \endcond */
 

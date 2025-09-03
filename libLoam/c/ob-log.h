@@ -462,25 +462,25 @@ typedef struct ob_log_file_rule ob_log_file_rule;
 // black from "I'm not specifying a color").
 #ifdef _MSC_VER
 // See http://msdn.microsoft.com/en-us/library/ms682013(VS.85).aspx
-#define OB_FOREGROUND_BLUE 0x0001
-#define OB_FOREGROUND_GREEN 0x0002
-#define OB_FOREGROUND_RED 0x0004
-#define OB_BACKGROUND_BLUE 0x0010
-#define OB_BACKGROUND_GREEN 0x0020
-#define OB_BACKGROUND_RED 0x0040
+#define OB_FOREGROUND_BLUE    0x0001
+#define OB_FOREGROUND_GREEN   0x0002
+#define OB_FOREGROUND_RED     0x0004
+#define OB_BACKGROUND_BLUE    0x0010
+#define OB_BACKGROUND_GREEN   0x0020
+#define OB_BACKGROUND_RED     0x0040
 // {FOREGROUND,BACKGROUND}_{RED,GREEN,BLUE} are system-defined on Windows
 // (in lower 16 bits, so we start above there)
 #define OB_FOREGROUND_ENABLE 0x10000
 #define OB_BACKGROUND_ENABLE 0x20000
 #else  // UNIX, where we assume a terminal that takes ANSI color codes
-#define OB_FOREGROUND_ENABLE 0x3000
-#define OB_FOREGROUND_RED 0x3100
-#define OB_FOREGROUND_GREEN 0x3200
-#define OB_FOREGROUND_BLUE 0x3400
-#define OB_BACKGROUND_ENABLE 0x0040
-#define OB_BACKGROUND_RED 0x0041
-#define OB_BACKGROUND_GREEN 0x0042
-#define OB_BACKGROUND_BLUE 0x0044
+#define OB_FOREGROUND_ENABLE  0x3000
+#define OB_FOREGROUND_RED     0x3100
+#define OB_FOREGROUND_GREEN   0x3200
+#define OB_FOREGROUND_BLUE    0x3400
+#define OB_BACKGROUND_ENABLE  0x0040
+#define OB_BACKGROUND_RED     0x0041
+#define OB_BACKGROUND_GREEN   0x0042
+#define OB_BACKGROUND_BLUE    0x0044
 #endif
 
 typedef struct ob_log_level
