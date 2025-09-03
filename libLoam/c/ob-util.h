@@ -149,6 +149,30 @@ OB_LOAM_API void *ob_make_undefined (void *addr, size_t len);
  */
 #define OB_INVALIDATE(x) ob_make_undefined ((void *) &(x), sizeof (x))
 
+/**
+ * Size of the array required by ob_fmt_hex_line().
+ *
+ * (68 characters, plus room for a terminating NUL character.)
+ */
+#define OB_HEX_LINE_LEN 69
+
+/**
+ * Formats up to 16 bytes from \a src as a line of hex plus ASCII,
+ * in the same format produced by the hd(1) command.  (Although not
+ * including the file offset that hd(1) puts at the beginning of the
+ * line.)  There are eight hex bytes, an additional space, another
+ * eight hex bytes, and then sixteen ASCII bytes, where bytes
+ * outside the ASCII range are represented with a period.
+ *
+ * The result is written into \a dst and terminated with a NUL
+ * character.
+ *
+ * If \a srcLen is greater than 16, it is treated as if it was 16.
+ */
+OB_LOAM_API void ob_fmt_hex_line (char        dst[OB_HEX_LINE_LEN],
+                                  const unt8 *src,
+                                  size_t      srcLen);
+
 #ifdef __cplusplus
 }
 #endif

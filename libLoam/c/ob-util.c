@@ -411,3 +411,40 @@ void *ob_make_undefined (void *addr, size_t len)
 #endif
   return addr;
 }
+
+static const char hexdigs[16] = "0123456789abcdef";
+
+void ob_fmt_hex_line (char        dst[OB_HEX_LINE_LEN],
+                      const unt8 *src,
+                      size_t      srcLen)
+{
+  size_t hexIdx = 0;
+  size_t ascIdx = 50;
+  size_t i;
+
+  memset (dst, ' ', OB_HEX_LINE_LEN);
+  dst[ascIdx++] = '|';
+
+  for (i = 0; i < 16 && i < srcLen; i++)
+    {
+      const unt8 b  = src[i];
+      const unt8 lo = b & 0xf;
+      const unt8 hi = b >> 4;
+      char       c  = '.';
+
+      if (i == 8)
+        hexIdx++;
+
+      dst[hexIdx    ] = hexdigs[hi];
+      dst[hexIdx + 1] = hexdigs[lo];
+      hexIdx += 3;
+
+      if (b >= ' ' && b <= '~')
+        c = (char) b;
+
+      dst[ascIdx++] = c;
+    }
+
+  dst[ascIdx++] = '|';
+  dst[ascIdx  ] = 0;
+}

@@ -58,3 +58,10 @@
 
 * Allocate log codes and retorts for Haskell binding.
   [#12](https://github.com/plasma-hamper/plasma/pull/12)
+
+* Change `slaw_spew_overview()` to display rude data as both hex and
+  ASCII, rather than just hex.  This is inspired by the format used by
+  the `hd(1)` command.  Additionally, a new libLoam function,
+  `ob_fmt_hex_line()` has been added, which implements this
+  functionality.
+  [#14](https://github.com/plasma-hamper/plasma/pull/14)
