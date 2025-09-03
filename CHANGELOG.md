@@ -4,6 +4,7 @@
   [#4](https://github.com/plasma-hamper/plasma/pull/4)
   [#6](https://github.com/plasma-hamper/plasma/pull/6)
   [#9](https://github.com/plasma-hamper/plasma/pull/9)
+  [#15](https://github.com/plasma-hamper/plasma/pull/15)
 
 * Fix infinite loop bug in `ob_search_path()` when `path` argument is
   an empty string [#5](https://github.com/plasma-hamper/plasma/pull/5)
