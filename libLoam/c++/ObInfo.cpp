@@ -226,7 +226,7 @@ Str ObInfo::ObInfoToYAML ()
   // This is light JSON (*cough* yaml *cough*) output thingy
   Str output ("{\n");
   output.Append (
-    JSONPair ("g-speak-version", GetInfo (ObInfo::Version_Of::Gspeak)));
+    JSONPair ("plasma-version", GetInfo (ObInfo::Version_Of::Gspeak)));
   output.Append (JSONPair ("abi-version", GetInfo (ObInfo::Version_Of::Abi)));
   output.Append (
     JSONPair ("compiler-version", GetInfo (ObInfo::Version_Of::Compiler)));

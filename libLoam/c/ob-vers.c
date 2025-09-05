@@ -25,6 +25,7 @@
 #include <sys/sysctl.h>
 #endif
 
+#define PRODNAME "plasma"
 
 static const char *parse_proc_file (const char *s, const char *label);
 
@@ -402,9 +403,9 @@ char *ob_get_version (ob_version_of_what what)
     {
       case OB_VERSION_OF_GSPEAK:
 #ifdef PACKAGE_VERSION_PATCH
-        c = "g-speak " PACKAGE_VERSION_PATCH;
+        c = PRODNAME " " PACKAGE_VERSION_PATCH;
 #elif defined(G_SPEAK_VERSION)
-        c = "g-speak " G_SPEAK_VERSION;
+        c = PRODNAME " " G_SPEAK_VERSION;
 #endif
         return strdup (c);
 
@@ -498,10 +499,10 @@ char *ob_get_version (ob_version_of_what what)
 void ob_banner (FILE *where)
 {
   char *yovo = ob_get_version (OB_VERSION_OF_GSPEAK);
-  // g-speak is all lower case with a dash
   // Omit year in copyright because CODING-STYLE says to,
   // plus it just gets out of date anyway.
-  fprintf (where, "g-speak SOE (c) Oblong Industries - %s"
+  fprintf (where,
+           PRODNAME " (c) Oblong Industries and ANIMIST contributors - %s"
 #ifdef GREENHOUSE
                   "+gh"
 #endif
@@ -663,13 +664,13 @@ ob_retort ob_check_abi (const char *file, const char *abi_string,
 
 #if 0
   /* Now that the ABI version is auto-generated, I don't think we need to
-   * also compare the g-speak version, too. */
+   * also compare the plasma version, too. */
   if (gs_version)
     { char *gs_lib_vers = ob_get_version (OB_VERSION_OF_GSPEAK);
       if (0 != strcmp (gs_lib_vers, gs_version))
         { OB_LOG_WARNING_CODE (0x10080000,
                                "%s was compiled against '%s' headers,\n"
-                               "but g-speak shared libraries are '%s'\n",
+                               "but " PRODNAME " shared libraries are '%s'\n",
                                bn,
                                gs_version,
                                gs_lib_vers);
@@ -684,7 +685,7 @@ ob_retort ob_check_abi (const char *file, const char *abi_string,
       OB_LOG_WARNING_CODE (0x10080001,
                            "%s was compiled against '" G_SPEAK_ABI_VERSION
                            "' headers,\n"
-                           "but g-speak shared libraries are '%s'\n",
+                           "but " PRODNAME " shared libraries are '%s'\n",
                            bn, abi_string);
       tort = OB_VERSION_MISMATCH;
     }
@@ -695,7 +696,7 @@ ob_retort ob_check_abi (const char *file, const char *abi_string,
       OB_LOG_WARNING_CODE (0x10080002,
                            "%s was compiled against g++ ABI %" OB_FMT_64
                            "d headers,\n"
-                           "but g-speak shared libraries are g++ ABI "
+                           "but " PRODNAME " shared libraries are g++ ABI "
                            "%" OB_FMT_64 "d\n",
                            bn, compiler_abi_version, our_gxx_abi);
       tort = OB_VERSION_MISMATCH;

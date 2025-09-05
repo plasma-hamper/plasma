@@ -181,9 +181,9 @@ int main (int argc, char **argv)
   const char *something = "/etc/apparmor.d/abstractions/freedesktop.org";
   printf ("The basename of %s is %s\n", something, ob_basename (something));
 
-  // Find out the g-speak version
+  // Find out the plasma version
   char *gsv = ob_get_version (OB_VERSION_OF_GSPEAK);
-  printf ("The g-speak version is \"%s\"\n", gsv);
+  printf ("The plasma version is \"%s\"\n", gsv);
   free (gsv);  // need to free the string that ob_get_version() allocated
 
   // Got a fatal error?
