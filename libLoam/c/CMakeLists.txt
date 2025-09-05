@@ -91,11 +91,16 @@ endif()
 # Include old non-multilib libdir to be kind to downstream
 # packages (like libWebThing) which install their libraries
 # to the old libdir, and never added their own rpath.
+#
+# Removed CMAKE_INSTALL_FULL_LIBDIR from LIBS, because it was
+# the empty string, and having the flags "-L -Wl,-rpath," was
+# causing all sorts of trouble.  Not sure what is supposed to
+# set CMAKE_INSTALL_FULL_LIBDIR, but it wasn't getting set.
 ObGeneratePC (
   NAME libLoam
   VERSION ${PC_VERSION}
   DESCRIPTION "Part of Oblong's g-speak Spatial Operating Environment"
-  LIBS "-L${CMAKE_INSTALL_FULL_LIBDIR} -Wl,-rpath,${CMAKE_INSTALL_FULL_LIBDIR} -L${CMAKE_INSTALL_PREFIX}/lib -Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib -lLoam ${PLATFORM_LINK_LIBS} ${SANITIZER_FLAGS}"
+  LIBS "-L${CMAKE_INSTALL_PREFIX}/lib -Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib -lLoam ${PLATFORM_LINK_LIBS} ${SANITIZER_FLAGS}"
   CFLAGS "-I${YOBUILD}/include -I${CMAKE_INSTALL_PREFIX}/include ${PTHREAD_OPT} ${SANITIZER_FLAGS}"
 )
 

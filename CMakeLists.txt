@@ -7,6 +7,11 @@ option(PLASMA_LEGACY_MODE "Build for compatibility with older systems" OFF)
 option(PLASMA_ENABLE_TCP_OPTIMIZATIONS "Enable TCP performance optimizations" ON)
 option(PLASMA_ENABLE_LARGE_TRANSFER_LOGGING "Enable logging for transfers >1MB" ON)
 
+# We don't really have a YOBUILD anymore, but it causes some
+# annoyance if YOBUILD is the empty string, so let's just set
+# it to something...
+set(YOBUILD "/opt/yobuild")
+
 # Auto-detect if legacy mode needed
 if(NOT DEFINED PLASMA_LEGACY_MODE)
     # Check compiler version
