@@ -12,6 +12,9 @@ option(PLASMA_ENABLE_LARGE_TRANSFER_LOGGING "Enable logging for transfers >1MB" 
 # it to something...
 set(YOBUILD "/opt/yobuild")
 
+# Rather than just hardcoding "plasma", have a variable for it:
+set(PRODNAME "plasma")
+
 # Auto-detect if legacy mode needed
 if(NOT DEFINED PLASMA_LEGACY_MODE)
     # Check compiler version
@@ -395,15 +398,15 @@ MACRO(pod2manhtml _sourcefile _manext)
     add_custom_command(
         OUTPUT ${doc_bindir}/${_outman}
         DEPENDS ${_sourcefile}
-        COMMAND ${pod2mancmd} "--section=${_manext}" "--center=Oblong Industries" "--release=g-speak ${VERSION}" "${_abssourcefile}" "${_doc_bindir}/${_outman}"
+        COMMAND ${pod2mancmd} "--section=${_manext}" "--center=User Commands" "--release=${PRODNAME} ${VERSION}" "${_abssourcefile}" "${_doc_bindir}/${_outman}"
         COMMAND ${pod2htmlcmd} "--infile=${_abssourcefile}" "--outfile=${_doc_bindir}/htmlman/${_outhtml}"
         COMMAND ${indexcmd} -o ${_doc_bindir}/index.html ${_doc_bindir}/htmlman/*-man.html
         VERBATIM
     )
-    INSTALL(FILES ${doc_bindir}/htmlman/${_outhtml} DESTINATION share/doc/g-speak/htmlman )
+    INSTALL(FILES ${doc_bindir}/htmlman/${_outhtml} DESTINATION share/doc/${PRODNAME}/htmlman )
     INSTALL(FILES ${doc_bindir}/${_outman}          DESTINATION share/man/man${_manext} )
 ENDMACRO(pod2manhtml)
-INSTALL(FILES ${doc_bindir}/index.html DESTINATION share/doc/g-speak )
+INSTALL(FILES ${doc_bindir}/index.html DESTINATION share/doc/${PRODNAME} )
 
 #------------- test support ---------------
 
