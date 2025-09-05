@@ -75,19 +75,29 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DABS_TOP_SRCDIR=\\\"${abs_top_srcdir}\
 #     OUTPUT_VARIABLE PACKAGE_PATCH
 # )
 # set(PACKAGE_VERSION_PATCH "${VERSION}-${PACKAGE_PATCH}")
-# STRING(REPLACE "." ";" VERSION_LIST ${VERSION})
-# LIST(GET VERSION_LIST 0 MAJOR_VERSION)
-# LIST(GET VERSION_LIST 1 MINOR_VERSION)
-# LIST(LENGTH VERSION_LIST VERSION_LIST_LEN)
-# if (VERSION_LIST_LEN LESS 3)
-#   set(MICRO_VERSION 0)
-# else()
-#   LIST(GET VERSION_LIST 2 MICRO_VERSION)
-# endif()
-# execute_process(
-#   COMMAND "perl" "-e" "printf('%u%02u%02u', ${MAJOR_VERSION}, ${MINOR_VERSION}, ${MICRO_VERSION})"
-#   OUTPUT_VARIABLE NUMBER_VERSION
-# )
+
+# For now, just hardcode the version here:
+set (VERSION "5.6.0")
+set (PACKAGE_VERSION_PATCH "${VERSION}")
+
+# And I don't know what was supposed to set PC_VERSION, but it looks
+# like nothing was setting it, so let's set it here:
+set (PC_VERSION "${VERSION}")
+
+# Derive some additional variables from VERSION
+STRING(REPLACE "." ";" VERSION_LIST ${VERSION})
+LIST(GET VERSION_LIST 0 MAJOR_VERSION)
+LIST(GET VERSION_LIST 1 MINOR_VERSION)
+LIST(LENGTH VERSION_LIST VERSION_LIST_LEN)
+if (VERSION_LIST_LEN LESS 3)
+  set(MICRO_VERSION 0)
+else()
+  LIST(GET VERSION_LIST 2 MICRO_VERSION)
+endif()
+execute_process(
+  COMMAND "perl" "-e" "printf('%u%02u%02u', ${MAJOR_VERSION}, ${MINOR_VERSION}, ${MICRO_VERSION})"
+  OUTPUT_VARIABLE NUMBER_VERSION
+)
 
 if(WIN32)
     set(YAML_LIB "-libpath:${YOBUILD}/lib;yaml.lib")
@@ -537,23 +547,27 @@ endif()
 
 # Variables set kludgily, in alphabetical order (FIXME)
 
+# comment out all of this git stuff for now...
 # GIT_VERSION
 #GIT_VERSION="$_describe\\n$_git_line_2\\n$_git_line_3"
-exec_program(
-    "git"
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ARGS "describe" "--long"
-    OUTPUT_VARIABLE GIT_VERSION )
-STRING(REGEX REPLACE "^.*-" "" PACKAGE_SHA ${GIT_VERSION})
-
+# exec_program(
+#     "git"
+#     ${CMAKE_CURRENT_SOURCE_DIR}
+#     ARGS "describe" "--long"
+#     OUTPUT_VARIABLE GIT_VERSION )
+# STRING(REGEX REPLACE "^.*-" "" PACKAGE_SHA ${GIT_VERSION})
+#
 # ABI_VERSION
 # Assume release versions are binary compatible if major and minor are the same.
 # Assume development versions are always incompatible.  (Use SHA as ABI version then.)
-if (GIT_VERSION MATCHES "rel-")
-    set(ABI_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}")
-else()
-    set(ABI_VERSION "${PACKAGE_VERSION_PATCH} ${PACKAGE_SHA}")
-endif()
+# if (GIT_VERSION MATCHES "rel-")
+#     set(ABI_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}")
+# else()
+#     set(ABI_VERSION "${PACKAGE_VERSION_PATCH} ${PACKAGE_SHA}")
+# endif()
+
+# ... and instead just do this:
+set(ABI_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}")
 
 set(UBUNTU_RELEASE "dopey")
 
