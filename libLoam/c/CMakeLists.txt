@@ -99,7 +99,7 @@ endif()
 ObGeneratePC (
   NAME libLoam
   VERSION ${PC_VERSION}
-  DESCRIPTION "Part of Oblong's g-speak Spatial Operating Environment"
+  DESCRIPTION "General utility functions"
   LIBS "-L${CMAKE_INSTALL_PREFIX}/lib -Wl,-rpath,${CMAKE_INSTALL_PREFIX}/lib -lLoam ${PLATFORM_LINK_LIBS} ${SANITIZER_FLAGS}"
   CFLAGS "-I${YOBUILD}/include -I${CMAKE_INSTALL_PREFIX}/include ${PTHREAD_OPT} ${SANITIZER_FLAGS}"
 )
