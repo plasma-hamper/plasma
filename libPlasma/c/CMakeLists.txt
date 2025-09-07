@@ -117,7 +117,7 @@ list(APPEND Plasma_LINK_LIBS Loam)
 ObGeneratePC (
   NAME libPlasma
   VERSION ${PC_VERSION}
-  DESCRIPTION "Part of Oblong's g-speak Spatial Operating Environment"
+  DESCRIPTION "Data serialization and IPC library"
   REQUIRES libLoam
   LIBS "-lPlasma ${YAML_LIB} ${OPENSSL_LIBRARIES}"
 )

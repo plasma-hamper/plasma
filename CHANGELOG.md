@@ -1,3 +1,5 @@
+## Plasma 5.6.0 - released 2025-09-05
+
 * Docker build [#3](https://github.com/plasma-hamper/plasma/pull/3)
 
 * Documentation fixes/improvements
@@ -66,3 +68,18 @@
   `ob_fmt_hex_line()` has been added, which implements this
   functionality.
   [#14](https://github.com/plasma-hamper/plasma/pull/14)
+
+* Fix up various issues with pkg-config files, which were preventing
+  them from working properly with hs-plasma.  Most notably, some paths
+  were the empty string, which caused problems.
+  [#16](https://github.com/plasma-hamper/plasma/pull/16)
+
+* Replace "g-speak" with "plasma" in user-visible messages.  This
+  doesn't change symbols in the API that contain "gspeak", such as
+  `OB_VERSION_OF_GSPEAK` in `ob-vers.h` or `Version_Of::Gspeak` in
+  `ObInfo.h`.
+  [#16](https://github.com/plasma-hamper/plasma/pull/16)
+
+* Hardcode version number in `CMakeLists.txt`, instead of trying to
+  determine it from tag names.
+  [#16](https://github.com/plasma-hamper/plasma/pull/16)

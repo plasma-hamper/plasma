@@ -280,7 +280,9 @@ typedef int64 ob_retort;
  */
 #define OB_DISCONNECTED      OB_CONST_RETORT (-260)
 
-/** Illegal mixing of different versions of g-speak headers and shared libs. */
+/**
+ * Illegal mixing of different versions of Plasma headers and
+ * shared libs. */
 #define OB_VERSION_MISMATCH  OB_CONST_RETORT (-261)
 
 /**

@@ -48,7 +48,7 @@ set(Plasma++_LINK_LIBS ${PLATFORM_LINK_LIBS} Loam Plasma Loam++ ${ICU_LIBRARIES}
 ObGeneratePC (
   NAME libPlasma++
   VERSION ${PC_VERSION}
-  DESCRIPTION "Part of Oblong's g-speak Spatial Operating Environment"
+  DESCRIPTION "Data serialization and IPC library (C++ API)"
   REQUIRES libLoam libLoam++ libPlasma
   LIBS -lPlasma++
 )

@@ -19,7 +19,7 @@
 #endif
 
 // http://www.gnu.org/software/hello/manual/autoconf/Defining-Directories.html
-#ifdef HAVE_CONFIG_H
+#if 1 /* we always have datadir and prefix */
 #include "private/datadir.h"
 #include "private/prefix.h"
 #endif
@@ -409,7 +409,7 @@ const char *ob_get_standard_path (ob_standard_dir dir)
                            generate_path, "%f/share", get_user_gspeak_dir,
 #ifdef _MSC_VER
                            "%f/oblong/share", get_program_files_dir,
-#elif defined(HAVE_CONFIG_H)
+#elif 1 /* we always have datadir and prefix */
                            "%s/oblong", datadir,
 #else
                            "/well/since/you/dont/have/a/config/h/i/dont/know/"
@@ -441,7 +441,7 @@ const char *ob_get_standard_path (ob_standard_dir dir)
           return x;
         return YOBUILD_PREFIX;
       case ob_prefix_dir:
-#if defined(HAVE_CONFIG_H)
+#if 1 /* we always have datadir and prefix */
         return prefix;
 #elif defined(_MSC_VER)
         return cache_path (&cache_windows_prefix, generate_path, "%f/oblong",

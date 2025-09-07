@@ -114,7 +114,7 @@ set(Loam++_LINK_LIBS ${PLATFORM_LINK_LIBS} Loam ${ICU_LIBRARIES} ${Boost_LIBRARI
 ObGeneratePC (
   NAME libLoam++
   VERSION ${PC_VERSION}
-  DESCRIPTION "Part of Oblong's g-speak Spatial Operating Environment"
+  DESCRIPTION "General utility functions (C++ API)"
   # FIXME: use REQUIRES instead of LIBS and CFLAGS for Boost and ICU
   REQUIRES libLoam
   LIBS "-lLoam++ ${Boost_LIBRARIES_SPACE_SEP} ${ICU_LIBRARIES_SPACE_SEP}"

@@ -217,7 +217,7 @@ int main (int argc, char **argv)
       printf ("===================\n");
     }
 
-  print_version (OB_VERSION_OF_GSPEAK, "g-speak");
+  print_version (OB_VERSION_OF_GSPEAK, "plasma");
   print_version (OB_VERSION_OF_ABI, "abi");
   print_version (OB_VERSION_OF_COMPILER, "compiler");
   print_integer ("bit width", 8 * sizeof (void *));

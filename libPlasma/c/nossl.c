@@ -8,7 +8,7 @@
 ob_retort ob_tls_banner (FILE *where)
 {
   ob_banner (where);
-  fprintf (where, "This version of g-speak was built without TLS support.\n");
+  fprintf (where, "This version of plasma was built without TLS support.\n");
   return POOL_NO_TLS;
 }
 
