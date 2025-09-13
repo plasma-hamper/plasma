@@ -80,7 +80,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DABS_TOP_SRCDIR=\\\"${abs_top_srcdir}\
 # set(PACKAGE_VERSION_PATCH "${VERSION}-${PACKAGE_PATCH}")
 
 # For now, just hardcode the version here:
-set (VERSION "5.6.0")
+set (VERSION "5.6.1")
 set (PACKAGE_VERSION_PATCH "${VERSION}")
 
 # And I don't know what was supposed to set PC_VERSION, but it looks

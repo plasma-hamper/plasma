@@ -83,3 +83,8 @@
 * Hardcode version number in `CMakeLists.txt`, instead of trying to
   determine it from tag names.
   [#16](https://github.com/plasma-hamper/plasma/pull/16)
+
+## Plasma 5.6.1 - development version
+
+* Fix cmake std::shuffle detection when compiler defaults to < C++-11.
+  [#17](https://github.com/plasma-hamper/plasma/pull/17)
