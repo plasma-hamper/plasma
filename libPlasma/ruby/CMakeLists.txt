@@ -1,6 +1,6 @@
 # /* (c) 2014 Oblong Industries */
 
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.6.2)
 project(rubyPlasma)
 
 # Avoid cmake warnings on Mac
