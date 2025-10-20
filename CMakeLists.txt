@@ -123,7 +123,7 @@ STRING(REPLACE ";" " " ICU_LIBRARIES_SPACE_SEP "${ICU_LIBRARIES}" )
 # otherwise boost includes optimized and debug versions, which fouls up the build
 set(Boost_USE_DEBUG_RUNTIME FALSE)
 set(BOOST_ROOT ${YOBUILD})
-find_package(Boost REQUIRED COMPONENTS filesystem regex system)
+find_package(Boost REQUIRED COMPONENTS filesystem regex)
 if (NOT WIN32)
     # Using absolute paths to libraries causes great woe in .pc files
     # Instead, use -l flags.   We already have all needed -L and -I flags.
