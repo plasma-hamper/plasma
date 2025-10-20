@@ -87,7 +87,7 @@ OB_PLASMA_API slaw slaw_strings_join_f (slaw strlist, const char *sep);
  * Returns true if s is a slaw string and does not contain any
  * invalid byte sequences for UTF-8.
  */
-OB_PLASMA_API bool slaw_string_is_valid_utf8 (slaw s);
+OB_PLASMA_API bool slaw_string_is_valid_utf8 (bslaw s);
 
 #ifdef __cplusplus
 }
