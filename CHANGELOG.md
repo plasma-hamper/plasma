@@ -88,3 +88,14 @@
 
 * Fix cmake std::shuffle detection when compiler defaults to < C++-11.
   [#17](https://github.com/plasma-hamper/plasma/pull/17)
+
+* Remove `Boost.System` from `find_package(Boost)`.
+  [#18](https://github.com/plasma-hamper/plasma/pull/18)
+
+* Update `cmake_minimum_version` in subprojects to 3.6.2 to match
+  top-level `CMakeLists.txt`.
+  [#18](https://github.com/plasma-hamper/plasma/pull/18)
+
+* Change prototype of `slaw_string_is_valid_utf8()` to
+  accept a `bslaw`, since the argument is constant.
+  [#19](https://github.com/plasma-hamper/plasma/pull/19)
