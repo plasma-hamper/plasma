@@ -187,7 +187,7 @@ slaw slaw_strings_join_slabu_f (slabu *sb, const char *sep)
   return result;
 }
 
-bool slaw_string_is_valid_utf8 (slaw s)
+bool slaw_string_is_valid_utf8 (bslaw s)
 {
   bool invalid, dummy;
 
