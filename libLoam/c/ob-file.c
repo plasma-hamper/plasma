@@ -340,7 +340,10 @@ static int glibc_version (void)
 {
   char *vs = ob_get_version (OB_VERSION_OF_LIBC);
   if (!vs || 0 != strncmp (vs, "glibc ", 6))
+  {
+    free(vs);
     return 0;
+  }
 
   int v[3];
   const int n = parse_version (vs + 6, v);
