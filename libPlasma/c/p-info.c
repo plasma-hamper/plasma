@@ -67,7 +67,7 @@ int main (int argc, char **argv)
   int ret = EXIT_SUCCESS;
   slaw f;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   if (pool_cmd_get_poolname (&cmd, argc, argv, optind))
     usage ();
 
@@ -95,11 +95,10 @@ int main (int argc, char **argv)
         }
       info = protein_ingests (p);
       terminal = slaw_path_get_bool (info, "terminal", true);
-      tort =
-        slaw_to_string_options_f (info, &yaml,
-                                  slaw_map_inline_cl ("tag_numbers", f,
-                                                      "directives", f,
-                                                      "ordered_maps", f, NULL));
+      tort = slaw_to_string_options_f (
+        info, &yaml,
+        slaw_map_inline_cl ("tag_numbers", f, "directives", f, "ordered_maps",
+                            f, NULL));
       protein_free (p);
       if (tort < OB_OK)
         {

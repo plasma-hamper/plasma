@@ -28,8 +28,8 @@ static pool_toc_entry check_entry (const pool_toc_t *pi, pool_timestamp ts,
                                    const pool_toc_entry &low)
 {
   pool_toc_entry l = POOL_TOC_NULL_ENTRY, u = POOL_TOC_NULL_ENTRY;
-  EXPECT_TRUE (pool_toc_find_timestamp (pi, ts, &l, &u)) << "Seeking timestamp "
-                                                         << ts;
+  EXPECT_TRUE (pool_toc_find_timestamp (pi, ts, &l, &u))
+    << "Seeking timestamp " << ts;
   EXPECT_EQ (low, l);
 
   if (!POOL_TOC_ENTRY_NULL_P (l))
@@ -57,12 +57,11 @@ static void check_entry (const pool_toc_t *pi, const pool_toc_entry &entry)
 
 // Fixtures
 
-pool_toc_entry test_data[] = {{0, 1, 0.11},        {1, 19, 0.2},
-                              {2, 21, 0.33},       {3, 31, 50.40002},
-                              {4, 32, 284.6},      {5, 33, 3231.0216},
-                              {6, 42, 3233},       {7, 543, 3233.001},
-                              {8, 552, 3240.2},    {9, 6000, 10000.1},
-                              {10, 6001, 10000.2}, {11, 6002, 10001.1}};
+pool_toc_entry test_data[] = {
+  {0, 1, 0.11},       {1, 19, 0.2},        {2, 21, 0.33},
+  {3, 31, 50.40002},  {4, 32, 284.6},      {5, 33, 3231.0216},
+  {6, 42, 3233},      {7, 543, 3233.001},  {8, 552, 3240.2},
+  {9, 6000, 10000.1}, {10, 6001, 10000.2}, {11, 6002, 10001.1}};
 
 static const unt64 TESTDN = sizeof (test_data) / sizeof (test_data[0]);
 
@@ -148,9 +147,8 @@ TEST (TocUnitTest, Monotonic)
         (i < TESTDN - 1) ? test_data[i + 1].stamp - test_data[i].stamp : 1;
       for (int k = 0; k < K; ++k)
         {
-          pool_toc_entry e =
-            check_entry (pi, test_data[i].stamp + SHIFTS[k] * delta,
-                         test_data[i]);
+          pool_toc_entry e = check_entry (
+            pi, test_data[i].stamp + SHIFTS[k] * delta, test_data[i]);
           if (i < TESTDN - 1)
             EXPECT_EQ (e, test_data[i + 1]);
           else
@@ -162,16 +160,14 @@ TEST (TocUnitTest, Monotonic)
         {
           if (i > 0)
             {
-              pool_toc_entry e =
-                check_entry (pi, test_data[i].stamp - SHIFTS[k] * delta,
-                             test_data[i - 1]);
+              pool_toc_entry e = check_entry (
+                pi, test_data[i].stamp - SHIFTS[k] * delta, test_data[i - 1]);
               EXPECT_EQ (e, test_data[i]);
             }
           else
             {
-              pool_toc_entry e =
-                check_entry (pi, test_data[0].stamp - SHIFTS[k],
-                             POOL_TOC_NULL_ENTRY);
+              pool_toc_entry e = check_entry (
+                pi, test_data[0].stamp - SHIFTS[k], POOL_TOC_NULL_ENTRY);
               EXPECT_EQ (e, test_data[0]);
             }
         }

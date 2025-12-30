@@ -354,7 +354,7 @@ ob_retort ob_ossl_create_context (method_func mfun, SSL_CTX **ctx_out)
         | SSL_OP_NO_TLSv1
         | SSL_OP_NO_TLSv1_1
         ;
-// clang-format on
+      // clang-format on
 
 #ifdef SSL_OP_NO_TLSv1_3
       /* (partially?) work around hang in openssl 1.1.1b.
@@ -482,8 +482,9 @@ static void *ossl_common_thread_main (void *v)
   OB_LOG_DEBUG_CODE (0x20500005, "started new thread\n");
   transfer_entropy ();
   t[1] = ob_monotonic_time ();
-  OB_LOG_DEBUG_CODE (0x20500006, "entropy transfer took %" OB_FMT_64 "u ns\n"
-                                 "performing handshake\n",
+  OB_LOG_DEBUG_CODE (0x20500006,
+                     "entropy transfer took %" OB_FMT_64 "u ns\n"
+                     "performing handshake\n",
                      t[1] - t[0]);
   long err509;
   long ssl_error = 0;
@@ -512,13 +513,13 @@ static void *ossl_common_thread_main (void *v)
       const int interpretation = SSL_get_error (args.B, ret);
       char *errstack = ob_ossl_err_as_string ();
       char buf[160];
-      OB_LOG_ERROR_CODE (0x20500007, "SSL handshake error!\n"
-                                     "ret was %d, interpretation was %s\n"
-                                     "%s",
+      OB_LOG_ERROR_CODE (0x20500007,
+                         "SSL handshake error!\n"
+                         "ret was %d, interpretation was %s\n"
+                         "%s",
                          ret,
-                         ob_ossl_interpretation_as_string (buf, sizeof (buf),
-                                                           interpretation,
-                                                           erryes),
+                         ob_ossl_interpretation_as_string (
+                           buf, sizeof (buf), interpretation, erryes),
                          errstack);
       free (errstack);
       t[2] = erryes;
@@ -540,19 +541,19 @@ static void *ossl_common_thread_main (void *v)
       shrink_spaces (fub, sizeof (fub),
                      SSL_CIPHER_description (SSL_get_current_cipher (args.B),
                                              buf, sizeof (buf)));
-      OB_LOG_INFO_CODE (0x2050000f,
-                        "Connected securely using %s with cipher suite:\n%s",
-                        mangle_version (vers, sizeof (vers),
-                                        SSL_get_version (args.B)),
-                        fub);
+      OB_LOG_INFO_CODE (
+        0x2050000f, "Connected securely using %s with cipher suite:\n%s",
+        mangle_version (vers, sizeof (vers), SSL_get_version (args.B)), fub);
       t[2] = ob_monotonic_time ();
-      OB_LOG_DEBUG_CODE (0x20500008, "handshake took %" OB_FMT_64 "u ns\n"
-                                     "starting data transfer\n",
+      OB_LOG_DEBUG_CODE (0x20500008,
+                         "handshake took %" OB_FMT_64 "u ns\n"
+                         "starting data transfer\n",
                          t[2] - t[1]);
       OREILLY_data_transfer (args.A, args.B);
       t[3] = ob_monotonic_time ();
-      OB_LOG_DEBUG_CODE (0x20500009, "data transfer took %" OB_FMT_64 "u ns\n"
-                                     "cleaning up thread-local data\n",
+      OB_LOG_DEBUG_CODE (0x20500009,
+                         "data transfer took %" OB_FMT_64 "u ns\n"
+                         "cleaning up thread-local data\n",
                          t[3] - t[2]);
     }
 
@@ -733,7 +734,8 @@ ob_retort ob_ossl_launch_thread (int clear_sock, int cipher_sock,
   if (host)
     ob_safe_copy_string (args->host, sizeof (args->host), host);
 
-  const int ptc_ret = pthread_create (thr_out, NULL, ossl_common_thread_main, args);
+  const int ptc_ret =
+    pthread_create (thr_out, NULL, ossl_common_thread_main, args);
   if (ptc_ret != 0)
     return ob_errno_to_retort (ptc_ret);
   return OB_OK;
@@ -814,17 +816,19 @@ ob_retort ob_tls_banner (FILE *where)
   if (0 == strcmp (build_version, run_version))
     fprintf (where, "%s %s\n", run_version, ecc);
   else
-    fprintf (where, "%s (build-time) %s\n"
-                    "                         %s (run-time)\n",
+    fprintf (where,
+             "%s (build-time) %s\n"
+             "                         %s (run-time)\n",
              build_version, ecc, run_version);
 
   fprintf (where,
            "\nCertificate-based ciphersuites can be customized "
            "with " OB_CIPHER_SUITES " environment variable.\nCurrently: %s\n",
            get_authenticated_ciphers ());
-  fprintf (where, "\nAnonymous ciphersuites can be customized "
-                  "with " OB_CIPHER_SUITES_ANON
-                  " environment variable.\nCurrently: %s\n",
+  fprintf (where,
+           "\nAnonymous ciphersuites can be customized "
+           "with " OB_CIPHER_SUITES_ANON
+           " environment variable.\nCurrently: %s\n",
            get_anonymous_ciphers ());
 
   return OB_OK;
@@ -847,8 +851,9 @@ ob_retort ob_ossl_setup_certs (SSL_CTX *ctx, const char *certificate_chain,
   const char *badfunc;
   const char *badfile;
 
-  OB_LOG_INFO_CODE (0x20500013, "Loading certificate chain from '%s'\n"
-                                "and private key from '%s'\n",
+  OB_LOG_INFO_CODE (0x20500013,
+                    "Loading certificate chain from '%s'\n"
+                    "and private key from '%s'\n",
                     certificate_chain, private_key);
 
   badfunc = "SSL_CTX_use_certificate_chain_file";
@@ -894,7 +899,7 @@ ob_retort ob_ossl_setup_certs (SSL_CTX *ctx, const char *certificate_chain,
   badfile = private_key;
   if (1 != SSL_CTX_check_private_key (ctx))
     {
-    bad:
+bad:
       errstack = ob_ossl_err_as_string ();
       OB_LOG_ERROR_CODE (0x20500014, "certificate unhappiness in %s on %s:\n%s",
                          badfunc, badfile, errstack);

@@ -56,10 +56,8 @@
   OBSERT (NULL != sa2);                                                        \
   OBSERT (NULL != sa3);                                                        \
   OBSERT (NULL != sa4);                                                        \
-  snumcat =                                                                    \
-    slaw_##vt##bt##ct##_arrays_concat_f (slaw_dup (sa1), slaw_dup (sa2),       \
-                                         slaw_dup (sa3), slaw_dup (sa4),       \
-                                         NULL);                                \
+  snumcat = slaw_##vt##bt##ct##_arrays_concat_f (                              \
+    slaw_dup (sa1), slaw_dup (sa2), slaw_dup (sa3), slaw_dup (sa4), NULL);     \
   ptr##vt##bt##ct =                                                            \
     (bt *) ((void *) slaw_##vt##bt##ct##_array_emit (snumcat));                \
                                                                                \

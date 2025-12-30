@@ -10,9 +10,7 @@ namespace plasma {
 namespace detail {
 
 
-AtomicComposite::AtomicComposite (SlawRef s) : slaw_ (s)
-{
-}
+AtomicComposite::AtomicComposite (SlawRef s) : slaw_ (s) {}
 
 bool AtomicComposite::IsNull () const
 {

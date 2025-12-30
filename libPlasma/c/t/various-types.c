@@ -70,11 +70,10 @@ static void add_something (slabu *sb, int what, int how)
         x[2] = slaw_string (strerror (EEXIST));
         x[3] = slaw_string (strerror (ENOENT));
         x[4] = slaw_string (strerror (ENOSPC));
-        s = slaw_map_inline_ff (slaw_string ("EINVAL"), x[0],
-                                slaw_string ("ERANGE"), x[1],
-                                slaw_string ("EEXIST"), x[2],
-                                slaw_string ("ENOENT"), x[3],
-                                slaw_string ("ENOSPC"), x[4], NULL);
+        s = slaw_map_inline_ff (
+          slaw_string ("EINVAL"), x[0], slaw_string ("ERANGE"), x[1],
+          slaw_string ("EEXIST"), x[2], slaw_string ("ENOENT"), x[3],
+          slaw_string ("ENOSPC"), x[4], NULL);
         break;
       case 5:
         s = protein_from_ff (slaw_string ("descrips is not a list!"),
@@ -180,13 +179,12 @@ static void add_something (slabu *sb, int what, int how)
         s = slaw_float64_array_filled (1, 3.14159);
         break;
       case 35:
-        s = protein_from_ff (NULL, slaw_list_inline_c ("descrips", "are",
-                                                       "NULL", NULL));
+        s = protein_from_ff (
+          NULL, slaw_list_inline_c ("descrips", "are", "NULL", NULL));
         break;
       case 36:
-        s =
-          protein_from_ff (slaw_list_inline_c ("ingests", "are", "NULL", NULL),
-                           NULL);
+        s = protein_from_ff (
+          slaw_list_inline_c ("ingests", "are", "NULL", NULL), NULL);
         break;
       case 37:
         b = 10;
@@ -298,9 +296,9 @@ int main (int argc, char **argv)
       fprintf (stderr, "====================\n");
       slaw_spew_overview_to_stderr (s1);
       fprintf (stderr, "\n====================\n");
-      OB_FATAL_ERROR_CODE (0x20317002, "expected %" OB_FMT_64
-                                       "d things and got %" OB_FMT_64 "d\n",
-                           (int64) num_things, (int64) slaw_list_count (s1));
+      OB_FATAL_ERROR_CODE (
+        0x20317002, "expected %" OB_FMT_64 "d things and got %" OB_FMT_64 "d\n",
+        (int64) num_things, (int64) slaw_list_count (s1));
     }
 
   sb = slabu_new ();

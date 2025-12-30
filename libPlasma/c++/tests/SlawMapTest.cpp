@@ -165,12 +165,12 @@ void check_elements (slaw *values, size_t n, const Slaw &m)
 
 TEST_F (SlawMapTest, ExplicitConstructors)
 {
-  slaw sls[14] =
-    {make_slaw (3),       make_slaw (4),         make_slaw ("foo"),
-     make_slaw ("e"),     make_slaw (3.14),      make_slaw (3.14),
-     make_slaw ("bar"),   make_slaw (2),         make_slaw (int64 (2000)),
-     make_slaw ("int64"), make_slaw (unt32 (2)), make_slaw ("aha"),
-     make_slaw ("baz"),   make_slaw (1234543)};
+  slaw sls[14] = {
+    make_slaw (3),       make_slaw (4),         make_slaw ("foo"),
+    make_slaw ("e"),     make_slaw (3.14),      make_slaw (3.14),
+    make_slaw ("bar"),   make_slaw (2),         make_slaw (int64 (2000)),
+    make_slaw ("int64"), make_slaw (unt32 (2)), make_slaw ("aha"),
+    make_slaw ("baz"),   make_slaw (1234543)};
 
   Slaw Sls[14];
   for (size_t i = 0; i < 14; ++i)
@@ -479,10 +479,9 @@ TEST_F (SlawMapTest, Nth)
 
 TEST_F (SlawMapTest, MapOfMaps)
 {
-  Slaw map =
-    Slaw::Map (unt32 (2), Slaw::Map ("blue", unt32 (0), "logo", unt32 (1)),
-               unt32 (3), Slaw::Map ("yellow", unt32 (0), "green", unt32 (1),
-                                     "blue", unt32 (2)));
+  Slaw map = Slaw::Map (
+    unt32 (2), Slaw::Map ("blue", unt32 (0), "logo", unt32 (1)), unt32 (3),
+    Slaw::Map ("yellow", unt32 (0), "green", unt32 (1), "blue", unt32 (2)));
 
   Slaw keys (Slaw::List (unt32 (2), unt32 (3)));
   Slaw vals (Slaw::List (map.Find (unt32 (2)), map.Find (unt32 (3))));

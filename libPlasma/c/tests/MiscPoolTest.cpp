@@ -42,11 +42,9 @@ TEST (MiscPoolTest, ParticipateOptions)
   pool_cmd_options_from_env (&cmd);
   EXPECT_TORTEQ (OB_OK,
                  pool_create (cmd.pool_name, cmd.type, cmd.create_options));
-  protein popt =
-    protein_from_ff (NULL,
-                     slaw_map_inline_cc ("my favorite nonsense phrase",
-                                         "oblolate the syntax information",
-                                         NULL));
+  protein popt = protein_from_ff (
+    NULL, slaw_map_inline_cc ("my favorite nonsense phrase",
+                              "oblolate the syntax information", NULL));
   EXPECT_TORTEQ (OB_OK, pool_participate (cmd.pool_name, &cmd.ph, popt));
   EXPECT_TORTEQ (OB_OK, pool_withdraw (cmd.ph));
   EXPECT_TORTEQ (OB_OK, pool_dispose (cmd.pool_name));
@@ -187,9 +185,9 @@ TEST (MiscPoolTest, ZeroAwaitProbeFrwdNotFound)
   EXPECT_TORTEQ (OB_OK, pool_index (cmd.ph, &expected));
   protein p;
   slaw srch = slaw_string ("bananagram");
-  EXPECT_TORTEQ (POOL_AWAIT_TIMEDOUT,
-                 pool_await_probe_frwd (cmd.ph, srch, POOL_NO_WAIT, &p, NULL,
-                                        NULL));
+  EXPECT_TORTEQ (
+    POOL_AWAIT_TIMEDOUT,
+    pool_await_probe_frwd (cmd.ph, srch, POOL_NO_WAIT, &p, NULL, NULL));
   EXPECT_TORTEQ (OB_OK, pool_index (cmd.ph, &actual));
   // expect index to be unchanged by failed pool_probe_frwd (bug 547 comment 1)
   EXPECT_EQ (expected, actual);
@@ -213,9 +211,9 @@ TEST (MiscPoolTest, NonzeroAwaitProbeFrwdNotFound)
   EXPECT_TORTEQ (OB_OK, pool_index (cmd.ph, &expected));
   protein p;
   slaw srch = slaw_string ("bananagram");
-  EXPECT_EQ (POOL_AWAIT_TIMEDOUT,
-             pool_await_probe_frwd (cmd.ph, srch, 0.0000000001, &p, NULL,
-                                    NULL));
+  EXPECT_EQ (
+    POOL_AWAIT_TIMEDOUT,
+    pool_await_probe_frwd (cmd.ph, srch, 0.0000000001, &p, NULL, NULL));
   EXPECT_TORTEQ (OB_OK, pool_index (cmd.ph, &actual));
   // expect index to be unchanged by failed pool_probe_frwd (bug 547 comment 1)
   EXPECT_EQ (expected, actual);
@@ -308,8 +306,8 @@ TEST (MiscPoolTest, GangManipulation)
                                          cmd.create_options));
       jets_slaw.push_back (pool_name);
       pool_hose ph;
-      EXPECT_TORTEQ (OB_OK, pool_participate (slaw_string_emit (pool_name), &ph,
-                                              NULL));
+      EXPECT_TORTEQ (
+        OB_OK, pool_participate (slaw_string_emit (pool_name), &ph, NULL));
       jets_hoses.push_back (ph);
       EXPECT_TORTEQ (OB_OK, pool_join_gang (gang, ph));
     }
@@ -328,9 +326,10 @@ TEST (MiscPoolTest, GangManipulation)
       sharks_slaw.push_back (pool_name);
     }
 #ifdef HAVE_STD_SHUFFLE
-   std::shuffle(jets_hoses.begin(), jets_hoses.end(), std::mt19937{std::random_device{}()});
+  std::shuffle (jets_hoses.begin (), jets_hoses.end (),
+                std::mt19937{std::random_device{}()});
 #else
-   std::random_shuffle (jets_hoses.begin (), jets_hoses.end ());
+  std::random_shuffle (jets_hoses.begin (), jets_hoses.end ());
 #endif
 
 
@@ -353,7 +352,8 @@ TEST (MiscPoolTest, GangManipulation)
     }
   EXPECT_EQ (5, pool_gang_count (gang));
 #ifdef HAVE_STD_SHUFFLE
-  std::shuffle(sharks_hoses.begin(), sharks_hoses.end(), std::mt19937{std::random_device{}()});
+  std::shuffle (sharks_hoses.begin (), sharks_hoses.end (),
+                std::mt19937{std::random_device{}()});
 #else
   std::random_shuffle (sharks_hoses.begin (), sharks_hoses.end ());
 #endif
@@ -421,12 +421,10 @@ static void *fowl (void *v)
   for (int64 i = 0; i < FOWL_ITERATIONS; i++)
     {
       bool is_goose = (ob_rand_state_float64 (0.0, 1.0, r) > 0.9);
-      protein p =
-        protein_from_ff (slaw_list_inline_c (is_goose ? "goose" : "duck", NULL),
-                         slaw_map_inline_cf ("last-duck",
-                                             slaw_int64 (f->last_duck),
-                                             "last-goose",
-                                             slaw_int64 (f->last_goose), NULL));
+      protein p = protein_from_ff (
+        slaw_list_inline_c (is_goose ? "goose" : "duck", NULL),
+        slaw_map_inline_cf ("last-duck", slaw_int64 (f->last_duck),
+                            "last-goose", slaw_int64 (f->last_goose), NULL));
       int64 idx = -1;
       EXPECT_TORTEQ (OB_OK, pool_deposit (ph, p, &idx));
       EXPECT_EQ (i, idx);
@@ -531,9 +529,8 @@ static void deposit_100_proteins (pool_hose ph)
 
   for (i = 0; i < 100; i++)
     {
-      protein p =
-        protein_from_lf (descrips,
-                         slaw_map_inline_cf ("n", slaw_int64 (i), NULL));
+      protein p = protein_from_lf (
+        descrips, slaw_map_inline_cf ("n", slaw_int64 (i), NULL));
       EXPECT_TORTEQ (OB_OK, pool_deposit (ph, p, NULL));
       protein_free (p);
     }
@@ -1731,8 +1728,8 @@ TEST (MiscPoolTest, ClientCertificateInContext)
   EXPECT_TORTEQ (OB_OK, pool_new_context (&ctx));
   EXPECT_TORTEQ (OB_OK, pool_ctx_set_options (ctx, options));
   pool_cmd_options_from_env (&cmd);
-  EXPECT_TORTEQ (OB_OK, pool_create_ctx (cmd.pool_name, cmd.type,
-                                         cmd.create_options, ctx));
+  EXPECT_TORTEQ (
+    OB_OK, pool_create_ctx (cmd.pool_name, cmd.type, cmd.create_options, ctx));
   EXPECT_TORTEQ (OB_YES, pool_exists_ctx (cmd.pool_name, ctx));
   EXPECT_TORTEQ (OB_OK, pool_dispose_ctx (cmd.pool_name, ctx));
   EXPECT_TORTEQ (OB_NO, pool_exists_ctx (cmd.pool_name, ctx));

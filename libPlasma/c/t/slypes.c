@@ -105,8 +105,9 @@ int main (int ac, char **av)
 
   slaw snull = NULL;
   OBSERT (0 == gantlet_secular (snull, 0, 0, 0, 0, 0, 0));
-  OBSERT (0 == gantlet_ecclesiastical (snull, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                       0, 0, 0, 0, 0, 0));
+  OBSERT (0
+          == gantlet_ecclesiastical (snull, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                     0, 0, 0, 0, 0));
 
 #define NUMPY(typ, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o)                \
   typ n_##typ;                                                                 \
@@ -118,10 +119,12 @@ int main (int ac, char **av)
   OBSERT (slaw_is_##typ (sn));                                                 \
   OBSERT (slaw_is_##typ##_array (sna));                                        \
   OBSERT (!slaw_is_##typ (snull));                                             \
-  OBSERT (0 == gantlet_ecclesiastical (sn, a, b, c, d, e, f, g, h, i, j, k, l, \
-                                       m, n, o, 0, 1));                        \
-  OBSERT (0 == gantlet_ecclesiastical (sna, a, b, c, d, e, f, g, h, i, j, k,   \
-                                       l, m, n, o, 1, 0));                     \
+  OBSERT (0                                                                    \
+          == gantlet_ecclesiastical (sn, a, b, c, d, e, f, g, h, i, j, k, l,   \
+                                     m, n, o, 0, 1));                          \
+  OBSERT (0                                                                    \
+          == gantlet_ecclesiastical (sna, a, b, c, d, e, f, g, h, i, j, k, l,  \
+                                     m, n, o, 1, 0));                          \
   Free_Slaw (sn);                                                              \
   Free_Slaw (sna);
 

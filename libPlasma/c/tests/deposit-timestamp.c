@@ -31,7 +31,7 @@ int mainish (int argc, char *argv[])
   pool_timestamp ret_ts, dep_ts;
   int64 ret_idx, dep_idx;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
 
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
@@ -81,8 +81,9 @@ int mainish (int argc, char *argv[])
 
   if (pret != OB_OK)
     {
-      OB_LOG_ERROR_CODE (0x20402002, "pool_rewind returned %s, "
-                                     "but expected OB_OK\n",
+      OB_LOG_ERROR_CODE (0x20402002,
+                         "pool_rewind returned %s, "
+                         "but expected OB_OK\n",
                          ob_error_string (pret));
       retcode = EXIT_FAILURE;
       goto cleanup;
@@ -92,8 +93,9 @@ int mainish (int argc, char *argv[])
 
   if (pret != OB_OK)
     {
-      OB_LOG_ERROR_CODE (0x20402003, "pool_next returned %s, "
-                                     "but expected OB_OK\n",
+      OB_LOG_ERROR_CODE (0x20402003,
+                         "pool_next returned %s, "
+                         "but expected OB_OK\n",
                          ob_error_string (pret));
       retcode = EXIT_FAILURE;
       goto cleanup;
@@ -101,8 +103,9 @@ int mainish (int argc, char *argv[])
 
   if (ret_idx != dep_idx)
     {
-      OB_LOG_ERROR_CODE (0x20402004, "dep_idx was %" OB_FMT_64
-                                     "d, but ret_idx was %" OB_FMT_64 "d\n",
+      OB_LOG_ERROR_CODE (0x20402004,
+                         "dep_idx was %" OB_FMT_64
+                         "d, but ret_idx was %" OB_FMT_64 "d\n",
                          dep_idx, ret_idx);
       retcode = EXIT_FAILURE;
     }

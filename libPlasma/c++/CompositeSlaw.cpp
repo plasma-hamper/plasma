@@ -73,9 +73,7 @@ void CompositeSlaw::RefTraits::Destroy (CompositeSlaw *s)
 /* ---------------------------------------------------------------------- */
 // Construction
 
-CompositeSlaw::~CompositeSlaw ()
-{
-}
+CompositeSlaw::~CompositeSlaw () {}
 
 
 /* ---------------------------------------------------------------------- */

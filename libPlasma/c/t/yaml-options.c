@@ -16,17 +16,14 @@
 
 static slaw make_map (void)
 {
-  slaw m1 =
-    slaw_map_inline_cc ("mortals", "foolish", "pallor", "cadaverous", "aura",
-                        "foreboding", "metamorphosis", "disquieting",
-                        "observation", "dismaying", NULL);
+  slaw m1 = slaw_map_inline_cc (
+    "mortals", "foolish", "pallor", "cadaverous", "aura", "foreboding",
+    "metamorphosis", "disquieting", "observation", "dismaying", NULL);
 
-  slaw m2 =
-    slaw_map_inline_cf ("no", slaw_list_inline_c ("windows", "doors", NULL),
-                        "challenge", slaw_string ("chilling"), "way",
-                        slaw_list_inline_c ("out", "my", NULL), "frighten",
-                        slaw_string ("prematurely"), "haunts", slaw_int16 (999),
-                        NULL);
+  slaw m2 = slaw_map_inline_cf (
+    "no", slaw_list_inline_c ("windows", "doors", NULL), "challenge",
+    slaw_string ("chilling"), "way", slaw_list_inline_c ("out", "my", NULL),
+    "frighten", slaw_string ("prematurely"), "haunts", slaw_int16 (999), NULL);
 
   slaw m3 = slaw_map_inline_ff (slaw_list_inline_c ("room", "for", NULL),
                                 slaw_unt32 (1000), slaw_string ("volunteers?"),
@@ -55,9 +52,8 @@ static void verify (int id, slaw x, bool (*haunt_func) (bslaw s),
     OB_FATAL_ERROR_CODE (0x20319002, "%d: slaw_is_map (x) was false\n", id);
 
   if ((c = slaw_list_count (x)) != n)
-    OB_FATAL_ERROR_CODE (0x20319003,
-                         "%d: expected count %d but got %" OB_FMT_64 "d\n", id,
-                         n, c);
+    OB_FATAL_ERROR_CODE (
+      0x20319003, "%d: expected count %d but got %" OB_FMT_64 "d\n", id, n, c);
 
   DO_CHECK ("mortals", "foolish");
   DO_CHECK ("pallor", "cadaverous");

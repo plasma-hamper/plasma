@@ -15,10 +15,11 @@
 
 static void usage (void)
 {
-  fprintf (stderr, "Usage: check-stepsize-behavior [-t <type>] [-s <size>] "
-                   "[-i <toc cap>] <pool_name>\n"
-                   "\t<type> defaults to \"mmap\"\n"
-                   "\t<size> defaults to %" OB_FMT_64 "u bytes\n",
+  fprintf (stderr,
+           "Usage: check-stepsize-behavior [-t <type>] [-s <size>] "
+           "[-i <toc cap>] <pool_name>\n"
+           "\t<type> defaults to \"mmap\"\n"
+           "\t<size> defaults to %" OB_FMT_64 "u bytes\n",
            (unt64) POOL_MMAP_DEFAULT_SIZE);
   exit (EXIT_FAILURE);
 }
@@ -31,7 +32,7 @@ static int mainish (int argc, char **argv)
   protein terminal_info = NULL;
   unt64 stepsize;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
 
   while ((c = getopt (argc, argv, "i:s:t:v")) != -1)
     {
@@ -68,15 +69,12 @@ static int mainish (int argc, char **argv)
 
   // Let's make a protein slightly bigger than half the pool
   int ret = EXIT_SUCCESS;
-  protein p =
-    protein_from_ff (slaw_list_inline_c ("There should be room for one of",
-                                         "these proteins, but not two of",
-                                         "these proteins in the pool at once.",
-                                         NULL),
-                     slaw_map_inline_cf ("very large array",
-                                         slaw_int8_array_filled (cmd.size / 2,
-                                                                 -1),
-                                         NULL));
+  protein p = protein_from_ff (
+    slaw_list_inline_c ("There should be room for one of",
+                        "these proteins, but not two of",
+                        "these proteins in the pool at once.", NULL),
+    slaw_map_inline_cf ("very large array",
+                        slaw_int8_array_filled (cmd.size / 2, -1), NULL));
 
   for (idx = 0; idx < cmd.toc_capacity * 10; idx++)
     if (OB_OK != (pret = pool_deposit (cmd.ph, p, NULL)))

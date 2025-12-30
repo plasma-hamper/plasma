@@ -29,10 +29,11 @@ int OREILLY_verify_callback (int ok, X509_STORE_CTX *store)
       X509_NAME_oneline (X509_get_issuer_name (cert), issuer, sizeof (issuer));
       X509_NAME_oneline (X509_get_subject_name (cert), subject,
                          sizeof (subject));
-      OB_LOG_ERROR_CODE (0x20503000, "-Error with certificate at depth: %i\n"
-                                     "  issuer   = %s\n"
-                                     "  subject  = %s\n"
-                                     "  err %i:%s\n",
+      OB_LOG_ERROR_CODE (0x20503000,
+                         "-Error with certificate at depth: %i\n"
+                         "  issuer   = %s\n"
+                         "  subject  = %s\n"
+                         "  err %i:%s\n",
                          depth, issuer, subject, err,
                          X509_verify_cert_error_string (err));
     }
@@ -52,9 +53,8 @@ long OREILLY_post_connection_check (SSL *ssl, const char *host, bool anon_ok)
     {
       if (anon_ok)
         return X509_V_OK;
-      OB_LOG_ERROR_CODE (0x20503001,
-                         "certificate is required, but %s doesn't have one\n",
-                         host);
+      OB_LOG_ERROR_CODE (
+        0x20503001, "certificate is required, but %s doesn't have one\n", host);
       goto err_occurred;
     }
   if ((extcount = X509_get_ext_count (cert)) > 0)

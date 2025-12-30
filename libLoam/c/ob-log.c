@@ -409,7 +409,7 @@ static void process_word (ob_log_level **levp, const char *word)
         maxcount = strtoll (p, &endp, 10);
       if (*endp)
         {
-        bad:
+bad:
           OB_LOG_ERROR_CODE (0x10060002, "unrecognized '%s'; try OB_LOG=help\n",
                              word);
         }
@@ -565,7 +565,12 @@ static ob_log_rule *ob_log_find_rule (ob_log_level *lvl, unt64 code)
   return rul;
 }
 
-typedef enum should_print_t { PRINT_NO, PRINT_YES, PRINT_FINAL } should_print_t;
+typedef enum should_print_t
+{
+  PRINT_NO,
+  PRINT_YES,
+  PRINT_FINAL
+} should_print_t;
 
 static void masked_format (char buf[17], unt64 code, unt8 matchbits)
 {
@@ -966,64 +971,73 @@ static ob_log_rule deprecation_dont_limit_code_zero = {
   NULL                                  // uniques
 };
 
-ob_log_level oblv_bug = {OB_DST_FD | OB_DST_VALGRIND | OB_FLG_STACK_TRACE
-                           | OB_FLG_SHOW_CODE_OR_WHERE
-                           | OB_FLG_SHOW_TID_NONMAIN,
-                         OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED
-                           | OB_FOREGROUND_BLUE, /* magenta */
-                         LOG_ERR,
-                         2, "programming error: ", NULL, NULL, NULL, NULL};
+ob_log_level oblv_bug = {
+  OB_DST_FD | OB_DST_VALGRIND | OB_FLG_STACK_TRACE | OB_FLG_SHOW_CODE_OR_WHERE
+    | OB_FLG_SHOW_TID_NONMAIN,
+  OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED | OB_FOREGROUND_BLUE, /* magenta */
+  LOG_ERR,
+  2,
+  "programming error: ",
+  NULL,
+  NULL,
+  NULL,
+  NULL};
 
-ob_log_level oblv_error =
-  {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
-   LOG_ERR,
-   2,
-   "error: ",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+ob_log_level oblv_error = {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE
+                             | OB_FLG_SHOW_TID_NONMAIN,
+                           OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
+                           LOG_ERR,
+                           2,
+                           "error: ",
+                           NULL,
+                           NULL,
+                           NULL,
+                           NULL};
 
-ob_log_level oblv_deprecation =
-  {OB_DST_FD | OB_DST_VALGRIND | OB_FLG_STACK_TRACE | OB_FLG_SHOW_CODE_OR_WHERE
-     | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN | OB_FOREGROUND_BLUE, /* cyan */
-   LOG_WARNING, 2, "deprecation: ", NULL, NULL,
-   &deprecation_dont_limit_code_zero, NULL};
+ob_log_level oblv_deprecation = {
+  OB_DST_FD | OB_DST_VALGRIND | OB_FLG_STACK_TRACE | OB_FLG_SHOW_CODE_OR_WHERE
+    | OB_FLG_SHOW_TID_NONMAIN,
+  OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN | OB_FOREGROUND_BLUE, /* cyan */
+  LOG_WARNING,
+  2,
+  "deprecation: ",
+  NULL,
+  NULL,
+  &deprecation_dont_limit_code_zero,
+  NULL};
 
-ob_log_level oblv_wrnu =
-  {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED | OB_FOREGROUND_GREEN, /* yellow */
-   LOG_WARNING,
-   2,
-   "warning: ",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+ob_log_level oblv_wrnu = {
+  OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
+  OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED | OB_FOREGROUND_GREEN, /* yellow */
+  LOG_WARNING,
+  2,
+  "warning: ",
+  NULL,
+  NULL,
+  NULL,
+  NULL};
 
-ob_log_level oblv_info =
-  {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_BLUE, /* blue */
-   LOG_INFO,
-   2,
-   "info: ",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+ob_log_level oblv_info = {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE
+                            | OB_FLG_SHOW_TID_NONMAIN,
+                          OB_FOREGROUND_ENABLE | OB_FOREGROUND_BLUE, /* blue */
+                          LOG_INFO,
+                          2,
+                          "info: ",
+                          NULL,
+                          NULL,
+                          NULL,
+                          NULL};
 
-ob_log_level oblv_dbug =
-  {OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
-   LOG_DEBUG,
-   2,
-   "dbg: ",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+ob_log_level oblv_dbug = {OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
+                          OB_FOREGROUND_ENABLE
+                            | OB_FOREGROUND_GREEN, /* green */
+                          LOG_DEBUG,
+                          2,
+                          "dbg: ",
+                          NULL,
+                          NULL,
+                          NULL,
+                          NULL};
 
 typedef struct time_cache
 {
@@ -1059,9 +1073,9 @@ void ob_log_loc_v (const char *file, int lineno, ob_log_level *lvl, unt64 code,
 
   if (PRINT_FINAL == sp)
     {
-      int vasret = asprintf (&msg, "rule %s reached maximum count %" OB_FMT_64
-                                   "d; suppressing\n",
-                             supcode, maxed_out);
+      int vasret = asprintf (
+        &msg, "rule %s reached maximum count %" OB_FMT_64 "d; suppressing\n",
+        supcode, maxed_out);
       if (vasret >= 0)
         {
           ob_log_internal (flags, &now, 1, 1, file, lineno, lvl, code, msg);
@@ -1250,7 +1264,7 @@ static void ob_log_internal (int32 flags, time_cache *now, int64 nline,
   if (docolor)
     cap += strlen (colorbuf) + 4;
 
-  const char * final = NULL;
+  const char *final = NULL;
   char *line = NULL;
   // need to overwrite newline if using syslog; must copy in that case
   if (0 == cap && 0 == (flags & OB_DST_SYSLOG))
@@ -1296,17 +1310,17 @@ static void ob_log_internal (int32 flags, time_cache *now, int64 nline,
       final = line;
     }
 
-// On UNIX, we put everything (including the ANSI color codes)
-// together in a single string, and output it with a single
-// call to write(), so as long as it's shorter than PIPE_BUF,
-// we're guaranteed by POSIX that it will be atomic.  (Which means
-// really long messages, like the "Ctenophore turd" message,
-// might interleave, but most reasonable messages will not,
-// since PIPE_BUF appears to be 512 on OS X and 4096 on Linux.)
-// On Windows, we still put everything in one string, but the
-// color changing has to be done with separate API calls, so there's
-// a risk of interleaving between threads.  To avoid that possibility,
-// we use a critical section on Windows.
+    // On UNIX, we put everything (including the ANSI color codes)
+    // together in a single string, and output it with a single
+    // call to write(), so as long as it's shorter than PIPE_BUF,
+    // we're guaranteed by POSIX that it will be atomic.  (Which means
+    // really long messages, like the "Ctenophore turd" message,
+    // might interleave, but most reasonable messages will not,
+    // since PIPE_BUF appears to be 512 on OS X and 4096 on Linux.)
+    // On Windows, we still put everything in one string, but the
+    // color changing has to be done with separate API calls, so there's
+    // a risk of interleaving between threads.  To avoid that possibility,
+    // we use a critical section on Windows.
 
 #ifdef _MSC_VER
   if (needlocking)
@@ -1505,8 +1519,9 @@ static void summarize_suppressions (const ob_log_rule *rul, ob_log_level *dst)
           char buf[17];
 
           masked_format (buf, rul->code, rul->matchbits);
-          ob_log (dst, 0, "rule %s matched %" OB_FMT_64
-                          "d times; suppressed after %" OB_FMT_64 "d\n",
+          ob_log (dst, 0,
+                  "rule %s matched %" OB_FMT_64
+                  "d times; suppressed after %" OB_FMT_64 "d\n",
                   buf, count, maxcount);
         }
       const ob_log_rule *uni = ob_atomic_pointer_ref (&rul->uniques);
@@ -1515,16 +1530,16 @@ static void summarize_suppressions (const ob_log_rule *rul, ob_log_level *dst)
     }
 }
 
-static ob_log_level oblv_supp =
-  {OB_DST_FD | OB_FLG_SHOW_PROG | OB_FLG_SHOW_PID,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
-   LOG_INFO,
-   2,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level oblv_supp = {OB_DST_FD | OB_FLG_SHOW_PROG | OB_FLG_SHOW_PID,
+                                 OB_FOREGROUND_ENABLE
+                                   | OB_FOREGROUND_GREEN, /* green */
+                                 LOG_INFO,
+                                 2,
+                                 "",
+                                 NULL,
+                                 NULL,
+                                 NULL,
+                                 NULL};
 
 /// This implements bug 767
 static void ob_log_bye (void)

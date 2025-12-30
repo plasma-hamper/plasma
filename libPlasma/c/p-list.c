@@ -119,8 +119,8 @@ static slaw summarize_info (const char *poolName)
     }
 
   if (istep > 0)
-    slabu_list_add_x (sb, slaw_string_format ("%s*%" OB_FMT_64 "d", flag_str,
-                                              istep));
+    slabu_list_add_x (
+      sb, slaw_string_format ("%s*%" OB_FMT_64 "d", flag_str, istep));
   else if (flag_str[0] != 0)
     slabu_list_add_x (sb, slaw_string (flag_str));
 
@@ -196,10 +196,11 @@ int main (int argc, char **argv)
     {
       if (tort == POOL_POOLNAME_BADTH)
         {
-          fprintf (stderr, "'%s' was not acceptable:\nA remote poolserver "
-                           "URI should be of the form tcp://host[:port]/\n"
-                           "e. g. tcp://redbean.oblong.com/ or "
-                           "tcp://squash.local:1234/\n",
+          fprintf (stderr,
+                   "'%s' was not acceptable:\nA remote poolserver "
+                   "URI should be of the form tcp://host[:port]/\n"
+                   "e. g. tcp://redbean.oblong.com/ or "
+                   "tcp://squash.local:1234/\n",
                    server);
         }
       else

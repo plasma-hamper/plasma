@@ -19,24 +19,25 @@ static ob_once_t ossl_client_once_control = OB_ONCE_INIT;
 
 static void init_client_context (void)
 {
-  ossl_client_init_client_retort = ob_ossl_create_context (SSLv23_client_method, &ossl_client_context);
+  ossl_client_init_client_retort =
+    ob_ossl_create_context (SSLv23_client_method, &ossl_client_context);
   if (ossl_client_init_client_retort >= OB_OK)
     {
       if (ob_tls_num_cert_authorities > 0)
-        SSL_CTX_set_verify (ossl_client_context, SSL_VERIFY_PEER, OREILLY_verify_callback);
+        SSL_CTX_set_verify (ossl_client_context, SSL_VERIFY_PEER,
+                            OREILLY_verify_callback);
       else
         ossl_client_init_client_retort = POOL_ANONYMOUS_ONLY;
 
-      char *certificate_chain =
-        ob_resolve_standard_path (ob_etc_path, "client-certificate-chain.pem",
-                                  "RF");
+      char *certificate_chain = ob_resolve_standard_path (
+        ob_etc_path, "client-certificate-chain.pem", "RF");
       char *private_key =
         ob_resolve_standard_path (ob_etc_path, "client-private-key.pem", "RF");
       if (certificate_chain && private_key)
         {
           int dmy; /* unused */
-          ob_retort tort =
-            ob_ossl_setup_certs (ossl_client_context, certificate_chain, private_key, &dmy);
+          ob_retort tort = ob_ossl_setup_certs (
+            ossl_client_context, certificate_chain, private_key, &dmy);
           if (tort < OB_OK)
             ossl_client_init_client_retort = tort;
         }
@@ -47,7 +48,8 @@ static void init_client_context (void)
 
 ob_retort ob_tls_client_available (void)
 {
-  const ob_retort tort = ob_once (&ossl_client_once_control, init_client_context);
+  const ob_retort tort =
+    ob_once (&ossl_client_once_control, init_client_context);
   if (tort < OB_OK)
     return tort;
   return ossl_client_init_client_retort;

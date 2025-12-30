@@ -377,9 +377,9 @@ static void random_str_ops (const char *initial, int32 seed)
             for (j = 1; j < n; j++)
               if (probably (r))
                 {
-                  EXPECT_EQ (c, strs[j]->At (k)) << "j = " << j << ", k = " << k
-                                                 << ", str = '"
-                                                 << strs[j]->utf8 () << "'";
+                  EXPECT_EQ (c, strs[j]->At (k))
+                    << "j = " << j << ", k = " << k << ", str = '"
+                    << strs[j]->utf8 () << "'";
                 }
             break;
           case 3:

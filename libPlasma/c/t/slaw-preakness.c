@@ -488,14 +488,12 @@ int main (int ac, char **av)
   OBSERT (slawx_equal (s6, s6));
 
 
-  protein p =
-    protein_from_ff (slaw_list_inline_c ("scribblers", "major", NULL),
-                     slaw_map_inline_cc ("crank", "William Gaddis",
-                                         "philosopher", "William Gass",
-                                         "savant", "David Foster Wallace",
-                                         "mindman", "Nicholas Mosley",
-                                         "fabulist", "Harry Mathews", "gnarled",
-                                         "Samuel Beckett", NULL));
+  protein p = protein_from_ff (
+    slaw_list_inline_c ("scribblers", "major", NULL),
+    slaw_map_inline_cc ("crank", "William Gaddis", "philosopher",
+                        "William Gass", "savant", "David Foster Wallace",
+                        "mindman", "Nicholas Mosley", "fabulist",
+                        "Harry Mathews", "gnarled", "Samuel Beckett", NULL));
   OBSERT (NULL != p);
   fprintf (stderr, "molesting protein sans mercy...\n");
   slaw s7 = slaw_dup (p);

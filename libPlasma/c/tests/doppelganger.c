@@ -21,7 +21,7 @@ int mainish (int argc, char *argv[])
   pool_cmd_info cmd;
   ob_retort pret;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   // ob_log_to_file ("/dev/tty");
 
   if (pool_cmd_get_poolname (&cmd, argc, argv, optind))
@@ -96,9 +96,10 @@ int mainish (int argc, char *argv[])
   ob_log (OBLV_DBUG, 0x2040300f, "Joining gang with second hose...\n");
   pret = pool_join_gang (crips, cmd2.ph);
   if (pret != OB_OK)
-    OB_FATAL_ERROR_CODE (0x20403010, "Second pool hose for  %s failed to join "
-                                     "gang: %" OB_FMT_RETORT "d"
-                                     "\n",
+    OB_FATAL_ERROR_CODE (0x20403010,
+                         "Second pool hose for  %s failed to join "
+                         "gang: %" OB_FMT_RETORT "d"
+                         "\n",
                          cmd2.pool_name, pret);
 
   protein prot;

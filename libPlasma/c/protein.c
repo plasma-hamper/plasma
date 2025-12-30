@@ -45,9 +45,9 @@ ob_retort protein_fix_endian (protein p)
   else /* not a protein-- this is bad */
     {
       // this pops up in bug 882.
-      OB_LOG_WARNING_CODE (0x20006000, "header oct %016" OB_FMT_64
-                                       "X does not represent a protein\n",
-                           p->o);
+      OB_LOG_WARNING_CODE (
+        0x20006000,
+        "header oct %016" OB_FMT_64 "X does not represent a protein\n", p->o);
       return SLAW_CORRUPT_PROTEIN;
     }
 }
@@ -270,7 +270,7 @@ const void *protein_rude (bprotein prot, int64 *len)
 
       if ((end - prot) * 8 < *len)
         {
-        bad:
+bad:
           *len = 0;
           return NULL;
         }
@@ -310,7 +310,6 @@ int64 protein_search_ex (bprotein haystack, bslaw needle,
         return OB_INVALID_ARGUMENT;
     }
 
-  return (slaw_is_list (needle)
-            ? func
-            : slaw_list_find) (protein_descrips (haystack), needle);
+  return (slaw_is_list (needle) ? func : slaw_list_find) (
+    protein_descrips (haystack), needle);
 }

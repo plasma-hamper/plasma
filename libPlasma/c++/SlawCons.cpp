@@ -50,9 +50,7 @@ SlawRefs ExtractComponents (SlawRef s)
 /* ---------------------------------------------------------------------- */
 // Construction
 
-SlawCons::SlawCons (SlawRef cons) : elements_ (ExtractComponents (cons))
-{
-}
+SlawCons::SlawCons (SlawRef cons) : elements_ (ExtractComponents (cons)) {}
 
 SlawCons::SlawCons (SlawRef car, SlawRef cdr) : elements_ (MakeCons (car, cdr))
 {

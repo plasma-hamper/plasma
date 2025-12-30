@@ -71,7 +71,7 @@ int main (int argc, char **argv)
   slaw ingest;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   // Get our descrips and ingests.  It's okay if we have zero descrips
   // or ingests, null proteins are useful too.
   slabu *descrips = slabu_new ();

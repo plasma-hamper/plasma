@@ -38,9 +38,8 @@ static void *thread_main (void *ignored)
       protein p = protein_from_ff (NULL, ingests);
       OB_DIE_ON_ERROR (pool_deposit (hose, p, &idx));
       if (idx != i)
-        OB_FATAL_ERROR_CODE (0x2040c000,
-                             "idx = %" OB_FMT_64 "d, i = %" OB_FMT_64 "d\n",
-                             idx, i);
+        OB_FATAL_ERROR_CODE (
+          0x2040c000, "idx = %" OB_FMT_64 "d, i = %" OB_FMT_64 "d\n", idx, i);
       OB_DIE_ON_ERROR (pool_oldest_index (hose, &oldest));
       if (oldest > i)
         OB_FATAL_ERROR_CODE (0x2040c001,
@@ -69,7 +68,7 @@ int mainish (int argc, char *argv[])
   int64 proteins_attempted = 0;
   bool valgrind = false;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:S")) != -1)
     {
       switch (c)
@@ -160,9 +159,9 @@ int mainish (int argc, char *argv[])
             }
           if (oldest <= idx)
             {
-              OB_LOG_ERROR_CODE (0x2040c006, "oldest = %" OB_FMT_64
-                                             "d, idx = %" OB_FMT_64 "d\n",
-                                 oldest, idx);
+              OB_LOG_ERROR_CODE (
+                0x2040c006, "oldest = %" OB_FMT_64 "d, idx = %" OB_FMT_64 "d\n",
+                oldest, idx);
               retcode = EXIT_FAILURE;
               goto thread_cleanup;
             }
@@ -179,8 +178,9 @@ int mainish (int argc, char *argv[])
           int64 contents = slaw_path_get_int64 (p, "bad wolf", -456);
           if (contents != idx)
             {
-              OB_LOG_ERROR_CODE (0x2040c008, "contents = %" OB_FMT_64
-                                             "d, idx = %" OB_FMT_64 "d\n",
+              OB_LOG_ERROR_CODE (0x2040c008,
+                                 "contents = %" OB_FMT_64 "d, idx = %" OB_FMT_64
+                                 "d\n",
                                  contents, idx);
               retcode = EXIT_FAILURE;
               goto thread_cleanup;

@@ -22,7 +22,8 @@ static bool yeah_i_got_called = false;
 
 static void cback_func (const struct ob_log_level *lvl, unt64 code, float64 t,
                         int64 lnum, int64 lcount, const char *file, int line,
-                        const char *msg, const char *fmtdmsg, OB_UNUSED const char *stack)
+                        const char *msg, const char *fmtdmsg,
+                        OB_UNUSED const char *stack)
 {
   if (code != 0xc0de)
     error_exit ("code was %" OB_FMT_64 "x\n", code);
@@ -62,78 +63,80 @@ static void cback_func (const struct ob_log_level *lvl, unt64 code, float64 t,
   yeah_i_got_called = true;
 }
 
-static ob_log_level blue_plain =
-  {OB_DST_FD,     OB_FOREGROUND_ENABLE | OB_FOREGROUND_BLUE, /* blue */
-   LOG_INFO,      1,
-   "blue text: ", NULL,
-   NULL,          NULL, NULL};
+static ob_log_level blue_plain = {
+  OB_DST_FD,     OB_FOREGROUND_ENABLE | OB_FOREGROUND_BLUE, /* blue */
+  LOG_INFO,      1,
+  "blue text: ", NULL,
+  NULL,          NULL,
+  NULL};
 
 static ob_log_level totally_plain = {OB_DST_FD, 0, /* no color */
                                      LOG_INFO,  1, "", NULL, NULL, NULL, NULL};
 
-static ob_log_level red_error =
-  {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
-   LOG_ERR,
-   1,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level red_error = {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE,
+                                 OB_FOREGROUND_ENABLE
+                                   | OB_FOREGROUND_RED, /* red */
+                                 LOG_ERR,
+                                 1,
+                                 "",
+                                 NULL,
+                                 NULL,
+                                 NULL,
+                                 NULL};
 
-static ob_log_level green_prog =
-  {OB_DST_FD | OB_FLG_SHOW_PROG | OB_FLG_SHOW_PID,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
-   LOG_INFO,
-   1,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level green_prog = {
+  OB_DST_FD | OB_FLG_SHOW_PROG | OB_FLG_SHOW_PID,
+  OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
+  LOG_INFO,
+  1,
+  "",
+  NULL,
+  NULL,
+  NULL,
+  NULL};
 
-static ob_log_level stack_trace =
-  {OB_DST_FD | OB_FLG_SHOW_TIME | OB_FLG_SHOW_WHERE | OB_FLG_STACK_TRACE,
-   0, /* no color */
-   LOG_INFO,
-   1,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level stack_trace = {OB_DST_FD | OB_FLG_SHOW_TIME
+                                     | OB_FLG_SHOW_WHERE | OB_FLG_STACK_TRACE,
+                                   0, /* no color */
+                                   LOG_INFO,
+                                   1,
+                                   "",
+                                   NULL,
+                                   NULL,
+                                   NULL,
+                                   NULL};
 
-static ob_log_level cyan_syslog =
-  {OB_DST_FD | OB_DST_SYSLOG,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN | OB_FOREGROUND_BLUE, /* cyan */
-   LOG_INFO,
-   1,
-   "this is only a test: ",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level cyan_syslog = {OB_DST_FD | OB_DST_SYSLOG,
+                                   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN
+                                     | OB_FOREGROUND_BLUE, /* cyan */
+                                   LOG_INFO,
+                                   1,
+                                   "this is only a test: ",
+                                   NULL,
+                                   NULL,
+                                   NULL,
+                                   NULL};
 
-static ob_log_level limited =
-  {OB_DST_FD, OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
-   LOG_INFO,  1,
-   "",        NULL,
-   NULL,      NULL, NULL};
+static ob_log_level limited = {
+  OB_DST_FD, OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
+  LOG_INFO,  1,
+  "",        NULL,
+  NULL,      NULL,
+  NULL};
 
 static ob_log_level limited2 = {OB_DST_FD, 0, /* no color */
                                 LOG_INFO,  1, "foo: ", NULL, NULL, NULL, NULL};
 
-static ob_log_level callback =
-  {OB_DST_FD | OB_DST_CALLBACK | OB_FLG_SHOW_CODE,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_GREEN, /* green */
-   LOG_INFO,
-   1,
-   "",
-   cback_func,
-   (void *) "monster",
-   NULL,
-   NULL};
+static ob_log_level callback = {OB_DST_FD | OB_DST_CALLBACK | OB_FLG_SHOW_CODE,
+                                OB_FOREGROUND_ENABLE
+                                  | OB_FOREGROUND_GREEN, /* green */
+                                LOG_INFO,
+                                1,
+                                "",
+                                cback_func,
+                                (void *) "monster",
+                                NULL,
+                                NULL};
 
 #define LINE(f, b)                                                             \
   errno = 0;                                                                   \
@@ -423,16 +426,17 @@ int main (int argc, char **argv)
   ob_log (&totally_plain, 0, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", 1, 2,
           3, 4, 5, 6, 7, 8, 9, 10);
 
-  ob_log (&totally_plain, 0, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
-                             "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
+  ob_log (&totally_plain, 0,
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n"
+          "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
           1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
           21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
           38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54,

@@ -119,9 +119,8 @@ static slaw list_children (void)
   int64 i;
   for (i = 0; children_alive && i < slabu_count (children_alive); i++)
     slabu_list_add_x (sb, slaw_string_format ("%" OB_FMT_64 "d",
-                                              *slaw_int64_emit (
-                                                slabu_list_nth (children_alive,
-                                                                i))));
+                                              *slaw_int64_emit (slabu_list_nth (
+                                                children_alive, i))));
   return slaw_strings_join_slabu_f (sb, ",");
 }
 
@@ -177,11 +176,9 @@ static void initialize_logging (void)
                              pname, ob_error_string (tort));
           return;
         }
-      tort =
-        ob_log_to_pool (ph, true, OBLV_BUG, OBLV_ERROR, OBLV_DEPRECATION,
-                        OBLV_WRNU, OBLV_INFO,
-                        ob_log_is_level_enabled (OBLV_DBUG) ? OBLV_DBUG : NULL,
-                        NULL);
+      tort = ob_log_to_pool (
+        ph, true, OBLV_BUG, OBLV_ERROR, OBLV_DEPRECATION, OBLV_WRNU, OBLV_INFO,
+        ob_log_is_level_enabled (OBLV_DBUG) ? OBLV_DBUG : NULL, NULL);
       if (tort < OB_OK)
         OB_LOG_ERROR_CODE (0x2010903f, "Can't log to '%s' because '%s'\n",
                            pname, ob_error_string (tort));
@@ -193,8 +190,9 @@ static void reap_children (void);
 
 static void print_pid (int pid)
 {
-  OB_LOG_DEBUG_CODE (0x2010902c, "pid = %d, port = %d\n"
-                                 "pools dir = '%s'\n",
+  OB_LOG_DEBUG_CODE (0x2010902c,
+                     "pid = %d, port = %d\n"
+                     "pools dir = '%s'\n",
                      pid, actual_port, ob_get_standard_path (ob_pools_dir));
 
   if (!pidfile)
@@ -290,8 +288,9 @@ static ob_retort welcome_new_version (pool_net_data *net,
   if (advertise_starttls)
     cmds |= (OB_CONST_U64 (1) << POOL_CMD_STARTTLS);
 
-  OB_LOG_DEBUG_CODE (0x2010902f, "net version = %d, slaw version = %d, cmd "
-                                 "mask = 0x%" OB_FMT_64 "x\n",
+  OB_LOG_DEBUG_CODE (0x2010902f,
+                     "net version = %d, slaw version = %d, cmd "
+                     "mask = 0x%" OB_FMT_64 "x\n",
                      net->net_version, net->slaw_version, cmds);
 
   byte welcome[12];
@@ -388,17 +387,13 @@ static void convert_slaw_to_fetch_ops (bslaw s, pool_fetch_op *ops, int64 nops)
 static slaw convert_fetch_op_to_slaw (pool_fetch_op ops)
 {
   // XXX: make some of these conditional as described in pool-tcp-protocol.txt?
-  return slaw_map_inline_cf ("idx",    slaw_int64 (ops.idx),
-                             "retort", slaw_int64 (ops.tort),
-                             "time",   slaw_float64 (ops.ts),
-                             "tbytes", slaw_int64 (ops.total_bytes),
-                             "dbytes", slaw_int64 (ops.descrip_bytes),
-                             "ibytes", slaw_int64 (ops.ingest_bytes),
-                             "rbytes", slaw_int64 (ops.rude_bytes),
-                             "ndes",   slaw_int64 (ops.num_descrips),
-                             "ning",   slaw_int64 (ops.num_ingests),
-                             "prot",   ops.p,
-                             NULL);
+  return slaw_map_inline_cf (
+    "idx", slaw_int64 (ops.idx), "retort", slaw_int64 (ops.tort), "time",
+    slaw_float64 (ops.ts), "tbytes", slaw_int64 (ops.total_bytes), "dbytes",
+    slaw_int64 (ops.descrip_bytes), "ibytes", slaw_int64 (ops.ingest_bytes),
+    "rbytes", slaw_int64 (ops.rude_bytes), "ndes",
+    slaw_int64 (ops.num_descrips), "ning", slaw_int64 (ops.num_ingests), "prot",
+    ops.p, NULL);
 }
 
 static slaw convert_fetch_ops_to_slaw (const pool_fetch_op *ops, int64 nops)
@@ -554,9 +549,8 @@ first_command:
           OB_DIE_ON_ERROR (
             ob_socketpair_cloexec (OB_SP_DOMAIN, SOCK_STREAM, 0, pair));
           OB_DIE_ON_ERROR (ob_nosigpipe_sockopt_x2 (pair));
-          OB_DIE_ON_ERROR (
-            ob_tls_server_launch_thread (pair[0], net->connfd, &net->tls_thread,
-                                         !require_tls, client_auth));
+          OB_DIE_ON_ERROR (ob_tls_server_launch_thread (
+            pair[0], net->connfd, &net->tls_thread, !require_tls, client_auth));
           net->connfd = pair[1];
           send_pret = welcome_new_version_tls (net);
           const int e = errno;
@@ -587,9 +581,8 @@ first_command:
           net->net_version = rude_ptr[0];
           net->slaw_version = rude_ptr[1];
           protein_free (op_protein);
-          send_pret =
-            welcome_new_version (net, (allow_tls && (tls_available >= OB_OK)),
-                                 !require_tls);
+          send_pret = welcome_new_version (
+            net, (allow_tls && (tls_available >= OB_OK)), !require_tls);
           int e = errno;
           if (send_pret != OB_OK)
             SUPREME_BADNESS ("negotiating protocol version", send_pret, e);
@@ -772,8 +765,8 @@ first_command:
     }
   else
     {
-    // No other commands are valid.
-    bad_start:
+// No other commands are valid.
+bad_start:
       OB_LOG_ERROR_CODE (0x20109029, "bad starting op %d\n", op_num);
       protein_free (op_protein);
       return;
@@ -1030,16 +1023,18 @@ first_command:
                                           &ret_index);
                 send_pret = pool_net_send_op (net, POOL_CMD_FANCY_RESULT_1,
                                               "rti", pret, ret_ts, ret_index);
-                OB_LOG_DEBUG_CODE (0x20109041, "POOL_CMD_FANCY_RESULT_1 (%s, "
-                                               "%f, %" OB_FMT_64 "d)\n",
+                OB_LOG_DEBUG_CODE (0x20109041,
+                                   "POOL_CMD_FANCY_RESULT_1 (%s, "
+                                   "%f, %" OB_FMT_64 "d)\n",
                                    ob_error_string (pret), ret_ts, ret_index);
                 if (pret >= OB_OK && send_pret >= OB_OK)
                   {
                     send_pret =
                       pool_net_send_op (net, POOL_CMD_FANCY_RESULT_3, "tip",
                                         ret_ts, ret_index, ret_prot);
-                    OB_LOG_DEBUG_CODE (0x20109042, "POOL_CMD_FANCY_RESULT_3 "
-                                                   "(%f, %" OB_FMT_64 "d)\n",
+                    OB_LOG_DEBUG_CODE (0x20109042,
+                                       "POOL_CMD_FANCY_RESULT_3 "
+                                       "(%f, %" OB_FMT_64 "d)\n",
                                        ret_ts, ret_index);
                     protein_free (ret_prot);
                   }
@@ -1049,17 +1044,15 @@ first_command:
                     int64 thingy;
                     func = (unconditional ? always_return_0 : protein_search);
                     pool_seekto (ph, (thingy = (idx > newest ? idx : newest)));
-                    OB_LOG_DEBUG_CODE (0x20109045,
-                                       "set index to %" OB_FMT_64 "d\n",
-                                       thingy);
+                    OB_LOG_DEBUG_CODE (
+                      0x20109045, "set index to %" OB_FMT_64 "d\n", thingy);
                     do
                       {
                         protein_free (ret_prot);
                         OB_LOG_DEBUG_CODE (0x2010903b, "starting await\n");
-                        pret =
-                          pool_net_server_await (ph, net, POOL_WAIT_FOREVER,
-                                                 &ret_prot, &ret_ts,
-                                                 &ret_index);
+                        pret = pool_net_server_await (
+                          ph, net, POOL_WAIT_FOREVER, &ret_prot, &ret_ts,
+                          &ret_index);
                         OB_LOG_DEBUG_CODE (0x2010903c, "finished await\n");
                       }
                     while (pret == OB_OK && func (ret_prot, search) < 0);
@@ -1335,9 +1328,8 @@ static void wait_for_connection (int listenfd)
         }
 
       //spawn a new thread to handle the connection
-      HANDLE new_handle =
-        (HANDLE) _beginthreadex (NULL, 0, connection_thread_entry,
-                                 (void *) connfd, 0, NULL);
+      HANDLE new_handle = (HANDLE) _beginthreadex (
+        NULL, 0, connection_thread_entry, (void *) connfd, 0, NULL);
       if (new_handle != 0)
         {
           //thread creation was successful
@@ -1810,8 +1802,9 @@ static int parse_port (const char *port_str)
   if (*port_str == 0)
     OB_LOG_DEBUG_CODE (0x20109057, "port was empty string\n");
   else if (*endptr != 0)
-    OB_LOG_DEBUG_CODE (0x20109058, "invalid characters '%s' provided "
-                                   "after port number\n",
+    OB_LOG_DEBUG_CODE (0x20109058,
+                       "invalid characters '%s' provided "
+                       "after port number\n",
                        endptr);
   else if (errno != 0)
     OB_LOG_DEBUG_CODE (0x20109059, "invalid port: strtol results in '%s'\n",
@@ -1856,8 +1849,7 @@ static void print_usage (FILE *fp)
   fprintf (fp, "          (but still exit with code %d)\n", EXIT_IN_USE);
   fprintf (fp, "       -p specify port to listen on (default %u)\n",
            POOL_TCP_PORT);
-  fprintf (fp,
-           "       -P choose an unused port automatically, and print\n");
+  fprintf (fp, "       -P choose an unused port automatically, and print\n");
   fprintf (fp, "          the port and PID to the specified file\n");
   fprintf (fp, "       -s number of seconds to wait (on exit) for child\n");
   fprintf (fp, "          processes to die before killing them\n");
@@ -1879,20 +1871,18 @@ static void print_usage (FILE *fp)
   if (have_tls)
     {
       fprintf (fp, "       -S only allow secure connections (using TLS)\n");
-      fprintf (fp,
-               "       -I only allow insecure connections (forbid TLS)\n");
+      fprintf (fp, "       -I only allow insecure connections (forbid TLS)\n");
       fprintf (fp, "          (default is to allow both secure and "
-                       "insecure connections)\n");
-      fprintf (fp,
-               "       -C require client authentication (implies -S)\n");
+                   "insecure connections)\n");
+      fprintf (fp, "       -C require client authentication (implies -S)\n");
       fprintf (fp, "\n%s%s%s\n", secure_msg1,
                ob_get_standard_path (ob_etc_path), secure_msg2);
       fprintf (fp, "Clients will look for the file "
-                       "'certificate-authorities.pem', to\n");
+                   "'certificate-authorities.pem', to\n");
       fprintf (fp, "authenticate the server's certificate.\n");
       fprintf (fp, "\n");
       fprintf (fp, "If -C is specified, then the client also needs "
-                       "'client-certificate-chain.pem'\n");
+                   "'client-certificate-chain.pem'\n");
       fprintf (fp, "and 'client-private-key.pem', and the server needs\n");
       fprintf (fp, "'certificate-authorities.pem'.\n");
     }
@@ -1900,9 +1890,9 @@ static void print_usage (FILE *fp)
     {
       fprintf (fp, "       -I only allow insecure connections\n");
       fprintf (fp, "          (already the default, and thus is a nop in "
-                       "this build)\n");
+                   "this build)\n");
       fprintf (fp, "       no TLS support in this build (-S and -C not "
-                       "supported)\n");
+                   "supported)\n");
     }
   fprintf (fp, "\n");
   fprintf (fp, "exit codes:\n");
@@ -2004,8 +1994,9 @@ int main (int argc, char *argv[])
 
   if (argc != optind)
     {
-      fprintf (stderr, "pool_tcp_server does not accept non-option arguments.\n"
-                       "Non-option argument \"%s\" was provided.\n",
+      fprintf (stderr,
+               "pool_tcp_server does not accept non-option arguments.\n"
+               "Non-option argument \"%s\" was provided.\n",
                argv[optind]);
       usage ();
     }
@@ -2028,10 +2019,11 @@ int main (int argc, char *argv[])
                                  "Cannot operate in secure mode because: %s\n",
                                  ob_error_string (tls_available));
           else
-            OB_LOG_WARNING_CODE (0x20109063, "Secure connections are not "
-                                             "available because: %s\n"
-                                             "So only insecure connections "
-                                             "will be allowed.\n",
+            OB_LOG_WARNING_CODE (0x20109063,
+                                 "Secure connections are not "
+                                 "available because: %s\n"
+                                 "So only insecure connections "
+                                 "will be allowed.\n",
                                  ob_error_string (tls_available));
         }
       else if (tls_available == POOL_ANONYMOUS_ONLY)
@@ -2042,11 +2034,9 @@ int main (int argc, char *argv[])
             "locations checked.)\n";
 
           if (require_tls)
-            OB_FATAL_ERROR_CODE (0x20109064,
-                                 "%sCannot operate securely.\n\n%s%s%s",
-                                 secure_msg0, secure_msg1,
-                                 ob_get_standard_path (ob_etc_path),
-                                 secure_msg2);
+            OB_FATAL_ERROR_CODE (
+              0x20109064, "%sCannot operate securely.\n\n%s%s%s", secure_msg0,
+              secure_msg1, ob_get_standard_path (ob_etc_path), secure_msg2);
           else
             OB_LOG_WARNING_CODE (0x20109065,
                                  "%sTherefore, only anonymous ciphersuites\n"

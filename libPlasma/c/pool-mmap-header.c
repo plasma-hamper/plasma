@@ -257,8 +257,9 @@ static ob_retort read_v1_header (pool_mmap_data *d)
   const unt64 header_bytes2 = get_header_size (d);
   if (header_bytes != header_bytes2)
     {
-      OB_LOG_ERROR_CODE (0x20110040, "mismatching header sizes: %" OB_FMT_64
-                                     "u and %" OB_FMT_64 "u\n",
+      OB_LOG_ERROR_CODE (0x20110040,
+                         "mismatching header sizes: %" OB_FMT_64
+                         "u and %" OB_FMT_64 "u\n",
                          header_bytes, header_bytes2);
       return POOL_CORRUPT;
     }
@@ -296,9 +297,8 @@ static protein make_mmap_config_protein (unt64 fsize, unt64 hsize,
                                          OB_UNUSED unt64 toc_cap)
 {
   slaw conf_b =
-    slaw_map_inline_cf (CFG_KEY_FILE_SIZE,   slaw_unt64 (fsize),
-                        CFG_KEY_HEADER_SIZE, slaw_unt64 (hsize),
-                        NULL);
+    slaw_map_inline_cf (CFG_KEY_FILE_SIZE, slaw_unt64 (fsize),
+                        CFG_KEY_HEADER_SIZE, slaw_unt64 (hsize), NULL);
   return conf_b ? protein_from_ff (NULL, conf_b) : NULL;
 }
 
@@ -351,10 +351,9 @@ static ob_retort pool_mmap_bootstrap_config_v1_prime (const char *path,
 
 static ob_retort pool_mmap_bootstrap_config_v1 (pool_mmap_data *d)
 {
-  return pool_mmap_call_with_backing_file (d->ph->name,
-                                           d->ph->pool_directory_version, false,
-                                           pool_mmap_bootstrap_config_v1_prime,
-                                           d);
+  return pool_mmap_call_with_backing_file (
+    d->ph->name, d->ph->pool_directory_version, false,
+    pool_mmap_bootstrap_config_v1_prime, d);
 }
 
 static ob_retort pool_mmap_bootstrap_config_v1_prime (const char *path,
@@ -423,18 +422,18 @@ static ob_retort pool_mmap_bootstrap_config_v1_prime (const char *path,
    */
   if (h.conf.hdr.sig != POOL_CHUNK_CONF)
     {
-      OB_LOG_ERROR_CODE (0x20110049, "POOL_CORRUPT: 0x%016" OB_FMT_64 "x != "
-                                     "0x%016" OB_FMT_64 "x\n",
+      OB_LOG_ERROR_CODE (0x20110049,
+                         "POOL_CORRUPT: 0x%016" OB_FMT_64 "x != "
+                         "0x%016" OB_FMT_64 "x\n",
                          h.conf.hdr.sig, POOL_CHUNK_CONF);
       return POOL_CORRUPT;
     }
 
   if (h.conf.hdr.len < sizeof (h.conf) / sizeof (h.conf.hdr.len))
     {
-      OB_LOG_ERROR_CODE (0x2011004a,
-                         "POOL_CORRUPT: %" OB_FMT_64 "d < %" OB_FMT_SIZE "u\n",
-                         h.conf.hdr.len,
-                         sizeof (h.conf) / sizeof (h.conf.hdr.len));
+      OB_LOG_ERROR_CODE (
+        0x2011004a, "POOL_CORRUPT: %" OB_FMT_64 "d < %" OB_FMT_SIZE "u\n",
+        h.conf.hdr.len, sizeof (h.conf) / sizeof (h.conf.hdr.len));
       return POOL_CORRUPT;
     }
 

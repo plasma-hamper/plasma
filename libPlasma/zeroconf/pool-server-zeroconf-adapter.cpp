@@ -220,8 +220,9 @@ int main (int argc, char **argv)
              &pollInterval, true);
   ap.ArgString ("zname", " <name>\aName to announce for Zeroconf service ",
                 &nameOfService, true);
-  ap.ArgString ("subtypes", " <foo,bar,...>\aList of Zeroconf subtypes, "
-                            "comma-separated only ",
+  ap.ArgString ("subtypes",
+                " <foo,bar,...>\aList of Zeroconf subtypes, "
+                "comma-separated only ",
                 &subTypes);
 #ifndef _MSC_VER
   ap.ArgFlag ("nofork",

@@ -22,37 +22,35 @@ typedef struct for_a_good_time_call
   char expected[32];
 } for_a_good_time_call;
 
-static const for_a_good_time_call good_times[] =
-  {
-    { "Dec 20, 2024 13:30:53.63 "   , "Dec 20, 2024 13:30:53.63 "    },
-    { "Dec 20, 2024 13:30:53.63"    , "Dec 20, 2024 13:30:53.63 "    },
-    { "Dec 20, 2024 13:30:53.631 "  , "Dec 20, 2024 13:30:53.63 "    },
-    { "Dec 20, 2024 13:30:53.631"   , "Dec 20, 2024 13:30:53.63 "    },
-    { "Dec 20, 2024 13:30:53.50 "   , "Dec 20, 2024 13:30:53.50 "    },
-    { "Dec 20, 2024 13:30:53.50"    , "Dec 20, 2024 13:30:53.50 "    },
-    { "Dec 20, 2024 13:30:53.5 "    , "Dec 20, 2024 13:30:53.50 "    },
-    { "Dec 20, 2024 13:30:53.5"     , "Dec 20, 2024 13:30:53.50 "    },
-    { "Dec 20, 2024 13:30:53 "      , "Dec 20, 2024 13:30:53.00 "    },
-    { "Dec 20, 2024 13:30:53"       , "Dec 20, 2024 13:30:53.00 "    },
-  };
+static const for_a_good_time_call good_times[] = {
+  {"Dec 20, 2024 13:30:53.63 ", "Dec 20, 2024 13:30:53.63 "},
+  {"Dec 20, 2024 13:30:53.63", "Dec 20, 2024 13:30:53.63 "},
+  {"Dec 20, 2024 13:30:53.631 ", "Dec 20, 2024 13:30:53.63 "},
+  {"Dec 20, 2024 13:30:53.631", "Dec 20, 2024 13:30:53.63 "},
+  {"Dec 20, 2024 13:30:53.50 ", "Dec 20, 2024 13:30:53.50 "},
+  {"Dec 20, 2024 13:30:53.50", "Dec 20, 2024 13:30:53.50 "},
+  {"Dec 20, 2024 13:30:53.5 ", "Dec 20, 2024 13:30:53.50 "},
+  {"Dec 20, 2024 13:30:53.5", "Dec 20, 2024 13:30:53.50 "},
+  {"Dec 20, 2024 13:30:53 ", "Dec 20, 2024 13:30:53.00 "},
+  {"Dec 20, 2024 13:30:53", "Dec 20, 2024 13:30:53.00 "},
+};
 
 typedef struct for_a_bad_time_call
 {
-  char      bad_time[32];
+  char bad_time[32];
   ob_retort expected;
 } for_a_bad_time_call;
 
-static const for_a_bad_time_call bad_times[] =
-  {
-    { "Dec 32, 2024 13:30:53.63"    , OB_PARSE_ERROR },
-    { "Dec 20, 2024 25:30:53.63"    , OB_PARSE_ERROR },
-    { "Dec 20, 2024 13:30:xx.63"    , OB_PARSE_ERROR },
-    { "Dec 20, 2024 13:30:53.xx"    , OB_PARSE_ERROR },
-    { "Dec 20, 867-5309 13:30:53.63", OB_PARSE_ERROR },
-    { "Blob 20, 2024 13:30:53.63"   , OB_PARSE_ERROR },
-    { ".63"                         , OB_PARSE_ERROR },
-    { ""                            , OB_PARSE_ERROR },
-  };
+static const for_a_bad_time_call bad_times[] = {
+  {"Dec 32, 2024 13:30:53.63", OB_PARSE_ERROR},
+  {"Dec 20, 2024 25:30:53.63", OB_PARSE_ERROR},
+  {"Dec 20, 2024 13:30:xx.63", OB_PARSE_ERROR},
+  {"Dec 20, 2024 13:30:53.xx", OB_PARSE_ERROR},
+  {"Dec 20, 867-5309 13:30:53.63", OB_PARSE_ERROR},
+  {"Blob 20, 2024 13:30:53.63", OB_PARSE_ERROR},
+  {".63", OB_PARSE_ERROR},
+  {"", OB_PARSE_ERROR},
+};
 
 /* oddly, ob_format_time outputs a single trailing space. */
 static const char beg_of_time_s[] = "Jan 1, 1970 00:00:00.00 ";
@@ -208,11 +206,11 @@ static void test_ob_strptime (void)
 
   for (i = 0; i < sizeof (good_times) / sizeof (good_times[0]); i++)
     {
-      float64     secs = -1.0;
+      float64 secs = -1.0;
       const char *good = good_times[i].good_time;
 
       print_test_string (good);
-      ob_retort   tort = ob_strptime (good, &secs);
+      ob_retort tort = ob_strptime (good, &secs);
 
       if (tort == OB_OK)
         {
@@ -225,7 +223,7 @@ static void test_ob_strptime (void)
         }
       else
         {
-          const char *msg  = ob_error_string (tort);
+          const char *msg = ob_error_string (tort);
           print_passfail (false);
           printf (" %s\n", msg);
         }
@@ -234,15 +232,15 @@ static void test_ob_strptime (void)
   /* Test whether some known-bad strings fail as expected */
   for (i = 0; i < sizeof (bad_times) / sizeof (bad_times[0]); i++)
     {
-      float64     secs = -1.0;
-      const char *bad  = bad_times[i].bad_time;
+      float64 secs = -1.0;
+      const char *bad = bad_times[i].bad_time;
 
       print_test_string (bad);
 
-      ob_retort   tort = ob_strptime (bad, &secs);
+      ob_retort tort = ob_strptime (bad, &secs);
       print_passfail (tort == bad_times[i].expected);
 
-      const char *msg  = ob_error_string (tort);
+      const char *msg = ob_error_string (tort);
       printf (" %s\n", msg);
     }
 }

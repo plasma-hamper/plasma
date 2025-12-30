@@ -142,8 +142,8 @@ void pool_fifo_multi_destroy_awaiter (pool_hose ph)
           ph->name, ph->fifo_path);
   if (ph->fifo_path[0] != 0)
     if (unlink (ph->fifo_path) != 0)
-      ob_log (OBLV_DBUG, 0x20100004, "Couldn't unlink fifo %s: ",
-              ph->fifo_path);
+      ob_log (OBLV_DBUG, 0x20100004,
+              "Couldn't unlink fifo %s: ", ph->fifo_path);
 
   ph->fifo_path[0] = 0;
   pool_notification_unlock (ph);
@@ -489,8 +489,8 @@ ob_retort pool_fifo_wake_awaiters (pool_hose ph)
               ob_log (OBLV_DBUG, 0x2010000e, "Unlinking orphaned fifo %s\n",
                       fifo_path);
               if (unlink (fifo_path) != 0)
-                ob_log (OBLV_DBUG, 0x2010000f, "Couldn't unlink fifo %s: ",
-                        fifo_path);
+                ob_log (OBLV_DBUG, 0x2010000f,
+                        "Couldn't unlink fifo %s: ", fifo_path);
               continue;
             }
           else if (erryes == EACCES)
@@ -508,8 +508,8 @@ ob_retort pool_fifo_wake_awaiters (pool_hose ph)
                                  "fifo:\n%s\n",
                                  strerror (erryes), fifo_path);
               if (unlink (fifo_path) != 0)
-                ob_log (OBLV_DBUG, 0x20100011, "Couldn't unlink fifo %s: ",
-                        fifo_path);
+                ob_log (OBLV_DBUG, 0x20100011,
+                        "Couldn't unlink fifo %s: ", fifo_path);
               continue;
             }
         }

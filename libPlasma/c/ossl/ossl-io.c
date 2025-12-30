@@ -348,13 +348,15 @@ void OREILLY_data_transfer (ob_sock_t A, SSL *B)
               default:
                 /* ERROR */
                 erryes = errno;
-                OB_LOG_DEBUG_CODE (0x20501005, "code %d, "
-                                               "interpretation %s, "
-                                               "descriptor %d\n",
-                                   code, ob_ossl_interpretation_as_string (
-                                           errbuf, sizeof (errbuf),
-                                           interpretation, erryes),
-                                   B_sock);
+                OB_LOG_DEBUG_CODE (
+                  0x20501005,
+                  "code %d, "
+                  "interpretation %s, "
+                  "descriptor %d\n",
+                  code,
+                  ob_ossl_interpretation_as_string (errbuf, sizeof (errbuf),
+                                                    interpretation, erryes),
+                  B_sock);
                 goto err;
             }
         }

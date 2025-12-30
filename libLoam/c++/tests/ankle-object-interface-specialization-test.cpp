@@ -32,8 +32,9 @@ void update_scratch (const char *note)
 {
   if (global_scratch.size () == expected_entries)
     {
-      fprintf (stderr, "calling our scratchpad function unexpectedly. "
-                       "(%s)\n",
+      fprintf (stderr,
+               "calling our scratchpad function unexpectedly. "
+               "(%s)\n",
                note);
       abort ();
     }

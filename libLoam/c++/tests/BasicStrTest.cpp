@@ -566,9 +566,9 @@ TEST_F (BasicStrTest, Format)
  * to keep C++11 from complaining?  That blows! */
 
 const char eins[] = {0x24, 0x00};
-const char zwei[] = {char(0xC2), char(0xA2), 0x00};
-const char drei[] = {char(0xE2), char(0x82), char(0xAC), 0x00};
-const char vier[] = {char(0xF0), char(0xA4), char(0xAD), char(0xA2), 0x00};
+const char zwei[] = {char (0xC2), char (0xA2), 0x00};
+const char drei[] = {char (0xE2), char (0x82), char (0xAC), 0x00};
+const char vier[] = {char (0xF0), char (0xA4), char (0xAD), char (0xA2), 0x00};
 
 TEST_F (BasicStrTest, FromUTF8)
 {
@@ -960,8 +960,8 @@ TEST_F (BasicStrTest, InvalidUTF8)  // bug 2865
 {
   ob_suppress_message (OBLV_WARN, 0x11000004);
 
-  static const char notutf8[] = {82, 101, 121,       107, 106,
-                                 97, 118, char(237), 107, 0};
+  static const char notutf8[] = {82, 101, 121,        107, 106,
+                                 97, 118, char (237), 107, 0};
   Str unfortunate (notutf8);
   EXPECT_EQ (9, unfortunate.Length ());
   EXPECT_EQ ('j', unfortunate.At (4));
@@ -1082,7 +1082,6 @@ TEST_F (BasicStrTest, Char16)
 
 TEST_F (BasicStrTest, DubyaChar)
 {
-
   const wchar_t *text = L"beeeep";
   const size_t text_length = wcslen (text);
 

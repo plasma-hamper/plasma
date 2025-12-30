@@ -14,9 +14,7 @@ namespace plasma {
 namespace bench {
 
 
-PingPonger::Config::Config () : timeout (0), ping (false)
-{
-}
+PingPonger::Config::Config () : timeout (0), ping (false) {}
 
 
 PingPonger::Config::Config (const Config &other)

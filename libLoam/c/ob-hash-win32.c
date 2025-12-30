@@ -58,8 +58,9 @@
 // possible hash functions, by using SIMD instructions, or by
 // compromising on hash quality.
 
-unt64 __declspec(naked) ob_city_hash64 (const void *key, size_t len)
-{ __asm {
+unt64 __declspec (naked) ob_city_hash64 (const void *key, size_t len)
+{
+  __asm {
     push    ebp
     push    ebx
     push    edi

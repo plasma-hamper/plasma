@@ -75,9 +75,10 @@ static void test (int16 num)
         expected = i;
 
       if (x != expected)
-        OB_FATAL_ERROR_CODE (0x2030b001, "%" OB_FMT_64 "d"
-                                         " != %" OB_FMT_64 "d"
-                                         "\n",
+        OB_FATAL_ERROR_CODE (0x2030b001,
+                             "%" OB_FMT_64 "d"
+                             " != %" OB_FMT_64 "d"
+                             "\n",
                              x, expected);
     }
 
@@ -113,8 +114,9 @@ static void test (int16 num)
   OB_DIE_ON_ERROR (slabu_list_add_c (sb, "banana"));
   x = slabu_list_find_c (sb, "banana");
   if (x != slabu_count (sb) - 1)
-    OB_FATAL_ERROR_CODE (0x2030b004, "didn't expect banana at %" OB_FMT_64 "d"
-                                     "\n",
+    OB_FATAL_ERROR_CODE (0x2030b004,
+                         "didn't expect banana at %" OB_FMT_64 "d"
+                         "\n",
                          x);
 
   tort = slabu_list_remove_c (sb, "panama");

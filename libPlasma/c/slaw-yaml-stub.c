@@ -14,6 +14,4 @@ ob_retort slaw_output_open_text_handler (slaw_write_handler h, bslaw options,
   return SLAW_NO_YAML;
 }
 
-void private_test_yaml_hash (void)
-{
-}
+void private_test_yaml_hash (void) {}

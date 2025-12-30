@@ -30,17 +30,14 @@ void do_check (bslaw expected)
 
 static slaw make_map (void)
 {
-  slaw m1 =
-    slaw_map_inline_cc ("mortals", "foolish", "pallor", "cadaverous", "aura",
-                        "foreboding", "metamorphosis", "disquieting",
-                        "observation", "dismaying", NULL);
+  slaw m1 = slaw_map_inline_cc (
+    "mortals", "foolish", "pallor", "cadaverous", "aura", "foreboding",
+    "metamorphosis", "disquieting", "observation", "dismaying", NULL);
 
-  slaw m2 =
-    slaw_map_inline_cf ("no", slaw_list_inline_c ("windows", "doors", NULL),
-                        "challenge", slaw_string ("chilling"), "way",
-                        slaw_list_inline_c ("out", "my", NULL), "frighten",
-                        slaw_string ("prematurely"), "haunts", slaw_int16 (999),
-                        NULL);
+  slaw m2 = slaw_map_inline_cf (
+    "no", slaw_list_inline_c ("windows", "doors", NULL), "challenge",
+    slaw_string ("chilling"), "way", slaw_list_inline_c ("out", "my", NULL),
+    "frighten", slaw_string ("prematurely"), "haunts", slaw_int16 (999), NULL);
 
   slaw m3 = slaw_map_inline_ff (slaw_list_inline_c ("room", "for", NULL),
                                 slaw_unt32 (1000), slaw_string ("volunteers?"),

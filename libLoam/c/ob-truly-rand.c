@@ -61,7 +61,8 @@
 
 static ob_retort update_reseed_time (void);
 
-typedef enum {
+typedef enum
+{
   RAND_NEED_INITIALIZATION = 0,
   RAND_NEED_RESEED,
   RAND_DOING_FINE

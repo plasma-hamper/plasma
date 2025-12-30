@@ -125,17 +125,11 @@ SlawRefs GetComponents (SlawRef s)
 /* ---------------------------------------------------------------------- */
 // Construction
 
-SlawList::SlawList ()
-{
-}
+SlawList::SlawList () {}
 
-SlawList::SlawList (SlawRef s) : elements_ (slawlist::GetComponents (s))
-{
-}
+SlawList::SlawList (SlawRef s) : elements_ (slawlist::GetComponents (s)) {}
 
-SlawList::SlawList (const SlawRefs &elems) : elements_ (elems)
-{
-}
+SlawList::SlawList (const SlawRefs &elems) : elements_ (elems) {}
 
 /* ---------------------------------------------------------------------- */
 // Typing

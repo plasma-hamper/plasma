@@ -14,38 +14,38 @@
 #include "libPlasma/c/protein.h"
 #include "libPlasma/c/slaw.h"
 
-static ob_log_level my_log =
-  {OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
-   LOG_ERR,
-   2,
-   "test: ",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level my_log = {
+  OB_DST_FD | OB_FLG_SHOW_CODE_OR_WHERE | OB_FLG_SHOW_TID_NONMAIN,
+  OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
+  LOG_ERR,
+  2,
+  "test: ",
+  NULL,
+  NULL,
+  NULL,
+  NULL};
 
-static ob_log_level red_log =
-  {OB_DST_FD | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
-   LOG_ERR,
-   2,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level red_log = {OB_DST_FD | OB_FLG_SHOW_TID_NONMAIN,
+                               OB_FOREGROUND_ENABLE
+                                 | OB_FOREGROUND_RED, /* red */
+                               LOG_ERR,
+                               2,
+                               "",
+                               NULL,
+                               NULL,
+                               NULL,
+                               NULL};
 
-static ob_log_level yellow_log =
-  {OB_DST_FD | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED | OB_FOREGROUND_GREEN, /* yellow */
-   LOG_ERR,
-   2,
-   "",
-   NULL,
-   NULL,
-   NULL,
-   NULL};
+static ob_log_level yellow_log = {OB_DST_FD | OB_FLG_SHOW_TID_NONMAIN,
+                                  OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED
+                                    | OB_FOREGROUND_GREEN, /* yellow */
+                                  LOG_ERR,
+                                  2,
+                                  "",
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  NULL};
 
 static ob_log_level limited_log = {OB_DST_FD | OB_FLG_SHOW_TID_NONMAIN,
                                    0, /* no color */
@@ -215,7 +215,7 @@ int main (int argc, char **argv)
   int ret = EXIT_SUCCESS;
   int64 l[3];
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
       switch (c)

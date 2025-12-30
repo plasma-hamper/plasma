@@ -38,16 +38,16 @@ ob_rand_t *ob_rand_allocate_state (int32 seedval)
   ob_retort tort = OB_NO_MEM;
   ob_rand_t *ret = NULL;
 
-// The posix_memalign call is not available on Mac.  But, we can use
-// the Mac's plain malloc instead, since it is guaranteed to be
-// aligned for any type including SSE-related types.
+  // The posix_memalign call is not available on Mac.  But, we can use
+  // the Mac's plain malloc instead, since it is guaranteed to be
+  // aligned for any type including SSE-related types.
 
-/* And on Windows, we use VirtualAlloc(), which will give us
+  /* And on Windows, we use VirtualAlloc(), which will give us
    page-aligned memory, which will be more than enough alignment!
    (It's a bit wasteful, but since there will only be a few of these
    allocated in the whole program, it doesn't matter.) */
 
-/* It is unclear whether posix_memalign will zero its pseudo-return
+  /* It is unclear whether posix_memalign will zero its pseudo-return
    value (ob_global_rand_state) on error, so we do it below. Plus,
    this has the advantage of showing the compiler that we are at
    least paying some attention to the return value (err), which is
@@ -129,8 +129,9 @@ static ob_seed_t completely_random_seed (void)
       seed.fallback.p = getpid ();
       seed.fallback.c = ob_atomic_int32_add (&counter, 1);
       if (seed.fallback.c == 1)
-        OB_LOG_WARNING_CODE (0x10050000, "Using suboptimal entropy source\n"
-                                         "because '%s'\n",
+        OB_LOG_WARNING_CODE (0x10050000,
+                             "Using suboptimal entropy source\n"
+                             "because '%s'\n",
                              ob_error_string (tort));
     }
   return seed;
@@ -172,8 +173,9 @@ int32 ob_rand_state_int32 (int32 low, int32 high, ob_rand_t *rand_state)
   // TODO what should happen if high <= low?
   assert (high > low);
 
-  v = (float64) low + (((float64) ((int64) high - (int64) low))
-                       * dsfmt_genrand_close_open (rand_state));
+  v = (float64) low
+      + (((float64) ((int64) high - (int64) low))
+         * dsfmt_genrand_close_open (rand_state));
 
   // TODO prefer a faster method for negative case; problem: the
   // contract is low <= x < high, but an int cast truncates (moves

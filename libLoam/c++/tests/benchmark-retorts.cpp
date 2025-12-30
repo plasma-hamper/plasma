@@ -32,11 +32,10 @@ ObRetort nesty_ObRetort (void *, int64);
   start = FatherTime::AbsoluteTime ();                                         \
   for (unt64 i = 0; i < (iterations); i++)                                     \
     {
-
 #define BENCH_END(iterations)                                                  \
   }                                                                            \
   end = FatherTime::AbsoluteTime ();                                           \
-  cout << (end - start) << "s, " << (end - start) / (iterations) *1e9          \
+  cout << (end - start) << "s, " << (end - start) / (iterations) * 1e9         \
        << "ns per iteration." << endl
 
 int main (int argc, char **argv)

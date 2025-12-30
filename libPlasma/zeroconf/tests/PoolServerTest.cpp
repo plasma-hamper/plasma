@@ -10,8 +10,7 @@ using namespace oblong::plasma;
 namespace {
 
 class PoolServerTest : public ::testing::Test
-{
-};
+{};
 
 TEST_F (PoolServerTest, Defaults)
 {

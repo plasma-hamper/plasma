@@ -93,16 +93,17 @@ static ob_retort private_read_binary_header (slaw_read_handler h, unt8 *version,
 
   if (size_read < sizeof (buf))
     {
-      OB_LOG_ERROR_CODE (0x20002000, "binary slaw file (%" OB_FMT_SIZE
-                                     "u bytes) is less than 8 bytes long!\n",
+      OB_LOG_ERROR_CODE (0x20002000,
+                         "binary slaw file (%" OB_FMT_SIZE
+                         "u bytes) is less than 8 bytes long!\n",
                          size_read);
       return SLAW_WRONG_FORMAT;
     }
   else if (size_read > sizeof (buf))
     {
-      OB_LOG_ERROR_CODE (0x20002005, "Didn't expect %" OB_FMT_SIZE
-                                     "u to be greater than 8\n",
-                         size_read);
+      OB_LOG_ERROR_CODE (
+        0x20002005, "Didn't expect %" OB_FMT_SIZE "u to be greater than 8\n",
+        size_read);
       return OB_UNKNOWN_ERR;
     }
 
@@ -183,12 +184,9 @@ ob_retort slaw_output_open_binary_handler (slaw_write_handler h,
 {
   ob_retort err;
 
-  err =
-    private_write_binary_header (h, CURRENT_VERSION,
-                                 PLASMA_BINARY_FILE_TYPE_SLAW,
-                                 (ob_i_am_big_endian ()
-                                    ? PLASMA_BINARY_FILE_FLAG_BIG_ENDIAN_SLAW
-                                    : 0));
+  err = private_write_binary_header (
+    h, CURRENT_VERSION, PLASMA_BINARY_FILE_TYPE_SLAW,
+    (ob_i_am_big_endian () ? PLASMA_BINARY_FILE_FLAG_BIG_ENDIAN_SLAW : 0));
   if (err != OB_OK)
     return err;
 
@@ -257,8 +255,9 @@ static ob_retort binary_input_read (slaw_input f, slaw *s)
     return SLAW_END_OF_FILE;
   else if (size_read > sizeof (slawhead))
     {
-      OB_LOG_ERROR_CODE (0x20002006, "Didn't expect %" OB_FMT_SIZE
-                                     "u to be greater than %" OB_FMT_SIZE "u\n",
+      OB_LOG_ERROR_CODE (0x20002006,
+                         "Didn't expect %" OB_FMT_SIZE
+                         "u to be greater than %" OB_FMT_SIZE "u\n",
                          size_read, sizeof (slawhead));
       return OB_UNKNOWN_ERR;
     }
@@ -369,25 +368,24 @@ ob_retort slaw_input_open_binary_handler (slaw_read_handler h, slaw_input *f)
 
   if (version > CURRENT_VERSION)
     {
-      OB_LOG_ERROR_CODE (0x20002002, "binary slaw file is version %u but "
-                                     "expected version %u or earlier\n",
+      OB_LOG_ERROR_CODE (0x20002002,
+                         "binary slaw file is version %u but "
+                         "expected version %u or earlier\n",
                          version, CURRENT_VERSION);
       return SLAW_WRONG_VERSION;
     }
 
   if (typ != PLASMA_BINARY_FILE_TYPE_SLAW)
     {
-      OB_LOG_ERROR_CODE (0x20002003, "binary slaw file has type %u but "
-                                     "expected type %u\n",
+      OB_LOG_ERROR_CODE (0x20002003,
+                         "binary slaw file has type %u but "
+                         "expected type %u\n",
                          typ, PLASMA_BINARY_FILE_TYPE_SLAW);
       return SLAW_WRONG_FORMAT;
     }
 
-  return make_binary_input_file (h, f,
-                                 ((flags
-                                   & PLASMA_BINARY_FILE_FLAG_BIG_ENDIAN_SLAW)
-                                  != 0),
-                                 version);
+  return make_binary_input_file (
+    h, f, ((flags & PLASMA_BINARY_FILE_FLAG_BIG_ENDIAN_SLAW) != 0), version);
 }
 
 slaw_input new_slaw_input (void)

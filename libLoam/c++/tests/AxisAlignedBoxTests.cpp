@@ -31,7 +31,9 @@ TEST (AxisAlignedBoxTests, AABB_Constructors)
   const std::array<Vect, 8> op_corners = box.Corners ();
 
   // Test construction from an iterator pair.
-  auto bad_hash = [](const Vect &x) -> size_t { return 0; };
+  auto bad_hash = [] (const Vect &x) -> size_t {
+    return 0;
+  };
   std::unordered_set<Vect, decltype (bad_hash)> spoints (0, bad_hash);
   spoints.emplace (1, 2, 3);
   spoints.emplace (2, 3, 4);

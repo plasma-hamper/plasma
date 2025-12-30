@@ -55,7 +55,7 @@ static void waste_time ()
     vals[i] = i;
 
 #ifdef HAVE_STD_SHUFFLE
-  std::shuffle(vals + 0, vals + enuf, std::mt19937{std::random_device{}()});
+  std::shuffle (vals + 0, vals + enuf, std::mt19937{std::random_device{}()});
 #else
   std::random_shuffle (vals + 0, vals + enuf);
 #endif

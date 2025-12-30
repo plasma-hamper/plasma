@@ -32,12 +32,14 @@ void pool_validate_context (pool_context ctx, const char *where)
     {
       const unt32 magic = ctx->magic;
       if (magic != POOL_CTX_MAGIC)
-        OB_FATAL_BUG_CODE (0x20111000, "in %s: %p is %s\n"
-                                       "magic is 0x%08x; should be 0x%08x\n",
-                           where, ctx, magic == POOL_CTX_FREED
-                                         ? "an already-freed pool context"
-                                         : "not a pool context (presumed "
-                                           "memory corruption)",
+        OB_FATAL_BUG_CODE (0x20111000,
+                           "in %s: %p is %s\n"
+                           "magic is 0x%08x; should be 0x%08x\n",
+                           where, ctx,
+                           magic == POOL_CTX_FREED
+                             ? "an already-freed pool context"
+                             : "not a pool context (presumed "
+                               "memory corruption)",
                            magic, POOL_CTX_MAGIC);
     }
 }

@@ -31,7 +31,7 @@ int main (int argc, char **argv)
   if (argc < 3 || argc > 4)
     usage ();
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   cmd.pool_name = argv[1];
   int64 ind = strtoll (argv[2], NULL, 0);
 

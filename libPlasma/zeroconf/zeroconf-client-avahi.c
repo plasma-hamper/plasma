@@ -112,9 +112,9 @@ static void browse_callback (AvahiServiceBrowser *b, AvahiIfIndex interface,
                                           type, domain, AVAHI_PROTO_UNSPEC, 0,
                                           resolve_callback, bd)))
           {
-            ZEROCONF_LOG_WARNING ("Failed to resolve service '%s': %s", name,
-                                  avahi_strerror (
-                                    avahi_client_errno (bd->client)));
+            ZEROCONF_LOG_WARNING (
+              "Failed to resolve service '%s': %s", name,
+              avahi_strerror (avahi_client_errno (bd->client)));
             bd->unresolved--;
           }
         break;
@@ -171,10 +171,9 @@ static bool init_avahi_data (browser_data *bd)
       return false;
     }
 
-  bd->browser =
-    avahi_service_browser_new (bd->client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
-                               ZEROCONF_SERVICE_TYPE, NULL, 0, browse_callback,
-                               bd);
+  bd->browser = avahi_service_browser_new (
+    bd->client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, ZEROCONF_SERVICE_TYPE,
+    NULL, 0, browse_callback, bd);
   if (!bd->browser)
     {
       ZEROCONF_LOG_ERROR ("Failed to create service browser: %s",

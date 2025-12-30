@@ -14,9 +14,8 @@ Mutex::Mutex (bool recursive)
   pthread_mutexattr_t attr;
   OB_CHECK_PTHREAD_CODE (0x110b0000, pthread_mutexattr_init (&attr));
   if (recursive)
-    OB_CHECK_PTHREAD_CODE (0x110b0001,
-                           pthread_mutexattr_settype (&attr,
-                                                      PTHREAD_MUTEX_RECURSIVE));
+    OB_CHECK_PTHREAD_CODE (
+      0x110b0001, pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE));
   OB_CHECK_PTHREAD_CODE (0x110b0002, pthread_mutex_init (&mutex_, &attr));
   OB_CHECK_PTHREAD_CODE (0x110b0003, pthread_mutexattr_destroy (&attr));
 }

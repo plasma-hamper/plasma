@@ -687,10 +687,10 @@ TEST (StaticMutex, StaticMutex)
   pthread_t t1, t2;
   cmp_func c1 = comp1;
   cmp_func c2 = comp2;
-  EXPECT_EQ (0, pthread_create (&t1, NULL, thread_main,
-                                reinterpret_cast<void *> (c1)));
-  EXPECT_EQ (0, pthread_create (&t2, NULL, thread_main,
-                                reinterpret_cast<void *> (c2)));
+  EXPECT_EQ (
+    0, pthread_create (&t1, NULL, thread_main, reinterpret_cast<void *> (c1)));
+  EXPECT_EQ (
+    0, pthread_create (&t2, NULL, thread_main, reinterpret_cast<void *> (c2)));
   EXPECT_EQ (0, pthread_join (t1, NULL));
   EXPECT_EQ (0, pthread_join (t2, NULL));
   int sum = 0;

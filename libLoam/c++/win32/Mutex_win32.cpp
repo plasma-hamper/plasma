@@ -53,20 +53,20 @@ void Mutex::Lock ()
           case WAIT_FAILED:
             lasterr = GetLastError ();
             tort = ob_win32err_to_retort (lasterr);
-            OB_FATAL_BUG_CODE (0x11010003, "WaitForSingleObject failed with:\n"
-                                           "GetLastError = 0x%08x\n"
-                                           "tort = 0x%016" OB_FMT_64 "x\n"
-                                           "semaphore = %d\n"
-                                           "%s\n",
+            OB_FATAL_BUG_CODE (0x11010003,
+                               "WaitForSingleObject failed with:\n"
+                               "GetLastError = 0x%08x\n"
+                               "tort = 0x%016" OB_FMT_64 "x\n"
+                               "semaphore = %d\n"
+                               "%s\n",
                                lasterr, tort, semaphore,
                                ob_error_string (tort));
             return;
 
           default:
             //we weren't able to get the lock
-            OB_FATAL_BUG_CODE (0x11010001,
-                               "WaitForSingleObject returned unexpected %d",
-                               result);
+            OB_FATAL_BUG_CODE (
+              0x11010001, "WaitForSingleObject returned unexpected %d", result);
             return;
         }
     }

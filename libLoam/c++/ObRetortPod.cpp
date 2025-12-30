@@ -7,13 +7,9 @@
 using namespace oblong::loam;
 
 
-ObRetortPod::ObRetortPod () : ObPseudopod (), c_ret (0)
-{
-}
+ObRetortPod::ObRetortPod () : ObPseudopod (), c_ret (0) {}
 
-ObRetortPod::ObRetortPod (ob_retort obr) : ObPseudopod (), c_ret (obr)
-{
-}
+ObRetortPod::ObRetortPod (ob_retort obr) : ObPseudopod (), c_ret (obr) {}
 
 ObRetortPod::ObRetortPod (ob_retort obr, ObRetortPod *ant)
     : ObPseudopod (), c_ret (obr), antecedent (ant)
@@ -21,9 +17,7 @@ ObRetortPod::ObRetortPod (ob_retort obr, ObRetortPod *ant)
 }
 
 
-ObRetortPod::~ObRetortPod ()
-{
-}
+ObRetortPod::~ObRetortPod () {}
 
 
 ob_retort ObRetortPod::NumericRetort () const

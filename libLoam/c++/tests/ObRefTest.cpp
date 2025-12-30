@@ -331,8 +331,7 @@ TEST (PointerToNonAnkleAssignTest, ObRef)
 }
 
 struct CountVonCountVonCount : public CountVonCount
-{
-};
+{};
 
 TEST (PointerToNonAnkleAssignSubTest, ObRef)
 {
@@ -368,8 +367,7 @@ TEST (PointerToNonAnkleMoveAssignTest, ObRef)
 
 
 struct Subtalar : public AnkleObject
-{
-};
+{};
 
 TEST (EmptyObRefSubTypeAssignmentTest, ObRef)
 {
@@ -580,13 +578,9 @@ TEST (ObRefForwardTestTwo, ObRef)
   EXPECT_EQ (obj.obj->grip_mnd, obj_minder);
 }
 
-AnkleForwardedTestTwo::AnkleForwardedTestTwo ()
-{
-}
+AnkleForwardedTestTwo::AnkleForwardedTestTwo () {}
 
-AnkleForwardedTestTwo::~AnkleForwardedTestTwo ()
-{
-}
+AnkleForwardedTestTwo::~AnkleForwardedTestTwo () {}
 
 
 //struct AnkleSubclass : public virtual AnkleObject

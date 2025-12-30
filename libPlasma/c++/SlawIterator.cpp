@@ -16,9 +16,7 @@ void SlawIterator::SetIndex (unt64 idx)
   idx_ = (::std::min) (idx, unt64 (slaw_.Count ()));
 }
 
-SlawIterator::SlawIterator () : idx_ (0)
-{
-}
+SlawIterator::SlawIterator () : idx_ (0) {}
 
 SlawIterator::SlawIterator (const Slaw &s) : slaw_ (s)
 {
@@ -40,7 +38,7 @@ SlawIterator::reference SlawIterator::operator* () const
   return slaw_.Nth (idx_);
 }
 
-SlawIterator::pointer SlawIterator::operator-> () const
+SlawIterator::pointer SlawIterator::operator->() const
 {
   return pointer (slaw_.Nth (idx_));
 }
@@ -131,8 +129,8 @@ bool SlawIterator::IsEnd () const
   return idx_ == unt64 (slaw_.Count ());
 }
 
-SlawIterator::difference_type SlawIterator::
-operator- (const SlawIterator &other) const
+SlawIterator::difference_type
+SlawIterator::operator- (const SlawIterator &other) const
 {
   unt64 end = slaw_.IsNull () ? unt64 (other.slaw_.Count ()) : idx_;
   return SlawIterator::difference_type (end - other.idx_);

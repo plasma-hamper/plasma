@@ -33,13 +33,9 @@ SlawRef SlawRef::NilRef ()
   return nil;
 }
 
-SlawRef::SlawRef () : parent_ (NULL_REF), slaw_ (NULL_BSLAW)
-{
-}
+SlawRef::SlawRef () : parent_ (NULL_REF), slaw_ (NULL_BSLAW) {}
 
-SlawRef::SlawRef (slaw s) : parent_ (s), slaw_ (s)
-{
-}
+SlawRef::SlawRef (slaw s) : parent_ (s), slaw_ (s) {}
 
 SlawRef::SlawRef (bslaw s, SlawRef parent) : parent_ (parent.parent_), slaw_ (s)
 {

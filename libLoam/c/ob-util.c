@@ -201,13 +201,9 @@ ob_retort ob_gid_from_name (const char *name, int *gid)
 #endif
 }
 
-void ob_nop (void)
-{
-}
+void ob_nop (void) {}
 
-void ob_ignore (OB_UNUSED int64 foo, ...)
-{
-}
+void ob_ignore (OB_UNUSED int64 foo, ...) {}
 
 #if defined(__gnu_linux__)
 #include <sys/syscall.h>
@@ -414,9 +410,7 @@ void *ob_make_undefined (void *addr, size_t len)
 
 static const char hexdigs[16] = "0123456789abcdef";
 
-void ob_fmt_hex_line (char        dst[OB_HEX_LINE_LEN],
-                      const unt8 *src,
-                      size_t      srcLen)
+void ob_fmt_hex_line (char dst[OB_HEX_LINE_LEN], const unt8 *src, size_t srcLen)
 {
   size_t hexIdx = 0;
   size_t ascIdx = 50;
@@ -427,15 +421,15 @@ void ob_fmt_hex_line (char        dst[OB_HEX_LINE_LEN],
 
   for (i = 0; i < 16 && i < srcLen; i++)
     {
-      const unt8 b  = src[i];
+      const unt8 b = src[i];
       const unt8 lo = b & 0xf;
       const unt8 hi = b >> 4;
-      char       c  = '.';
+      char c = '.';
 
       if (i == 8)
         hexIdx++;
 
-      dst[hexIdx    ] = hexdigs[hi];
+      dst[hexIdx] = hexdigs[hi];
       dst[hexIdx + 1] = hexdigs[lo];
       hexIdx += 3;
 
@@ -446,5 +440,5 @@ void ob_fmt_hex_line (char        dst[OB_HEX_LINE_LEN],
     }
 
   dst[ascIdx++] = '|';
-  dst[ascIdx  ] = 0;
+  dst[ascIdx] = 0;
 }

@@ -236,8 +236,9 @@ struct _slaw_bundle
 #define SLAW_NUMERIC_MAX_UNIT_BSIZE ((unt64) SLAW_NUMERIC_UNIT_BSIZE_MASK)
 
 #define SLAW_IS_N_ILK(s, ilky)                                                 \
-  (SLAW_IS_NUMERIC (s) && ((SLAW_ILK (s) & SLAW_NUMERIC_PERSONALITY_BITS)      \
-                           == (SLAW_##ilky & SLAW_NUMERIC_PERSONALITY_BITS)))
+  (SLAW_IS_NUMERIC (s)                                                         \
+   && ((SLAW_ILK (s) & SLAW_NUMERIC_PERSONALITY_BITS)                          \
+       == (SLAW_##ilky & SLAW_NUMERIC_PERSONALITY_BITS)))
 
 #define SLAW_IS_N_CORE_ILK(s, ilky)                                            \
   (SLAW_IS_NUMERIC (s)                                                         \
@@ -332,9 +333,10 @@ struct _slaw_bundle
 #define SLAW_IS_NUMERIC_SCALAR(s) (SLAW_IS_NUMERIC (s) && SLAW_IS_N_SCALAR (s))
 
 #define SLAW_N_VECTOR_WIDTH(s)                                                 \
-  (!SLAW_IS_NUMERIC (s) ? -1 : (1 + SLAW_IS_N_MVEC (s)                         \
-                                + ((SLAW_ILK (s) & SLAW_NUMERIC_VEC_BITS)      \
-                                   >> SLAW_NUMERIC_VEC_SHIFTY)))
+  (!SLAW_IS_NUMERIC (s) ? -1                                                   \
+                        : (1 + SLAW_IS_N_MVEC (s)                              \
+                           + ((SLAW_ILK (s) & SLAW_NUMERIC_VEC_BITS)           \
+                              >> SLAW_NUMERIC_VEC_SHIFTY)))
 
 
 #define SLAW_NUMERIC_UNIT_BSIZE(s)                                             \
@@ -361,11 +363,12 @@ struct _slaw_bundle
    - 1)
 
 #define SLAW_N_ARRAY_BREADTH(s)                                                \
-  (SLAW_IS_N_SINGLETON (s) ? 0 : (SLAW_N_ARRAY_HAS_WEE_BREADTH (s)             \
-                                    ? SLAW_N_ARRAY_WEE_BREADTH (s)             \
-                                    : (SLAW_N_ARRAY_HAS_8_BYTE_BREADTH (s)     \
-                                         ? (*((unt64 *) (s + 1)))              \
-                                         : (*((unt32 *) (s + 1))))))
+  (SLAW_IS_N_SINGLETON (s)                                                     \
+     ? 0                                                                       \
+     : (SLAW_N_ARRAY_HAS_WEE_BREADTH (s)                                       \
+          ? SLAW_N_ARRAY_WEE_BREADTH (s)                                       \
+          : (SLAW_N_ARRAY_HAS_8_BYTE_BREADTH (s) ? (*((unt64 *) (s + 1)))      \
+                                                 : (*((unt32 *) (s + 1))))))
 
 #define SLAW_N_ARRAY_FIRST_ELEM(s)                                             \
   ((void *) (SLAW_N_ARRAY_HAS_WEE_BREADTH (s)                                  \
@@ -374,7 +377,7 @@ struct _slaw_bundle
 
 #define SLAW_N_ARRAY_NTH_ELEM(s, N)                                            \
   ((void *) (((unt8 *) SLAW_N_ARRAY_FIRST_ELEM (s))                            \
-             + (N) *SLAW_NUMERIC_UNIT_BSIZE (s)))
+             + (N) * SLAW_NUMERIC_UNIT_BSIZE (s)))
 
 // the basics, kid:
 
@@ -776,7 +779,8 @@ static int v1tms_revert (const void *va, const void *vb)
 // https://bugs.oblong.com/show_bug.cgi?id=28#c3
 // But I'll leave this enum here in case different behavior is needed in
 // the future.
-typedef enum {
+typedef enum
+{
   DUP_KEEP_FIRST,
   DUP_KEEP_LAST,
   DUP_KEEP_LAST_IN_POSITION_OF_FIRST
@@ -1300,8 +1304,9 @@ static unt64 v1slaw_quadlen (bslaw s)
     return 1;
   if (SLAW_IS_WEE_PROTEIN (s))
     {
-      return 1 + ((SLAW_ILK (s) & SLAW_PROTEIN_QUADLEN_BITS)
-                  >> SLAW_PROTEIN_QUADLEN_SHIFTY);
+      return 1
+             + ((SLAW_ILK (s) & SLAW_PROTEIN_QUADLEN_BITS)
+                >> SLAW_PROTEIN_QUADLEN_SHIFTY);
     }
   if (SLAW_LENGTH_FOLLOWS_FLAG_IS_SET (s))
     {
@@ -2031,7 +2036,8 @@ static ob_retort v1sf_begin_array (void *cookie)
   return v1sf_enter (sf, OB_ARRAY);
 }
 
-static ob_retort v1sf_begin_array_hinted (void *cookie, OB_UNUSED int64 hint, OB_UNUSED int hint2)
+static ob_retort v1sf_begin_array_hinted (void *cookie, OB_UNUSED int64 hint,
+                                          OB_UNUSED int hint2)
 {
   return v1sf_begin_array (cookie);
 }
@@ -2262,8 +2268,9 @@ static ob_retort v1sf_handle_nonstd_protein (void *cookie, const void *pp,
   unt64 p_len = v1slaw_len (p);
   if (p_len != len)
     {
-      OB_LOG_ERROR_CODE (0x20003002, "nonstandard protein is %" OB_FMT_64 "u"
-                                     " but thought it was %" OB_FMT_64 "u\n",
+      OB_LOG_ERROR_CODE (0x20003002,
+                         "nonstandard protein is %" OB_FMT_64 "u"
+                         " but thought it was %" OB_FMT_64 "u\n",
                          p_len, len);
       return SLAW_CORRUPT_SLAW;
     }
@@ -2744,19 +2751,35 @@ static int v1slaw_numeric_unit_bsize (bslaw s)
   return (v1slaw_is_numeric (s) ? SLAW_NUMERIC_UNIT_BSIZE (s) : 0);
 }
 
-static const slaw_handler v1slaw_fabrication_handler =
-  {v1sf_begin_cons, v1sf_end_cons,
-   v1sf_begin_list, /* same function to begin list or map */
-   v1sf_end_map,
-   v1sf_begin_list, v1sf_end_list,
-   v1sf_begin_array_hinted, v1sf_end_array,
-   v1sf_begin_multivector,
-   v1sf_end_multivector, v1sf_begin_vector,
-   v1sf_end_vector, v1sf_begin_complex, v1sf_end_complex, v1sf_handle_nil,
-   v1sf_handle_string, v1sf_handle_int, v1sf_handle_unt, v1sf_handle_float,
-   v1sf_handle_empty_array, v1sf_begin_protein, v1sf_end_protein,
-   v1sf_handle_nonstd_protein, v1sf_begin_descrips, v1sf_end_descips,
-   v1sf_begin_ingests, v1sf_end_ingests, v1sf_handle_rude_data};
+static const slaw_handler v1slaw_fabrication_handler = {
+  v1sf_begin_cons,
+  v1sf_end_cons,
+  v1sf_begin_list, /* same function to begin list or map */
+  v1sf_end_map,
+  v1sf_begin_list,
+  v1sf_end_list,
+  v1sf_begin_array_hinted,
+  v1sf_end_array,
+  v1sf_begin_multivector,
+  v1sf_end_multivector,
+  v1sf_begin_vector,
+  v1sf_end_vector,
+  v1sf_begin_complex,
+  v1sf_end_complex,
+  v1sf_handle_nil,
+  v1sf_handle_string,
+  v1sf_handle_int,
+  v1sf_handle_unt,
+  v1sf_handle_float,
+  v1sf_handle_empty_array,
+  v1sf_begin_protein,
+  v1sf_end_protein,
+  v1sf_handle_nonstd_protein,
+  v1sf_begin_descrips,
+  v1sf_end_descips,
+  v1sf_begin_ingests,
+  v1sf_end_ingests,
+  v1sf_handle_rude_data};
 
 static ob_retort v1build (slaw *s, const slaw_vfuncs *v)
 {

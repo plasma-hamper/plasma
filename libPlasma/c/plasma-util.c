@@ -121,9 +121,8 @@ static ob_retort ensure_capacity (ob_numeric_builder **nb_inout)
 
 ob_retort ob_nb_new (ob_numeric_builder **nb_out)
 {
-  *nb_out = (ob_numeric_builder *) calloc (sizeof (ob_numeric_builder)
-                                             + INITIAL_CAPACITY,
-                                           1);
+  *nb_out = (ob_numeric_builder *) calloc (
+    sizeof (ob_numeric_builder) + INITIAL_CAPACITY, 1);
   if (!*nb_out)
     return OB_NO_MEM;
   (*nb_out)->capacity = INITIAL_CAPACITY;
@@ -328,21 +327,21 @@ typedef struct old_retort
 } old_retort;
 
 static old_retort old_retorts[] = {
-  {OB_UNKNOWN_ERR,          0, 2, -203},
-  {OB_ARGUMENT_WAS_NULL,    0, 2, -210000},
-  {SLAW_CORRUPT_PROTEIN,    0, 2, -210001},
-  {SLAW_CORRUPT_SLAW,       0, 2, -210002},
+  {OB_UNKNOWN_ERR, 0, 2, -203},
+  {OB_ARGUMENT_WAS_NULL, 0, 2, -210000},
+  {SLAW_CORRUPT_PROTEIN, 0, 2, -210001},
+  {SLAW_CORRUPT_SLAW, 0, 2, -210002},
   {SLAW_FABRICATOR_BADNESS, 0, 2, -210003},
-  {SLAW_NOT_NUMERIC,        0, 2, -210004},
-  {SLAW_RANGE_ERR,          0, 2, -210005},
-  {SLAW_UNIDENTIFIED_SLAW,  0, 2, -210006},
-  {SLAW_WRONG_LENGTH,       0, 2, -210007},
-  {SLAW_NOT_FOUND,          0, 2, -210008},
-  {POOL_NO_SUCH_PROTEIN,    0, 2, -200010},  // POOL_EMPTY
-  {OB_NO_MEM,               0, 2, -200530},  // POOL_MALLOC_BADTH
-  {POOL_INVALID_SIZE,       0, 2, -200590},  // POOL_ARG_BADTH
-  {POOL_NO_SUCH_PROTEIN,    0, 2, -200610},  // POOL_DISCARDED_PROTEIN
-  {POOL_NO_SUCH_PROTEIN,    0, 2, -200620},  // POOL_FUTURE_PROTEIN
+  {SLAW_NOT_NUMERIC, 0, 2, -210004},
+  {SLAW_RANGE_ERR, 0, 2, -210005},
+  {SLAW_UNIDENTIFIED_SLAW, 0, 2, -210006},
+  {SLAW_WRONG_LENGTH, 0, 2, -210007},
+  {SLAW_NOT_FOUND, 0, 2, -210008},
+  {POOL_NO_SUCH_PROTEIN, 0, 2, -200010},  // POOL_EMPTY
+  {OB_NO_MEM, 0, 2, -200530},             // POOL_MALLOC_BADTH
+  {POOL_INVALID_SIZE, 0, 2, -200590},     // POOL_ARG_BADTH
+  {POOL_NO_SUCH_PROTEIN, 0, 2, -200610},  // POOL_DISCARDED_PROTEIN
+  {POOL_NO_SUCH_PROTEIN, 0, 2, -200620},  // POOL_FUTURE_PROTEIN
 };
 
 #define N_OLD_RETORTS (sizeof (old_retorts) / sizeof (old_retorts[0]))

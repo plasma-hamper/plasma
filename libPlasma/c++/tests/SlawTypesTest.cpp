@@ -161,11 +161,10 @@ void SlawTypesTest::TestVectorClasses ()
 
 void SlawTypesTest::TestVect ()
 {
-  oblong::loam::Vect vs[] = {oblong::loam::Vect (0, 1, 2),
-                             oblong::loam::Vect (-3.14159265358979,
-                                                 2.718281828459045,
-                                                 9902345.009123),
-                             oblong::loam::Vect ()};
+  oblong::loam::Vect vs[] = {
+    oblong::loam::Vect (0, 1, 2),
+    oblong::loam::Vect (-3.14159265358979, 2.718281828459045, 9902345.009123),
+    oblong::loam::Vect ()};
   wrapped_slaw_test_v (this, vs);
 }
 

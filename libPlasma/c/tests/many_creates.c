@@ -51,12 +51,14 @@ static void warn_about_semaphores (void)
   if (OB_OK == slaw_to_int64 (slabu_list_nth (sb, 3), &semsets)
       && semsets < creates)
     {
-      fprintf (stderr, "warning: %d semaphore sets are needed, and you "
-                       "only have %" OB_FMT_64 "d\n",
+      fprintf (stderr,
+               "warning: %d semaphore sets are needed, and you "
+               "only have %" OB_FMT_64 "d\n",
                creates, semsets);
       fprintf (stderr, "If this test fails, try this:\n");
-      fprintf (stderr, "sudo sh -c 'echo %s %s %s %" OB_FMT_64
-                       "d > /proc/sys/kernel/sem'\n",
+      fprintf (stderr,
+               "sudo sh -c 'echo %s %s %s %" OB_FMT_64
+               "d > /proc/sys/kernel/sem'\n",
                slaw_string_emit (slabu_list_nth (sb, 0)),
                slaw_string_emit (slabu_list_nth (sb, 1)),
                slaw_string_emit (slabu_list_nth (sb, 2)), creates + semsets);
@@ -78,7 +80,7 @@ int main (int argc, char **argv)
   pool_cmd_info cmd;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:n:s:t:")) != -1)
     {
       switch (c)
@@ -120,8 +122,9 @@ int main (int argc, char **argv)
       if (cmd.verbose)
         printf ("%d\n", i);
       if (pret < OB_OK)
-        OB_FATAL_ERROR_CODE (0x20405000, "no can create %s (%" OB_FMT_64 "u"
-                                         "): %s\n",
+        OB_FATAL_ERROR_CODE (0x20405000,
+                             "no can create %s (%" OB_FMT_64 "u"
+                             "): %s\n",
                              cmd.pool_name, cmd.size, ob_error_string (pret));
       // While we're at it, participate and withdraw, too
       pool_cmd_open_pool (&cmd);
@@ -133,8 +136,9 @@ int main (int argc, char **argv)
                              cmd.pool_name, cmd.size, ob_error_string (pret));
       pret = pool_dispose (cmd.pool_name);
       if (pret < OB_OK)
-        OB_FATAL_ERROR_CODE (0x20405002, "no can dispose %s (%" OB_FMT_64 "u"
-                                         "): %s\n",
+        OB_FATAL_ERROR_CODE (0x20405002,
+                             "no can dispose %s (%" OB_FMT_64 "u"
+                             "): %s\n",
                              cmd.pool_name, cmd.size, ob_error_string (pret));
     }
 
@@ -169,8 +173,9 @@ int main (int argc, char **argv)
         printf ("%d\n", i);
       ob_retort pret = pool_dispose (poolName);
       if (pret != OB_OK)
-        OB_FATAL_ERROR_CODE (0x20405005, "no can dispose %s (%" OB_FMT_64 "u"
-                                         "): %s\n",
+        OB_FATAL_ERROR_CODE (0x20405005,
+                             "no can dispose %s (%" OB_FMT_64 "u"
+                             "): %s\n",
                              poolName, cmd.size, ob_error_string (pret));
     }
 

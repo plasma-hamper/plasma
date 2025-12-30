@@ -139,11 +139,10 @@ static ob_retort gang_array_add (gang_array **ptr, pool_gang_member member,
   if ((*ptr)->nmembers > (*ptr)->capacity)
     {
       (*ptr)->capacity *= 2;
-      gang_array *re =
-        (gang_array *) realloc (*ptr, sizeof (gang_array)
-                                        + sizeof (gang_array_entry)
-                                            * ((*ptr)->capacity
-                                               - DEFAULT_CAPACITY (*ptr)));
+      gang_array *re = (gang_array *) realloc (
+        *ptr, sizeof (gang_array)
+                + sizeof (gang_array_entry)
+                    * ((*ptr)->capacity - DEFAULT_CAPACITY (*ptr)));
       if (!re)
         {
           free (*ptr);
@@ -497,10 +496,9 @@ static gang_array *array_from_gang (pool_gang gang,
   do
     {
       search = pool_next_gang_member (gang, search);
-      pret =
-        gang_array_add (&ga, search, count++ | (is_a_winner (search->ph, winner)
-                                                  ? 0
-                                                  : NON_WINNER_MASK));
+      pret = gang_array_add (
+        &ga, search,
+        count++ | (is_a_winner (search->ph, winner) ? 0 : NON_WINNER_MASK));
       if (pret < OB_OK)
         return NULL;
     }
@@ -789,8 +787,9 @@ static ob_retort pool_multi_select (pool_gang gang, pool_timestamp timeout,
         }
 
       // http://msdn.microsoft.com/en-us/library/ms687025(VS.85).aspx
-      OB_LOG_ERROR_CODE (0x20105015, "unexpected return value for "
-                                     "WaitForMultipleObjects = 0x%08x\n",
+      OB_LOG_ERROR_CODE (0x20105015,
+                         "unexpected return value for "
+                         "WaitForMultipleObjects = 0x%08x\n",
                          wait_res);
       return POOL_FIFO_BADTH;
 
@@ -911,9 +910,8 @@ ob_retort pool_await_next_multi (pool_gang gang, pool_timestamp timeout,
         return pret;
 
       // Sleep until we are woken by a protein deposit or the timeout.
-      pret =
-        pool_multi_select (gang, private_incremental_timeout (timeout, &target),
-                           &winner);
+      pret = pool_multi_select (
+        gang, private_incremental_timeout (timeout, &target), &winner);
 
       // Must do this before the pool_unawait_all(), which destroys
       // the notify handles, which we need to determine the winner.
@@ -947,8 +945,9 @@ ob_retort pool_await_next_multi (pool_gang gang, pool_timestamp timeout,
       pret = pool_next_multi_internal2 (gang, ret_ph, ret_prot, ret_ts,
                                         ret_index, ga, pool_opportunistic_next);
       free (ga);
-      ob_log (OBLV_DBUG, 0x20105024, "%d: pool_next_multi() returned %s"
-                                     " in pool_await_next_multi()\n",
+      ob_log (OBLV_DBUG, 0x20105024,
+              "%d: pool_next_multi() returned %s"
+              " in pool_await_next_multi()\n",
               getpid (), ob_error_string (pret));
 
       if (pret == OB_OK)
@@ -1036,21 +1035,23 @@ ob_retort ob_insert_penultimate_directory (char **pathp, const char *insert)
   const char *src = path + slashpos;
   size_t len = 1 + pathlen - slashpos;
   if (0 != VALGRIND_CHECK_MEM_IS_ADDRESSABLE (dest, len))
-    OB_LOG_ERROR_CODE (0x20105030, "dest not addressable in '%s'\n"
-                                   "pathlen = %" OB_FMT_SIZE "u\n"
-                                   "newlen = %" OB_FMT_SIZE "u\n"
-                                   "dest = %" OB_FMT_SIZE "u\n"
-                                   "src = %" OB_FMT_SIZE "u\n"
-                                   "len = %" OB_FMT_SIZE "u\n",
+    OB_LOG_ERROR_CODE (0x20105030,
+                       "dest not addressable in '%s'\n"
+                       "pathlen = %" OB_FMT_SIZE "u\n"
+                       "newlen = %" OB_FMT_SIZE "u\n"
+                       "dest = %" OB_FMT_SIZE "u\n"
+                       "src = %" OB_FMT_SIZE "u\n"
+                       "len = %" OB_FMT_SIZE "u\n",
                        path, pathlen, newlen, (size_t) (dest - path),
                        (size_t) (src - path), len);
   if (0 != VALGRIND_CHECK_MEM_IS_DEFINED (src, len))
-    OB_LOG_ERROR_CODE (0x20105031, "src not defined in '%s'\n"
-                                   "pathlen = %" OB_FMT_SIZE "u\n"
-                                   "newlen = %" OB_FMT_SIZE "u\n"
-                                   "dest = %" OB_FMT_SIZE "u\n"
-                                   "src = %" OB_FMT_SIZE "u\n"
-                                   "len = %" OB_FMT_SIZE "u\n",
+    OB_LOG_ERROR_CODE (0x20105031,
+                       "src not defined in '%s'\n"
+                       "pathlen = %" OB_FMT_SIZE "u\n"
+                       "newlen = %" OB_FMT_SIZE "u\n"
+                       "dest = %" OB_FMT_SIZE "u\n"
+                       "src = %" OB_FMT_SIZE "u\n"
+                       "len = %" OB_FMT_SIZE "u\n",
                        path, pathlen, newlen, (size_t) (dest - path),
                        (size_t) (src - path), len);
   memmove (dest, src, len);

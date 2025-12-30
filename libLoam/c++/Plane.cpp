@@ -11,9 +11,7 @@ using namespace oblong::loam;
 static const Vect zaxs (0.0, 0.0, 1.0);
 
 
-Plane::Plane () : norm (zaxs)
-{
-}
+Plane::Plane () : norm (zaxs) {}
 
 Plane::Plane (const Vect &p, const Vect &normal) : point (p), norm (normal)
 {

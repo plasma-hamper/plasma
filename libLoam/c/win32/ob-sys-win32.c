@@ -374,9 +374,9 @@ int pthread_create (pthread_t *out_handle, void *attr_ignored,
 
   if (new_handle == 0)
     {
-      OB_FATAL_ERROR_CODE (0x10030003, "error creating thread - %s\n",
-                           ob_error_string (
-                             ob_win32err_to_retort (GetLastError ())));
+      OB_FATAL_ERROR_CODE (
+        0x10030003, "error creating thread - %s\n",
+        ob_error_string (ob_win32err_to_retort (GetLastError ())));
     }
 
   *out_handle = new_handle;
@@ -393,10 +393,9 @@ int pthread_timedjoin_np (pthread_t thread, void **value_ptr,
       DWORD exit_code = 0;
       if (!GetExitCodeThread (thread, &exit_code))
         {
-          OB_LOG_ERROR_CODE (0x10030004,
-                             "error getting thread exit code - %s\n",
-                             ob_error_string (
-                               ob_win32err_to_retort (GetLastError ())));
+          OB_LOG_ERROR_CODE (
+            0x10030004, "error getting thread exit code - %s\n",
+            ob_error_string (ob_win32err_to_retort (GetLastError ())));
           exit_code = 1;
         }
 
@@ -414,15 +413,15 @@ int pthread_timedjoin_np (pthread_t thread, void **value_ptr,
     return EBUSY;
   else if (res == WAIT_FAILED)
     {
-      OB_FATAL_ERROR_CODE (0x10030006,
-                           "error on pthread_join: WAIT_FAILED: %s\n",
-                           ob_error_string (
-                             ob_win32err_to_retort (GetLastError ())));
+      OB_FATAL_ERROR_CODE (
+        0x10030006, "error on pthread_join: WAIT_FAILED: %s\n",
+        ob_error_string (ob_win32err_to_retort (GetLastError ())));
     }
 
   //any error causes an exit
-  OB_FATAL_ERROR_CODE (0x10030005, "error on pthread_join: WaitForSingleObject "
-                                   "returned 0x%08x\n",
+  OB_FATAL_ERROR_CODE (0x10030005,
+                       "error on pthread_join: WaitForSingleObject "
+                       "returned 0x%08x\n",
                        res);
 }
 
@@ -801,8 +800,8 @@ static void set_week_number_mon4 (struct tm *timeptr, int wnum)
 /* strptime: roken */
 /* extern "C" */
 char *
-  /* strptime (const char *buf, const char *format, struct tm *timeptr) */
-  strptime (const char *buf, const char *format, struct tm *timeptr)
+/* strptime (const char *buf, const char *format, struct tm *timeptr) */
+strptime (const char *buf, const char *format, struct tm *timeptr)
 {
   char c;
 

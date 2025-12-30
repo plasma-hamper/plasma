@@ -43,7 +43,7 @@ int main (int argc, char *argv[])
   unsigned long long i;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "s:S:t:")) != -1)
     {
       switch (c)
@@ -86,7 +86,7 @@ int main (int argc, char *argv[])
 
   // Set an alarm to wake us after the time is up.
   struct itimerval iv;
-  memset(&iv, 0, sizeof(iv));
+  memset (&iv, 0, sizeof (iv));
   iv.it_value.tv_sec = test_secs;
   if (setitimer (ITIMER_REAL, &iv, NULL) < 0)
     {

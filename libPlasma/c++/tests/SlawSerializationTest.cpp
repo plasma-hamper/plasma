@@ -70,13 +70,13 @@ TEST (SlawSerializationTest, LousySerialization)
   {
     Slaw from;
     Slaw to;
-  } data[] =
-    {{Slaw (unt16 (124)), Slaw (int64 (124))},
-     {Slaw (float32 (3.141)), Slaw (float64 (3.141))},
-     {Slaw (int64 (12321312)), Slaw ()},
-     {Slaw (int64 (1)), Slaw ()},
-     {Slaw ("a string"), Slaw ()},
-     {Slaw::List ("a", "b", int8 (2)), Slaw::List ("a", "b", int64 (2))}};
+  } data[] = {
+    {Slaw (unt16 (124)), Slaw (int64 (124))},
+    {Slaw (float32 (3.141)), Slaw (float64 (3.141))},
+    {Slaw (int64 (12321312)), Slaw ()},
+    {Slaw (int64 (1)), Slaw ()},
+    {Slaw ("a string"), Slaw ()},
+    {Slaw::List ("a", "b", int8 (2)), Slaw::List ("a", "b", int64 (2))}};
 
   const int N (sizeof (data) / sizeof (data[0]));
 

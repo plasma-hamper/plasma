@@ -7,11 +7,7 @@
 using namespace oblong::loam;
 
 
-ObPseudopod::ObPseudopod () : AnkleObject ()
-{
-}
+ObPseudopod::ObPseudopod () : AnkleObject () {}
 
 
-ObPseudopod::~ObPseudopod ()
-{
-}
+ObPseudopod::~ObPseudopod () {}

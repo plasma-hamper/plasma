@@ -215,14 +215,10 @@ void pool_enable_atfork_handlers (void)
 #else
 
 /* No-op on Windows. */
-void pool_disable_atfork_handlers (void)
-{
-}
+void pool_disable_atfork_handlers (void) {}
 
 /* Ditto. */
-void pool_enable_atfork_handlers (void)
-{
-}
+void pool_enable_atfork_handlers (void) {}
 
 #endif  // ndef _MSC_VER
 
@@ -791,12 +787,10 @@ static ob_retort pool_save_default_config_with_permissions (pool_hose ph,
   if (cf)
     OB_LOG_DEBUG_CODE (0x20101005, "writing sem-key %u\n", ph->sem_key);
   slaw m1 =
-    slaw_map_inline_cf ("type",         slaw_string (reliable_type),
-                        "pool-version", slaw_int32 (ph->pool_directory_version),
-                        NULL);
-  slaw m2 = slaw_map_inline_cf ("sem-key", slaw_int32 (ph->sem_key),
-                                "perms",   slaw_v3int32 (perms_v),
-                                NULL);
+    slaw_map_inline_cf ("type", slaw_string (reliable_type), "pool-version",
+                        slaw_int32 (ph->pool_directory_version), NULL);
+  slaw m2 = slaw_map_inline_cf ("sem-key", slaw_int32 (ph->sem_key), "perms",
+                                slaw_v3int32 (perms_v), NULL);
   slaw m = slaw_maps_merge (m1, (cf ? m2 : NULL), NULL);
   if (!m1 || !m2 || !m)
     return slaw_free (m1), slaw_free (m2), slaw_free (m), OB_NO_MEM;
@@ -814,9 +808,8 @@ static ob_retort pool_save_default_config_with_permissions (pool_hose ph,
 // only exported for rewrite of config file in pool_sem.c
 ob_retort pool_save_default_config (pool_hose ph)
 {
-  return pool_save_default_config_with_permissions (ph, ph->perms.mode,
-                                                    ph->perms.uid,
-                                                    ph->perms.gid);
+  return pool_save_default_config_with_permissions (
+    ph, ph->perms.mode, ph->perms.uid, ph->perms.gid);
 }
 
 static ob_retort pool_load_default_config (pool_hose ph)
@@ -844,11 +837,11 @@ static ob_retort pool_load_default_config (pool_hose ph)
       && version != POOL_DIRECTORY_VERSION_CONFIG_IN_MMAP)
     {
       protein_free (conf);
-      OB_LOG_ERROR_CODE (0x20101006, "'%s' had pool-version %" OB_FMT_64
-                                     "d, but expected either %d or %d\n",
-                         ph->name, version,
-                         POOL_DIRECTORY_VERSION_CONFIG_IN_FILE,
-                         POOL_DIRECTORY_VERSION_CONFIG_IN_MMAP);
+      OB_LOG_ERROR_CODE (
+        0x20101006,
+        "'%s' had pool-version %" OB_FMT_64 "d, but expected either %d or %d\n",
+        ph->name, version, POOL_DIRECTORY_VERSION_CONFIG_IN_FILE,
+        POOL_DIRECTORY_VERSION_CONFIG_IN_MMAP);
       return POOL_WRONG_VERSION;
     }
 
@@ -1060,9 +1053,8 @@ ob_retort pool_get_info (pool_hose ph, int64 hops, protein *return_prot)
     return ph->info (ph, hops, return_prot);
 
   // else, fake it
-  slaw ingests = slaw_map_inline_cf ("type",     slaw_string (ph->method),
-                                     "terminal", slaw_boolean (true),
-                                     NULL);
+  slaw ingests = slaw_map_inline_cf ("type", slaw_string (ph->method),
+                                     "terminal", slaw_boolean (true), NULL);
   if (!ingests)
     return OB_NO_MEM;
   *return_prot = protein_from_ff (NULL, ingests);
@@ -1550,7 +1542,7 @@ void pool_fetch_ex (pool_hose ph, pool_fetch_op *ops, int64 nops,
   tort = check_hose_validity (ph);
   if (tort < OB_OK)
     {
-    splatter_retort:
+splatter_retort:
       if (oldest_idx_out)
         *oldest_idx_out = tort;
       if (newest_idx_out)
@@ -1603,12 +1595,9 @@ void pool_fetch_ex (pool_hose ph, pool_fetch_op *ops, int64 nops,
           else
             {
               // construct a new protein with the parts we want
-              protein np =
-                protein_from_llr (ops[i].want_descrips ? protein_descrips (p)
-                                                       : NULL,
-                                  ops[i].want_ingests ? protein_ingests (p)
-                                                      : NULL,
-                                  rude, rlen);
+              protein np = protein_from_llr (
+                ops[i].want_descrips ? protein_descrips (p) : NULL,
+                ops[i].want_ingests ? protein_ingests (p) : NULL, rude, rlen);
               protein_free (p);
               ops[i].p = np;
             }
@@ -1618,8 +1607,9 @@ void pool_fetch_ex (pool_hose ph, pool_fetch_op *ops, int64 nops,
           int64 idx;
           if (OB_OK == pool_oldest_index (ph, &idx))
             {
-              if (idx > ops[i].idx || (OB_OK == pool_newest_index (ph, &idx)
-                                       && idx < ops[i].idx))
+              if (idx > ops[i].idx
+                  || (OB_OK == pool_newest_index (ph, &idx)
+                      && idx < ops[i].idx))
                 {
                   ops[i].idx = idx; /* clamp the index to oldest or newest */
                   i--;              /* and go round again */
@@ -1754,9 +1744,8 @@ static ob_retort pool_list_internal (slabu *sb, const char *dir_path,
                                      int prefix)
 {
   struct dirent **namelist = NULL;
-  const int nentries =
-    ob_scandir (dir_path, &namelist, filter_out_dot_and_doubledot,
-                hackishly_sort_my_way);
+  const int nentries = ob_scandir (
+    dir_path, &namelist, filter_out_dot_and_doubledot, hackishly_sort_my_way);
 
   if (nentries < 0 && errno == ENOENT)
     {
@@ -2085,9 +2074,8 @@ static pclock_t pool_config_lock (bool need_not_exist, bprotein permissions)
         return result;
     }
 
-  OB_LOG_ERROR_CODE (0x20101018,
-                     "unknown result waiting for config lock - %d\n",
-                     winResult);
+  OB_LOG_ERROR_CODE (
+    0x20101018, "unknown result waiting for config lock - %d\n", winResult);
 
   result.status = OB_UNKNOWN_ERR;
   return result;
@@ -2365,9 +2353,8 @@ static ob_retort __pool_create (const char *pool_uri, const char *type,
             {
               if (pool_name_is_remote (pool_uri))
                 {
-                  OB_LOG_BUG_CODE (0x2010103a,
-                                   "Didn't expect that for pool '%s'\n",
-                                   pool_uri);
+                  OB_LOG_BUG_CODE (
+                    0x2010103a, "Didn't expect that for pool '%s'\n", pool_uri);
                   return OB_UNKNOWN_ERR;
                 }
               pret = __pool_dispose (pool_uri);
@@ -2554,8 +2541,9 @@ ob_retort pool_create_ctx (const char *pool_uri, const char *type,
       options = options_map_or_prot;
       if (options != NULL && !slaw_is_protein (options))
         {
-          OB_LOG_ERROR_CODE (0x20101021, "For pool '%s', options is not a map "
-                                         "or a protein\n",
+          OB_LOG_ERROR_CODE (0x20101021,
+                             "For pool '%s', options is not a map "
+                             "or a protein\n",
                              pool_uri);
           return POOL_NOT_A_PROTEIN_OR_MAP;
         }
@@ -2743,8 +2731,9 @@ ob_retort pool_participate_creatingly_ctx (const char *pool_uri,
       options = options_map_or_prot;
       if (options != NULL && !slaw_is_protein (options))
         {
-          OB_LOG_ERROR_CODE (0x20101039, "For pool '%s', options is not a map "
-                                         "or a protein\n",
+          OB_LOG_ERROR_CODE (0x20101039,
+                             "For pool '%s', options is not a map "
+                             "or a protein\n",
                              pool_uri);
           return POOL_NOT_A_PROTEIN_OR_MAP;
         }

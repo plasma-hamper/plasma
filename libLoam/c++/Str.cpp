@@ -106,9 +106,7 @@ Str::Str () noexcept
   _Init ();
 }
 
-Str::Str (std::nullptr_t) noexcept : Str ()
-{
-}
+Str::Str (std::nullptr_t) noexcept : Str () {}
 
 Str::Str (const char *text)
 {
@@ -813,7 +811,7 @@ bool Str::Matches (const Str &pattern) const
                          pattern.utf8 (), mattie.ErrorStr ().utf8 ());
   else
     mattie.Match ();
-  return bool(mattie);
+  return bool (mattie);
 }
 
 bool Str::Match (const Str &pattern)
@@ -827,7 +825,7 @@ bool Str::Match (const Str &pattern)
                          pattern.utf8 (), match->ErrorStr ().utf8 ());
   else
     match->Match ();
-  return bool(*match);
+  return bool (*match);
 }
 
 bool Str::Match ()
@@ -841,13 +839,13 @@ bool Str::MatchAgain ()
   if (!match)
     return false;
   match->Match ();
-  return bool(*match);
+  return bool (*match);
 }
 
 bool Str::MatchHasMatched () const
 {
   if (match)
-    return bool(*match);
+    return bool (*match);
   return false;
 }
 
@@ -1282,8 +1280,9 @@ void Str::_EnsureU8Capacity (int64 capacity)
 void Str::_SetU8Length (int64 length)
 {
   if (!u8 || u8ByteCapacity < length)
-    OB_FATAL_BUG_CODE (0x11000003, "u8 = %p, u8ByteCapacity = %" OB_FMT_64 "d, "
-                                   "length = %" OB_FMT_64 "d\n",
+    OB_FATAL_BUG_CODE (0x11000003,
+                       "u8 = %p, u8ByteCapacity = %" OB_FMT_64 "d, "
+                       "length = %" OB_FMT_64 "d\n",
                        u8, u8ByteCapacity, length);
   u8[length] = 0;
   u8ByteLength = length;

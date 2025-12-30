@@ -21,9 +21,9 @@
   {                                                                            \
     type x = *slaw_##type##_emit (s);                                          \
     if (x != (num))                                                            \
-      OB_FATAL_ERROR_CODE (0x2030a003, "expected %" OB_FMT_64                  \
-                                       "d but got %" OB_FMT_64 "d\n",          \
-                           (int64) (num), (int64) x);                          \
+      OB_FATAL_ERROR_CODE (                                                    \
+        0x2030a003, "expected %" OB_FMT_64 "d but got %" OB_FMT_64 "d\n",      \
+        (int64) (num), (int64) x);                                             \
   }                                                                            \
   slaw_free (s);
 

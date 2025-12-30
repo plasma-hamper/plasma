@@ -15,14 +15,14 @@ namespace {
 #define DEFINE_ARRAY_TEST(T)                                                   \
   TEST (ArraySlawTest, T##array)                                               \
   {                                                                            \
-    const T values[][5] =                                                      \
-      {{static_cast<T> ((std::numeric_limits<T>::min) ()),                     \
-        static_cast<T> ((std::numeric_limits<T>::min) () + 22),                \
-        static_cast<T> ((std::numeric_limits<T>::max) ()),                     \
-        static_cast<T> ((std::numeric_limits<T>::max) () - 42), T (0)},        \
-       {static_cast<T> ((std::numeric_limits<T>::min) () + 18),                \
-        static_cast<T> ((std::numeric_limits<T>::min) ()),                     \
-        static_cast<T> ((std::numeric_limits<T>::max) () - 2), T (1), T (0)}}; \
+    const T values[][5] = {                                                    \
+      {static_cast<T> ((std::numeric_limits<T>::min) ()),                      \
+       static_cast<T> ((std::numeric_limits<T>::min) () + 22),                 \
+       static_cast<T> ((std::numeric_limits<T>::max) ()),                      \
+       static_cast<T> ((std::numeric_limits<T>::max) () - 42), T (0)},         \
+      {static_cast<T> ((std::numeric_limits<T>::min) () + 18),                 \
+       static_cast<T> ((std::numeric_limits<T>::min) ()),                      \
+       static_cast<T> ((std::numeric_limits<T>::max) () - 2), T (1), T (0)}};  \
                                                                                \
     const size_t N (2);                                                        \
     const size_t M (5);                                                        \
