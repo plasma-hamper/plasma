@@ -99,3 +99,7 @@
 * Change prototype of `slaw_string_is_valid_utf8()` to
   accept a `bslaw`, since the argument is constant.
   [#19](https://github.com/plasma-hamper/plasma/pull/19)
+
+* Fix small memory leak on non-glibc (effectively, non-Linux)
+  platforms.
+  [#20](https://github.com/plasma-hamper/plasma/pull/20)
