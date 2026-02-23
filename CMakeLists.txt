@@ -126,7 +126,19 @@ find_package(Boost QUIET COMPONENTS filesystem regex)
 # for the presence check.
 find_library(_ICU_UC_LIB   NAMES icuuc   HINTS /opt/homebrew/opt/icu4c/lib)
 find_library(_ICU_I18N_LIB NAMES icui18n HINTS /opt/homebrew/opt/icu4c/lib)
-if(Boost_FOUND AND _ICU_UC_LIB AND _ICU_I18N_LIB)
+
+# Set ICU_LIBRARIES whenever ICU is present (not just for C++ libs), because
+# the C library's spew-test also links against ICU.
+# Use -l flags to avoid absolute paths in .pc files (see comment above).
+if(_ICU_UC_LIB AND _ICU_I18N_LIB)
+    if(WIN32)
+        set(ICU_LIBRARIES "-libpath:${YOBUILD}/lib;icuin.lib;icuuc.lib")
+    else()
+        set(ICU_LIBRARIES "-licuuc -licui18n")
+    endif()
+endif()
+
+if(Boost_FOUND AND ICU_LIBRARIES)
     set(_cxx_libs_default ON)
 else()
     set(_cxx_libs_default OFF)
@@ -141,18 +153,12 @@ if(BUILD_CXX_LIBS)
             "BUILD_CXX_LIBS is ON but Boost (filesystem, regex) was not found.\n"
             "Install libboost-dev, or set BOOST_ROOT to the Boost installation prefix.")
     endif()
-    if(NOT _ICU_UC_LIB OR NOT _ICU_I18N_LIB)
+    if(NOT ICU_LIBRARIES)
         message(FATAL_ERROR
             "BUILD_CXX_LIBS is ON but ICU libraries (icuuc, icui18n) were not found.\n"
             "Install libicu-dev, or set ICU_ROOT to the ICU installation prefix.")
     endif()
 
-    # ICU: use -l flags to avoid absolute paths in .pc files (see comment above).
-    if(WIN32)
-        set(ICU_LIBRARIES "-libpath:${YOBUILD}/lib;icuin.lib;icuuc.lib")
-    else()
-        set(ICU_LIBRARIES "-licuuc -licui18n")
-    endif()
     # Replace semicolons with spaces to keep cmake from splitting the argument.
     STRING(REPLACE ";" " " ICU_LIBRARIES_SPACE_SEP "${ICU_LIBRARIES}")
 

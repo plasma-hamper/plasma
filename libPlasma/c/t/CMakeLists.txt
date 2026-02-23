@@ -34,7 +34,6 @@ set(
   slumcat
   slypes
   spew-multi
-  spew-test
   test_new_stuff
   test-boolean
   testcoerce
@@ -56,8 +55,12 @@ set(
 set(PlasmaT_LINK_LIBS Plasma ${Plasma_LINK_LIBS})
 generate_tests("${PlasmaT_TESTS}" "${PlasmaT_LINK_LIBS}")
 
-# Additional libraries for a few tests
-target_link_libraries(spew-test ${ICU_LIBRARIES})
+# spew-test depends on ICU, so only build it when ICU is available.
+if(ICU_LIBRARIES AND BUILD_TESTS)
+    add_executable(spew-test spew-test.c)
+    target_link_libraries(spew-test gtest gtest_main ${PlasmaT_LINK_LIBS} ${ICU_LIBRARIES})
+    add_wrapped_test(spew-test spew-test "local")
+endif()
 
 # Test programs needed by the scripts in the above list (and not already
 # inferred by generate_tests).  Usually only need to do this if the
