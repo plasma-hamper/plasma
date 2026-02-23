@@ -106,39 +106,70 @@ if(WIN32)
     set(YAML_LIB "-libpath:${YOBUILD}/lib;yaml.lib")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /DYAML_DECLARE_STATIC" )  # yobuild12
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DYAML_DECLARE_STATIC" )  # yobuild12
-    set(ICU_LIBRARIES "-libpath:${YOBUILD}/lib;icuin.lib;icuuc.lib" )
 else()
     # Using absolute paths to libraries causes great woe in .pc files
     # (in particular, pkg-config reorders absolute paths before -l libraries,
     #  causing link failures), so don't do things the cmake way here:
     #find_library(YAML_LIB yaml HINTS "${YOBUILD}/lib")
-    #find_package(ICU REQUIRED COMPONENTS uc i18n)
     # Instead, use -l flags.   We already have all needed -L and -I flags.
     set(YAML_LIB "-lyaml")
-    set(ICU_LIBRARIES "-licuuc -licui18n")
 endif()
-# Replace semicolons with spaces to keep cmake from splitting the argument.
-STRING(REPLACE ";" " " ICU_LIBRARIES_SPACE_SEP "${ICU_LIBRARIES}" )
 
-# otherwise boost includes optimized and debug versions, which fouls up the build
+# Detect whether the C++ library dependencies are available, to set the
+# default for BUILD_CXX_LIBS.  Use QUIET so the build doesn't fail if they
+# are absent and the user hasn't explicitly requested C++ libs.
 set(Boost_USE_DEBUG_RUNTIME FALSE)
 set(BOOST_ROOT ${YOBUILD})
-find_package(Boost REQUIRED COMPONENTS filesystem regex)
-if (NOT WIN32)
-    # Using absolute paths to libraries causes great woe in .pc files
-    # Instead, use -l flags.   We already have all needed -L and -I flags.
-    STRING(REGEX REPLACE "/[a-zA-Z0-9_/-]*/libboost" "-lboost" Boost_LIBRARIES "${Boost_LIBRARIES}" )
-    STRING(REGEX REPLACE ".so|.dylib" "" Boost_LIBRARIES "${Boost_LIBRARIES}" )
+find_package(Boost QUIET COMPONENTS filesystem regex)
+# ICU is not found via find_package here to avoid overwriting ICU_LIBRARIES
+# with absolute paths that cause trouble in .pc files; use find_library just
+# for the presence check.
+find_library(_ICU_UC_LIB   NAMES icuuc   HINTS /opt/homebrew/opt/icu4c/lib)
+find_library(_ICU_I18N_LIB NAMES icui18n HINTS /opt/homebrew/opt/icu4c/lib)
+if(Boost_FOUND AND _ICU_UC_LIB AND _ICU_I18N_LIB)
+    set(_cxx_libs_default ON)
+else()
+    set(_cxx_libs_default OFF)
 endif()
-STRING(REPLACE ";" " " Boost_LIBRARIES_SPACE_SEP "${Boost_LIBRARIES}" )
-message("Boost_LIBRARIES is ${Boost_LIBRARIES}")
-message("Boost_INCLUDE_DIRS is ${Boost_INCLUDE_DIRS}")
-# Everything needs Boost...
-include_directories(${Boost_INCLUDE_DIRS})
-# Boost doesn't know where it lives, so turn off autolinking...
-add_definitions("-DBOOST_ALL_NO_LIB")
-# Avoid deprecated unused variables 'boost::system::posix_category'
-add_definitions("-DBOOST_SYSTEM_NO_DEPRECATED")
+option(BUILD_CXX_LIBS
+    "Build C++ libraries (libLoam++ and libPlasma++) - requires Boost and ICU"
+    ${_cxx_libs_default})
+
+if(BUILD_CXX_LIBS)
+    if(NOT Boost_FOUND)
+        message(FATAL_ERROR
+            "BUILD_CXX_LIBS is ON but Boost (filesystem, regex) was not found.\n"
+            "Install libboost-dev, or set BOOST_ROOT to the Boost installation prefix.")
+    endif()
+    if(NOT _ICU_UC_LIB OR NOT _ICU_I18N_LIB)
+        message(FATAL_ERROR
+            "BUILD_CXX_LIBS is ON but ICU libraries (icuuc, icui18n) were not found.\n"
+            "Install libicu-dev, or set ICU_ROOT to the ICU installation prefix.")
+    endif()
+
+    # ICU: use -l flags to avoid absolute paths in .pc files (see comment above).
+    if(WIN32)
+        set(ICU_LIBRARIES "-libpath:${YOBUILD}/lib;icuin.lib;icuuc.lib")
+    else()
+        set(ICU_LIBRARIES "-licuuc -licui18n")
+    endif()
+    # Replace semicolons with spaces to keep cmake from splitting the argument.
+    STRING(REPLACE ";" " " ICU_LIBRARIES_SPACE_SEP "${ICU_LIBRARIES}")
+
+    # Boost: similarly, convert absolute library paths to -l flags for .pc files.
+    if(NOT WIN32)
+        STRING(REGEX REPLACE "/[a-zA-Z0-9_/-]*/libboost" "-lboost" Boost_LIBRARIES "${Boost_LIBRARIES}")
+        STRING(REGEX REPLACE ".so|.dylib" "" Boost_LIBRARIES "${Boost_LIBRARIES}")
+    endif()
+    STRING(REPLACE ";" " " Boost_LIBRARIES_SPACE_SEP "${Boost_LIBRARIES}")
+    message("Boost_LIBRARIES is ${Boost_LIBRARIES}")
+    message("Boost_INCLUDE_DIRS is ${Boost_INCLUDE_DIRS}")
+    include_directories(${Boost_INCLUDE_DIRS})
+    # Boost doesn't know where it lives, so turn off autolinking...
+    add_definitions("-DBOOST_ALL_NO_LIB")
+    # Avoid deprecated unused variables 'boost::system::posix_category'
+    add_definitions("-DBOOST_SYSTEM_NO_DEPRECATED")
+endif()
 
 INCLUDE(CheckIncludeFileCXX)
 INCLUDE(CheckIncludeFile)
@@ -535,14 +566,17 @@ add_subdirectory(gtest)
 add_subdirectory(doc)
 add_subdirectory(libLoam/c)
 add_subdirectory(libPlasma/c)
-add_subdirectory(libLoam/c++)
-add_subdirectory(libPlasma/c++)
-if (NOT WIN32)
-# Not yet quite ported
-add_subdirectory(libPlasma/bench)
-add_subdirectory(libPlasma/ruby)
-add_subdirectory(libPlasma/zeroconf)
-# adding all noodoo2-related directories here
+if(BUILD_CXX_LIBS)
+    add_subdirectory(libLoam/c++)
+    add_subdirectory(libPlasma/c++)
+    if(NOT WIN32)
+        # Not yet quite ported
+        add_subdirectory(libPlasma/bench)
+        add_subdirectory(libPlasma/zeroconf)
+    endif()
+endif()
+if(NOT WIN32)
+    add_subdirectory(libPlasma/ruby)
 endif()
 
 # add_subdirectory(samples)
@@ -638,6 +672,7 @@ MESSAGE("CMAKE_BUILD_TYPE:  ${CMAKE_BUILD_TYPE} (choices are Debug, Release, or 
 MESSAGE("STRICT_WARNINGS:   ${STRICT_WARNINGS}")
 MESSAGE("WERROR:            ${WERROR}")
 MESSAGE("BUILD_TESTS:       ${BUILD_TESTS}")
+MESSAGE("BUILD_CXX_LIBS:    ${BUILD_CXX_LIBS}")
 MESSAGE("COVERAGE:          ${COVERAGE}; see https://gitlab.oblong.com/platform/docs/wikis/coverage-testing")
 MESSAGE("STATIC_ONLY:       ${STATIC_ONLY}")
 MESSAGE("GREENHOUSE:        ${GREENHOUSE}")
