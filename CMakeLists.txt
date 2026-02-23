@@ -109,10 +109,15 @@ if(WIN32)
 else()
     # Using absolute paths to libraries causes great woe in .pc files
     # (in particular, pkg-config reorders absolute paths before -l libraries,
-    #  causing link failures), so don't do things the cmake way here:
-    #find_library(YAML_LIB yaml HINTS "${YOBUILD}/lib")
-    # Instead, use -l flags.   We already have all needed -L and -I flags.
-    set(YAML_LIB "-lyaml")
+    #  causing link failures), so don't do things the cmake way here.
+    # Instead, use find_library just to check presence, then use a -l flag.
+    find_library(_yaml_lib_path NAMES yaml HINTS "${YOBUILD}/lib")
+    if(_yaml_lib_path)
+        set(YAML_LIB "-lyaml")
+    else()
+        message(STATUS "libyaml not found; YAML support will be disabled")
+    endif()
+    unset(_yaml_lib_path CACHE)
 endif()
 
 # Detect whether the C++ library dependencies are available, to set the
