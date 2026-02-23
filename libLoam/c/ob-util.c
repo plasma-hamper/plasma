@@ -361,10 +361,11 @@ ob_retort ob_append_env_list (const char *name, const char *value)
   if (!oldval)
     return ob_setenv (name, value);
 
-  char *buf = malloc (strlen (value) + 1 + strlen (oldval) + 1);
+  size_t buf_len = strlen (value) + 1 + strlen (oldval) + 1;
+  char *buf = malloc (buf_len);
   if (!buf)
     return OB_NO_MEM;
-  sprintf (buf, "%s%c%s", oldval, OB_PATH_CHAR, value);
+  snprintf (buf, buf_len, "%s%c%s", oldval, OB_PATH_CHAR, value);
 
   err = ob_setenv (name, buf);
   free (buf);
@@ -378,10 +379,11 @@ ob_retort ob_prepend_env_list (const char *name, const char *value)
   if (!oldval)
     return ob_setenv (name, value);
 
-  char *buf = malloc (strlen (value) + 1 + strlen (oldval) + 1);
+  size_t buf_len = strlen (value) + 1 + strlen (oldval) + 1;
+  char *buf = malloc (buf_len);
   if (!buf)
     return OB_NO_MEM;
-  sprintf (buf, "%s%c%s", value, OB_PATH_CHAR, oldval);
+  snprintf (buf, buf_len, "%s%c%s", value, OB_PATH_CHAR, oldval);
 
   err = ob_setenv (name, buf);
   free (buf);

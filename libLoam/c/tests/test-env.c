@@ -33,7 +33,8 @@ void test_ob_append_env_list (void)
   val = getenv ("BLARG");
   if (!val)
     error_exit ("getenv failed");
-  sprintf (expected, "%s%c%s", "/dir1", OB_PATH_CHAR, "/dir2");
+  snprintf (expected, sizeof (expected),
+            "%s%c%s", "/dir1", OB_PATH_CHAR, "/dir2");
   if (strcmp (val, expected))
     error_exit ("ob_append_env_list wrong value");
 
@@ -44,8 +45,10 @@ void test_ob_append_env_list (void)
   val = getenv ("BLARG");
   if (!val)
     error_exit ("getenv failed");
-  sprintf (expected, "%s%c%s%c%s", "/dir0", OB_PATH_CHAR, "/dir1", OB_PATH_CHAR,
-           "/dir2");
+  snprintf (expected, sizeof (expected), "%s%c%s%c%s",
+            "/dir0", OB_PATH_CHAR,
+            "/dir1", OB_PATH_CHAR,
+            "/dir2");
   if (strcmp (val, expected))
     error_exit ("ob_prepend_env_list wrong value");
 }
