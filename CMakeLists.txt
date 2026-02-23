@@ -222,8 +222,13 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/plasma_config.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/plasma_config.h)
 if (UNIX)
-  set(OPENSSL_LIBRARIES "-lssl -lcrypto")
-  set(OPENSSL_FOUND TRUE)
+  check_include_file(openssl/opensslv.h HAVE_OPENSSL_OPENSSLV_H)
+  check_include_file(openssl/rand.h HAVE_OPENSSL_RAND_H)
+
+  if (HAVE_OPENSSL_OPENSSLV_H AND HAVE_OPENSSL_RAND_H)
+    set(OPENSSL_LIBRARIES "-lssl -lcrypto")
+    set(OPENSSL_FOUND TRUE)
+  endif()
 
   check_include_file(openssl/ec.h HAVE_OPENSSL_EC_H)
   check_include_file(openssl/ecdsa.h HAVE_OPENSSL_ECDSA_H)
