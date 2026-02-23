@@ -14,10 +14,11 @@
  * even in out-of-tree builds.
  * buf must be a buffer big enough to hold the path.
  */
-static char *ob_test_source_relative3 (const char *abssrcdir, const char *fname,
-                                       char *buf)
+static char *ob_test_source_relative3 (const char *abssrcdir,
+                                       const char *fname,
+                                       char *buf, size_t buf_len)
 {
-  sprintf (buf, "%s/%s", abssrcdir, fname);
+  snprintf (buf, buf_len, "%s/%s", abssrcdir, fname);
   return buf;
 }
 
@@ -33,7 +34,9 @@ static char ob_find_file_name_buf[2048];
 static const char *ob_test_source_relative2 (const char *abssrcdir,
                                              const char *fname)
 {
-  return ob_test_source_relative3 (abssrcdir, fname, ob_find_file_name_buf);
+  return ob_test_source_relative3 (abssrcdir, fname,
+                                   ob_find_file_name_buf,
+                                   sizeof (ob_find_file_name_buf));
 }
 
 /* Read a file with a path relative to the top of the source tree

@@ -103,3 +103,6 @@
 * Fix small memory leak on non-glibc (effectively, non-Linux)
   platforms.
   [#20](https://github.com/plasma-hamper/plasma/pull/20)
+
+* Replace uses of `sprintf()` with `snprintf()` instead.
+  [#22](https://github.com/plasma-hamper/plasma/pull/22)
