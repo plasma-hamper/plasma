@@ -67,16 +67,19 @@ int main (int argc, char **argv)
                  "\anames, one per wjc card, to be used for slot 1 output",
                  &slot1poolsTrove, ',');
   ap.ArgFloat ("compression", "\acompression fraction ", &compression, true);
-  ap.ArgInt ("rate-num", "\anumerator of framerate fraction (rate_num/"
-                         "rate_denom)\n\a",
+  ap.ArgInt ("rate-num",
+             "\anumerator of framerate fraction (rate_num/"
+             "rate_denom)\n\a",
              &frame_rate_num, true);
-  ap.ArgInt ("rate-denom", "\adenominator of framerate fraction (rate_num/"
-                           "rate_denom)\n\a",
+  ap.ArgInt ("rate-denom",
+             "\adenominator of framerate fraction (rate_num/"
+             "rate_denom)\n\a",
              &frame_rate_denom, true);
   ap.ArgInt ("tiles", "\anumber of tiles to process in parallel ",
              &parallel_tiles, true);
-  ap.ArgInt ("kernel", "\awavelet kernel to use\n\a(0 = IRR_9x7, 1 = REV_5x3"
-                       ", 2 = IRR_5x3, 3 = KERNEL_DEFAULT)\n\a",
+  ap.ArgInt ("kernel",
+             "\awavelet kernel to use\n\a(0 = IRR_9x7, 1 = REV_5x3"
+             ", 2 = IRR_5x3, 3 = KERNEL_DEFAULT)\n\a",
              &kernel, true);
 
   ap.Alias ("pool", "p");

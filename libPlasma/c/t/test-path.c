@@ -65,8 +65,9 @@ int main (int argc, char **argv)
 
   if (one != 1)
     {
-      fprintf (stderr, "one = %" OB_FMT_64 "d"
-                       "\n",
+      fprintf (stderr,
+               "one = %" OB_FMT_64 "d"
+               "\n",
                one);
       OB_FATAL_ERROR_CODE (0x20313000, "one\n");
     }

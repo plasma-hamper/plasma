@@ -35,13 +35,11 @@ static const char *parse_proc_file (const char *s, const char *label);
 #ifdef __x86_64__
 // Adapted from gstreamer,
 // https://gitlab.freedesktop.org/gstreamer/orc/blob/bef97d21fd5328a30cda3f5270f004a6ff768ebf/orc/orccpu-x86.c#L182
-static void
-ob_cpuid (unt32 op, unt32 *reg)
+static void ob_cpuid (unt32 op, unt32 *reg)
 {
-  __asm__ (
-      "  cpuid\n"
-      : "=a" (reg[0]), "=b" (reg[1]), "=c" (reg[2]), "=d" (reg[3])
-      : "a"(op));
+  __asm__ ("  cpuid\n"
+           : "=a"(reg[0]), "=b"(reg[1]), "=c"(reg[2]), "=d"(reg[3])
+           : "a"(op));
 }
 
 #else
@@ -324,10 +322,9 @@ static char *machine_version (void)
    *   P5N32-E SLI
    * So we try to make a heuristic decision about which to use.
    */
-  const char *const dmifiles[2][2] = {{"/sys/class/dmi/id/sys_vendor",
-                                       "/sys/class/dmi/id/product_name"},
-                                      {"/sys/class/dmi/id/board_vendor",
-                                       "/sys/class/dmi/id/board_name"}};
+  const char *const dmifiles[2][2] = {
+    {"/sys/class/dmi/id/sys_vendor", "/sys/class/dmi/id/product_name"},
+    {"/sys/class/dmi/id/board_vendor", "/sys/class/dmi/id/board_name"}};
   int i, j;
   for (i = 0; i < 2; i++)
     {
@@ -445,7 +442,7 @@ char *ob_get_version (ob_version_of_what what)
                       ovx.dwMinorVersion);
             return s;
           }
-#else /* some kind of UNIX */
+#else  /* some kind of UNIX */
         if (uname (&u) == 0)
           c = u.release;
 #endif /* _MSC_VER */
@@ -504,9 +501,9 @@ void ob_banner (FILE *where)
   fprintf (where,
            PRODNAME " (c) Oblong Industries and ANIMIST contributors - %s"
 #ifdef GREENHOUSE
-                  "+gh"
+                    "+gh"
 #endif
-                  "\n",
+                    "\n",
            yovo);
   free (yovo);
 #if defined(__GNUC__) && !defined(__OPTIMIZE__)

@@ -54,10 +54,9 @@ static void CreateProtein (int str_len, protein *prot)
   // Null terminate
   buffer[j] = '\0';
 
-  slaw m =
-    slaw_map_inline_cf ("time", slaw_int32 (165955708), "numdots",
-                        slaw_int32 (0), "points", slaw_list_f (slabu_new ()),
-                        "test_string", slaw_string (buffer), NULL);
+  slaw m = slaw_map_inline_cf (
+    "time", slaw_int32 (165955708), "numdots", slaw_int32 (0), "points",
+    slaw_list_f (slabu_new ()), "test_string", slaw_string (buffer), NULL);
   *prot = protein_from_ff (slaw_list_inline_c ("dotframe", NULL), m);
   free (buffer);
 
@@ -73,7 +72,7 @@ int mainish (int argc, char **argv)
   int c;
   int i;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   cmd.size = pool_size;
 
   while ((c = getopt (argc, argv, "d:i:I:s:t:")) != -1)

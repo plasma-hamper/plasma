@@ -19,7 +19,7 @@
 #include "libLoam/c/ob-file.h"
 #include "libLoam/c/ob-pthread.h"
 
-static const char *ob_test_source_relative(const char *f)
+static const char *ob_test_source_relative (const char *f)
 {
   return ob_test_source_relative2 (ABS_TOP_SRCDIR "/libPlasma/c/t", f);
 }
@@ -200,10 +200,11 @@ TEST (MiscSlawTest, BadGenericOpen)
 TEST (MiscSlawTest, BadOutputTextOpen)
 {
   slaw_output f;
-  EXPECT_EQ (ob_errno_to_retort (dir_error),
-             slaw_output_open_text_options_f (
-               ".", &f, slaw_map_inline_cf ("ordered_maps",
-                                            slaw_boolean (false), NULL)));
+  EXPECT_EQ (
+    ob_errno_to_retort (dir_error),
+    slaw_output_open_text_options_f (
+      ".", &f,
+      slaw_map_inline_cf ("ordered_maps", slaw_boolean (false), NULL)));
 }
 
 struct thingy
@@ -415,28 +416,26 @@ MiscSlawTest1::MiscSlawTest1 ()
                         "natty narwhal", slaw_float64 (11.04), NULL);
   a_small_protein = protein_from_llr (descrips, a_slaw_map, &meaning, 1);
   a_large_protein = protein_from_llr (descrips, a_slaw_map, bin500, len500);
-  a_slaw_list =
-    slaw_list_inline_f (slaw_string ("\303\234nicode"),
-                        slaw_string ("DwCDUZmdct XGVLUI\312\274NDEO "
-                                     "zHVPlmG\360\235\225\203wy"
-                                     " HubGdlLjVN XCGLDUJ\312\274NUE "
-                                     "yyUTesYmrw"),
-                        slaw_unt32 (0xdeadbeef), slaw_nil (),
-                        slaw_string (KATY_PERRYS_SPELLING),
-                        slaw_unt64 (OB_CONST_U64 (12345678901234567890)), NULL);
+  a_slaw_list = slaw_list_inline_f (
+    slaw_string ("\303\234nicode"),
+    slaw_string ("DwCDUZmdct XGVLUI\312\274NDEO "
+                 "zHVPlmG\360\235\225\203wy"
+                 " HubGdlLjVN XCGLDUJ\312\274NUE "
+                 "yyUTesYmrw"),
+    slaw_unt32 (0xdeadbeef), slaw_nil (), slaw_string (KATY_PERRYS_SPELLING),
+    slaw_unt64 (OB_CONST_U64 (12345678901234567890)), NULL);
   byte *sorted = new byte[len500];
   memcpy (sorted, bin500, len500);
   std::sort (sorted, sorted + len500);
   byte uniq[256];  // can't be more than 256 unique bytes, by definition
   byte *uend = std::unique_copy (sorted, sorted + len500, uniq);
-  a_large_map = slaw_map_inline_ff (slaw_string ("That's an error"),
-                                    slaw_unt8_array (bin500, len500),
-                                    slaw_string ("unique"),
-                                    slaw_unt8_array (uniq, uend - uniq),
-                                    slaw_unt8_array (sorted, len500),
-                                    slaw_string ("that was binary data "
-                                                 "as a map key"),
-                                    NULL);
+  a_large_map = slaw_map_inline_ff (
+    slaw_string ("That's an error"), slaw_unt8_array (bin500, len500),
+    slaw_string ("unique"), slaw_unt8_array (uniq, uend - uniq),
+    slaw_unt8_array (sorted, len500),
+    slaw_string ("that was binary data "
+                 "as a map key"),
+    NULL);
 
   some_slawx[0] = a_slaw_string;
   some_slawx[1] = a_slaw_map;
@@ -574,11 +573,9 @@ class ProteinSearchTest : public ::testing::Test
 };
 
 ProteinSearchTest::ProteinSearchTest ()
-    : haystack (
-        protein_from_ff (slaw_list_f (
-                           slabu_of_strings_from_split (KATY_PERRYS_SPELLING,
-                                                        " ")),
-                         NULL)),
+    : haystack (protein_from_ff (
+        slaw_list_f (slabu_of_strings_from_split (KATY_PERRYS_SPELLING, " ")),
+        NULL)),
       needle1 (slaw_string ("MIRROW")),
       needle2 (slaw_string ("MIRROR")),
       needle3 (slaw_list_inline_c ("STAIR", "REARVIEUW", NULL)),

@@ -16,7 +16,8 @@
 #include "libPlasma/c/protein.h"
 #include "libPlasma/c/slaw.h"
 
-typedef enum {
+typedef enum
+{
   TEST_MULTI,
   TEST_SINGLE,
   TEST_NEXT,
@@ -141,10 +142,9 @@ static void do_op (test_op op, pool_hose ph, int hoseno, pool_gang gang,
           {
             p = protein_from_ff (
               slaw_list_inline_c ("what", "ever", NULL),
-              slaw_map_inline_cf ("random",
-                                  slaw_float64 (
-                                    ob_rand_state_float64 (0.0, 1.0, rstate)),
-                                  NULL));
+              slaw_map_inline_cf (
+                "random",
+                slaw_float64 (ob_rand_state_float64 (0.0, 1.0, rstate)), NULL));
             tort = pool_deposit (ph, p, &dep_index);
             OB_DIE_ON_ERROR (tort);
             expected = OB_OK;
@@ -195,9 +195,9 @@ static void do_op (test_op op, pool_hose ph, int hoseno, pool_gang gang,
                                ob_error_string (expected),
                                ob_error_string (tort));
         if (current_index - 1 != ret_index)
-          OB_FATAL_ERROR_CODE (0x2041200b, "Expected %" OB_FMT_64
-                                           "d but got %" OB_FMT_64 "d\n",
-                               current_index - 1, ret_index);
+          OB_FATAL_ERROR_CODE (
+            0x2041200b, "Expected %" OB_FMT_64 "d but got %" OB_FMT_64 "d\n",
+            current_index - 1, ret_index);
         break;
       case TEST_OLDEST:
         expected = (current_index == 0) ? POOL_NO_SUCH_PROTEIN : OB_OK;
@@ -213,7 +213,7 @@ static void do_op (test_op op, pool_hose ph, int hoseno, pool_gang gang,
         break;
       case TEST_649:
         stimulate (hoseno);
-      again:
+again:
         OB_DIE_ON_ERROR (pool_await_multi (gang, timeout));
         OB_DIE_ON_ERROR (pool_index (ph, &new_index));
         if (new_index != current_index)
@@ -231,9 +231,10 @@ static void do_op (test_op op, pool_hose ph, int hoseno, pool_gang gang,
             default:
               OB_DIE_ON_ERROR (pool_next (ph, &ret_prot, NULL, &ret_index));
               if (ret_index != current_index)
-                OB_FATAL_ERROR_CODE (0x2041201a, "%s: returned index was not "
-                                                 "what I expected: %" OB_FMT_64
-                                                 "d != %" OB_FMT_64 "d\n",
+                OB_FATAL_ERROR_CODE (0x2041201a,
+                                     "%s: returned index was not "
+                                     "what I expected: %" OB_FMT_64
+                                     "d != %" OB_FMT_64 "d\n",
                                      pool_name (ph), new_index, current_index);
               protein_free (ret_prot);
               break;
@@ -256,7 +257,7 @@ static int mainish (int argc, char **argv)
   pool_cmd_info cmd;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "s:t:i:")) != -1)
     {
       switch (c)

@@ -128,10 +128,9 @@ static void solve_collision (AvahiClient *c, zc_server_data *sd, bool reset)
 static bool add_subtype (zc_server_data *sd, const char *subtype)
 {
   char *st = format_subtype (sd->type, subtype);
-  int ret =
-    avahi_entry_group_add_service_subtype (sd->group, AVAHI_IF_UNSPEC,
-                                           AVAHI_PROTO_UNSPEC, 0, sd->name,
-                                           sd->type, NULL, st);
+  int ret = avahi_entry_group_add_service_subtype (
+    sd->group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, sd->name, sd->type, NULL,
+    st);
 
   if (ret < 0)
     ZEROCONF_LOG_ERROR ("failed to add service subtype %s: %s\n", st,
@@ -157,10 +156,9 @@ static bool add_subtypes (zc_server_data *sd)
 
 static void add_service (AvahiClient *c, zc_server_data *sd)
 {
-  int ret = avahi_entry_group_add_service_strlst (sd->group, AVAHI_IF_UNSPEC,
-                                                  AVAHI_PROTO_UNSPEC, 0,
-                                                  sd->name, sd->type, NULL,
-                                                  NULL, sd->port, sd->subtypes);
+  int ret = avahi_entry_group_add_service_strlst (
+    sd->group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, sd->name, sd->type, NULL,
+    NULL, sd->port, sd->subtypes);
   if (ret == AVAHI_ERR_COLLISION)
     {
       solve_collision (c, sd, true);

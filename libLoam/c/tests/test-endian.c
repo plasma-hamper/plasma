@@ -49,8 +49,9 @@ int main (int argc, char **argv)
 
       if (actual != expected)
         {
-          fprintf (stderr, "For 0x%" OB_FMT_64 "x, expected 0x%" OB_FMT_64 "x, "
-                           "but got 0x%" OB_FMT_64 "x\n",
+          fprintf (stderr,
+                   "For 0x%" OB_FMT_64 "x, expected 0x%" OB_FMT_64 "x, "
+                   "but got 0x%" OB_FMT_64 "x\n",
                    value, expected, actual);
           return EXIT_FAILURE;
         }

@@ -55,9 +55,7 @@
 
 /// XXX shouldn't this go into some other file? pool.h / pool.c?
 
-void pool_fifo_multi_destroy_awaiter (pool_hose ph)
-{
-}
+void pool_fifo_multi_destroy_awaiter (pool_hose ph) {}
 
 DWORD
 pool_timeout_to_wait_millis (pool_timestamp timeout)
@@ -149,8 +147,9 @@ ob_retort pool_fifo_multi_add_awaiter (pool_hose ph, protein *ret_prot,
       DWORD err = GetLastError ();
 
       if (new_event == 0)
-        OB_FATAL_ERROR_CODE (0x2010b005, "unable to create wait event for pool "
-                                         "notification, error %d",
+        OB_FATAL_ERROR_CODE (0x2010b005,
+                             "unable to create wait event for pool "
+                             "notification, error %d",
                              err);
 
       if (err == ERROR_ALREADY_EXISTS)
@@ -269,8 +268,9 @@ ob_retort pool_fifo_wake_awaiters (pool_hose ph)
           //in any case, we are going to delete the notification file
           if (unlink (file_name) != 0)
             {
-              OB_LOG_ERROR_CODE (0x2010b009, "wake_awaiters could not unlink "
-                                             "%s - errno %d\n",
+              OB_LOG_ERROR_CODE (0x2010b009,
+                                 "wake_awaiters could not unlink "
+                                 "%s - errno %d\n",
                                  file_name, errno);
             }
           if (wake_up_handle)
@@ -345,9 +345,8 @@ ob_retort pool_fifo_await_next_single (pool_hose ph, pool_timestamp timeout,
             break;
 
           default:
-            OB_LOG_ERROR_CODE (0x2010b00b,
-                               "unknown error WaitForSingleObject - %d\n",
-                               wait_res);
+            OB_LOG_ERROR_CODE (
+              0x2010b00b, "unknown error WaitForSingleObject - %d\n", wait_res);
             pret = POOL_FIFO_BADTH;
             break;
         }

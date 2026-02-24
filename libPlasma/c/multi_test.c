@@ -27,7 +27,7 @@ int main (int argc, char *argv[])
   ob_retort pret;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "s:t:")) != -1)
     {
       switch (c)

@@ -11,12 +11,12 @@ using namespace oblong::plasma;
 
 namespace {
 
-const char *const words[] =
-  {"mortals",    "foolish",       "pallor",      "cadaverous",  "aura",
-   "foreboding", "metamorphosis", "disquieting", "observation", "dismaying",
-   "no",         "windows",       "no",          "doors",       "challenge",
-   "chilling",   "way",           "out",         "way",         "my",
-   "frighten",   "prematurely"};
+const char *const words[] = {
+  "mortals",    "foolish",       "pallor",      "cadaverous",  "aura",
+  "foreboding", "metamorphosis", "disquieting", "observation", "dismaying",
+  "no",         "windows",       "no",          "doors",       "challenge",
+  "chilling",   "way",           "out",         "way",         "my",
+  "frighten",   "prematurely"};
 
 const int nwords = sizeof (words) / sizeof (words[0]);
 const int npairs = nwords / 2;

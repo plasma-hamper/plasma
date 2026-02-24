@@ -407,7 +407,8 @@ static int tms_revert (const void *va, const void *vb)
 // https://bugs.oblong.com/show_bug.cgi?id=28#c3
 // But I'll leave this enum here in case different behavior is needed in
 // the future.
-typedef enum {
+typedef enum
+{
   DUP_KEEP_FIRST,
   DUP_KEEP_LAST,
   DUP_KEEP_LAST_IN_POSITION_OF_FIRST
@@ -1387,8 +1388,8 @@ slaw slaw_list_inline_c (const char *first_str, ...)
 
   if (first_str && *first_str)
     {
-      ob_err_accum (&err, slabu_list_add_internal (sb, slaw_string (first_str),
-                                                   true));
+      ob_err_accum (
+        &err, slabu_list_add_internal (sb, slaw_string (first_str), true));
       const char *str;
       va_start (vargies, first_str);
       while ((str = va_arg (vargies, const char *)))
@@ -2034,14 +2035,16 @@ unt64 slaw_octlen (bslaw s)
       case SLAW_NIB_SINGL_SINT:
       case SLAW_NIB_SINGL_UINT:
       case SLAW_NIB_SINGL_FLOAT:
-        bsize = (1 + ((ilk >> SLAW_NUMERIC_BSIZE_SHIFTY)
-                      & SLAW_NUMERIC_UNIT_BSIZE_MASK));
+        bsize = (1
+                 + ((ilk >> SLAW_NUMERIC_BSIZE_SHIFTY)
+                    & SLAW_NUMERIC_UNIT_BSIZE_MASK));
         return (bsize <= 4 ? 1 : 1 + ((bsize + 7) / 8));
       case SLAW_NIB_ARRAY_SINT:
       case SLAW_NIB_ARRAY_UINT:
       case SLAW_NIB_ARRAY_FLOAT:
-        bsize = (1 + ((ilk >> SLAW_NUMERIC_BSIZE_SHIFTY)
-                      & SLAW_NUMERIC_UNIT_BSIZE_MASK));
+        bsize = (1
+                 + ((ilk >> SLAW_NUMERIC_BSIZE_SHIFTY)
+                    & SLAW_NUMERIC_UNIT_BSIZE_MASK));
         breadth = (ilk & SLAW_NUMERIC_ARRAY_BREADTH_MASK);
         asize = (bsize * breadth);
         return 1 + ((asize + 7) / 8);
@@ -2247,11 +2250,12 @@ static void slaw_spew_numeric_ovewview (bslaw s, fwfunc func, void *whither)
     _FW ("V%d", vecWid);
   else if (isM)
     _FW ("M%d", vecWid);
-  _FW ("%s%d", (slaw_is_numeric_float (s)
-                  ? "FLOAT"
-                  : (slaw_is_numeric_int (s)
-                       ? "INT"
-                       : (slaw_is_numeric_unt (s) ? "UNT" : "<unkn>"))),
+  _FW ("%s%d",
+       (slaw_is_numeric_float (s)
+          ? "FLOAT"
+          : (slaw_is_numeric_int (s)
+               ? "INT"
+               : (slaw_is_numeric_unt (s) ? "UNT" : "<unkn>"))),
        8 * slinc);
 
   if (isC)
@@ -2353,7 +2357,7 @@ static void slaw_spew_internal (bslaw s, fwfunc func, void *whither,
       if (rudeLen > 0)
         {
           int64 i;
-          char  rudeBuf[OB_HEX_LINE_LEN];
+          char rudeBuf[OB_HEX_LINE_LEN];
           _FW ("%srude data: %" OB_FMT_64 "d bytes\n", prolo, rudeLen);
           for (i = 0; i < rudeLen; i += 16)
             {
@@ -2526,7 +2530,7 @@ ob_retort slaw_swap (slaw s, slaw stop)
       case SLAW_NIB_ARRAY_UINT:
       case SLAW_NIB_ARRAY_FLOAT:
         breadth = SLAW_N_ARRAY_BREADTH (s);
-      swap_numeric:
+swap_numeric:
         primBytes = SLAW_NUMERIC_PRIM_BYTES (s);
         if (primBytes == 1)
           return OB_OK; /* 1-byte units don't need swapping */

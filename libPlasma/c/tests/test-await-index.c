@@ -36,10 +36,9 @@ static void *send_some_proteins (void *v)
   int64 prev = -1;
   for (i = 0; i < ITERATIONS; i++)
     {
-      protein p =
-        protein_from_ff (slaw_list_inline_c ("inaugural", "balls", NULL),
-                         slaw_map_inline_ff (slaw_string ("count"),
-                                             slaw_int64 (i), NULL));
+      protein p = protein_from_ff (
+        slaw_list_inline_c ("inaugural", "balls", NULL),
+        slaw_map_inline_ff (slaw_string ("count"), slaw_int64 (i), NULL));
       int64 idx;
       err = pool_deposit (ph, p, &idx);
       if (err != OB_OK)
@@ -49,9 +48,10 @@ static void *send_some_proteins (void *v)
       if (prev != -1)
         {
           if (idx != prev + 1)
-            OB_FATAL_ERROR_CODE (0x2040f002, "previous index was %" OB_FMT_64
-                                             "d and current "
-                                             "index is %" OB_FMT_64 "d\n",
+            OB_FATAL_ERROR_CODE (0x2040f002,
+                                 "previous index was %" OB_FMT_64
+                                 "d and current "
+                                 "index is %" OB_FMT_64 "d\n",
                                  prev, idx);
         }
       prev = idx;
@@ -70,7 +70,7 @@ static int mainish (int argc, char **argv)
   pool_cmd_info cmd;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
       switch (c)
@@ -127,9 +127,10 @@ static int mainish (int argc, char **argv)
       if (prev != -1)
         {
           if (idx != prev + 1)
-            OB_FATAL_ERROR_CODE (0x2040f007, "previous index was %" OB_FMT_64
-                                             "d and current "
-                                             "index is %" OB_FMT_64 "d\n",
+            OB_FATAL_ERROR_CODE (0x2040f007,
+                                 "previous index was %" OB_FMT_64
+                                 "d and current "
+                                 "index is %" OB_FMT_64 "d\n",
                                  prev, idx);
         }
       prev = idx;

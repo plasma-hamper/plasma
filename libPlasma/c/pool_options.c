@@ -22,12 +22,11 @@ protein mmap_pool_options (unt64 size)
 protein toc_mmap_pool_options (unt64 size, unt64 cap)
 {
   slaw m =
-    slaw_map_inline_cf (FILE_SIZE_OPTION_NAME,      slaw_unt64 (size),
+    slaw_map_inline_cf (FILE_SIZE_OPTION_NAME, slaw_unt64 (size),
                         // for backwards compatibility
                         INDEX_CAPACITY_OPTION_NAME, slaw_unt64 (cap),
                         // the new name is preferred
-                        TOC_CAPACITY_OPTION_NAME,   slaw_unt64 (cap),
-                        NULL);
+                        TOC_CAPACITY_OPTION_NAME, slaw_unt64 (cap), NULL);
   return m ? protein_from_ff (NULL, m) : NULL;
 }
 

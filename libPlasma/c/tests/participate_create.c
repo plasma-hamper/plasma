@@ -19,7 +19,7 @@ int mainish (int argc, char **argv)
   int c;
   ob_retort expected;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
       switch (c)

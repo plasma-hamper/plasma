@@ -479,9 +479,8 @@ static void create_children (void)
           d->thread_results = 0;
           d->is_depositor = true;
 
-          d->thread_handle =
-            (HANDLE) _beginthreadex (NULL, 0, child_depositor_thread,
-                                     (void *) d, 0, NULL);
+          d->thread_handle = (HANDLE) _beginthreadex (
+            NULL, 0, child_depositor_thread, (void *) d, 0, NULL);
 
           if (d->thread_handle == 0)
             {
@@ -500,9 +499,8 @@ static void create_children (void)
           d->thread_results = 0;
           d->is_depositor = false;
 
-          d->thread_handle =
-            (HANDLE) _beginthreadex (NULL, 0, child_reader_thread, (void *) d,
-                                     0, NULL);
+          d->thread_handle = (HANDLE) _beginthreadex (
+            NULL, 0, child_reader_thread, (void *) d, 0, NULL);
 
           if (d->thread_handle == 0)
             {
@@ -691,9 +689,8 @@ static int reap_children (void)
         }
       else
         {
-          OB_LOG_ERROR_CODE (0x2020101c,
-                             "child process %d ceased to exist... but why?\n",
-                             err);
+          OB_LOG_ERROR_CODE (
+            0x2020101c, "child process %d ceased to exist... but why?\n", err);
           all_errors |= 0xffff;
         }
     }

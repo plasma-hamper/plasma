@@ -101,15 +101,20 @@ static pthread_t logging_pthread;
 /// This is a special log level, used for logging messages
 /// from the pool logging code, to avoid an uncomfortable
 /// circularity.
-static ob_log_level emergency_log =
-  {OB_DST_FD | OB_DST_VALGRIND | OB_FLG_SHOW_CODE_OR_WHERE
-     | OB_FLG_SHOW_TID_NONMAIN,
-   OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
-   LOG_ERR, 2, "error in pool logging: ", NULL, NULL, NULL, NULL};
+static ob_log_level emergency_log = {
+  OB_DST_FD | OB_DST_VALGRIND | OB_FLG_SHOW_CODE_OR_WHERE
+    | OB_FLG_SHOW_TID_NONMAIN,
+  OB_FOREGROUND_ENABLE | OB_FOREGROUND_RED, /* red */
+  LOG_ERR,
+  2,
+  "error in pool logging: ",
+  NULL,
+  NULL,
+  NULL,
+  NULL};
 
-static const ob_log_level tmp_level_prototype = {OB_DST_FD, 0,    LOG_ERR,
-                                                 2,         "",   NULL,
-                                                 NULL,      NULL, NULL};
+static const ob_log_level tmp_level_prototype = {
+  OB_DST_FD, 0, LOG_ERR, 2, "", NULL, NULL, NULL, NULL};
 
 #define NOMORE ((log_entry *) -1)
 
@@ -181,7 +186,7 @@ static void log_callback (const struct ob_log_level *lvl, unt64 code, float64 t,
     }
   else
     {
-    failed:
+failed:
       /* only need to do this if not already logging to stderr */
       if (!(lvl->flags & OB_DST_FD))
         {

@@ -161,8 +161,9 @@ TEST (GeomSlabTest, TimeOneMillionRayRectIntersections)
   Vect hitPt;
   for (int i = 0; i < 1000000; ++i)
     {
-      didHit = didHit && GeomSlab::RayRectIntersection (rayStart, rayTo, corner,
-                                                        over, up, &hitPt);
+      didHit = didHit
+               && GeomSlab::RayRectIntersection (rayStart, rayTo, corner, over,
+                                                 up, &hitPt);
       didHit = didHit && GeomSlab::RayRectIntersection (ray, rect, &hitPt);
     }
   EXPECT_TRUE (didHit);
@@ -183,8 +184,9 @@ TEST (GeomSlabTest, TimeOneMillionRayQuadIntersections)
   Vect hitPt;
   for (int i = 0; i < 1000000; ++i)
     {
-      didHit = didHit && GeomSlab::RayQuadIntersection (rayStart, rayTo, corner,
-                                                        over, up, &hitPt);
+      didHit = didHit
+               && GeomSlab::RayQuadIntersection (rayStart, rayTo, corner, over,
+                                                 up, &hitPt);
     }
   EXPECT_TRUE (didHit);
 }
@@ -204,14 +206,14 @@ TEST (GeomSlabTest, TimeOneMillionRaySphereIntersections)
   Vect hitPt;
   for (int i = 0; i < 500000; ++i)
     {
-      didHit =
-        didHit && GeomSlab::RaySphereForwardIntersection (rayStart, rayTo,
+      didHit = didHit
+               && GeomSlab::RaySphereForwardIntersection (rayStart, rayTo,
                                                           corner, 8.0, &hitPt);
     }
   for (int i = 0; i < 500000; ++i)
     {
-      didHit =
-        didHit && GeomSlab::RaySphereForwardIntersection (rayStart, rayTo,
+      didHit = didHit
+               && GeomSlab::RaySphereForwardIntersection (rayStart, rayTo,
                                                           corner, 12.0, &hitPt);
     }
   EXPECT_TRUE (didHit);
@@ -252,9 +254,8 @@ TEST (GeomSlabTest, RayRectIntersection)
           const Vect rayOrigin = hitPt - distAlong * rayDir;
 
           Vect shouldMatchHitPt;
-          const bool didHit =
-            GeomSlab::RayRectIntersection (rayOrigin, hitPt, corner, over, up,
-                                           &shouldMatchHitPt);
+          const bool didHit = GeomSlab::RayRectIntersection (
+            rayOrigin, hitPt, corner, over, up, &shouldMatchHitPt);
 
           bool shouldBeInside =
             (a > eps) && (a < 1.0 - eps) && (b > eps) && (b < 1.0 - eps);
@@ -601,9 +602,8 @@ TEST (GeomSlabTest, RayTriangleIntersection)
           const Vect rayOrigin = hitPt - distAlong * rayDir;
 
           Vect shouldMatchHitPt;
-          const bool didHit =
-            GeomSlab::RayTriangleIntersection (rayOrigin, hitPt, corner, over,
-                                               up, &shouldMatchHitPt);
+          const bool didHit = GeomSlab::RayTriangleIntersection (
+            rayOrigin, hitPt, corner, over, up, &shouldMatchHitPt);
 
           // Be extra-forgiving for sliver polygons
           const bool sliver = sqrt (over.Dot (up) * over.Dot (up)
@@ -715,9 +715,8 @@ TEST (GeomSlabTest, RayEllipseIntersection)
           const Vect rayOrigin = hitPt - distAlong * rayDir;
 
           Vect shouldMatchHitPt;
-          const bool didHit =
-            GeomSlab::RayEllipseIntersection (rayOrigin, hitPt, center, over,
-                                              up, &shouldMatchHitPt);
+          const bool didHit = GeomSlab::RayEllipseIntersection (
+            rayOrigin, hitPt, center, over, up, &shouldMatchHitPt);
 
           const bool shouldBeInside = (sqrt (a * a + b * b) < (1.0 - eps));
           const bool shouldBeOutside = (sqrt (a * a + b * b) > (1.0 + eps));
@@ -803,12 +802,9 @@ TEST (GeomSlabTest, TestLineSphereBothIntersections)
 
                   Vect isectMidpoint;
                   float64 halfDist, alongDist;
-                  const bool didHit =
-                    GeomSlab::LineSphereBothIntersections (rayOrigin, rayDir,
-                                                           center, radius,
-                                                           &isectMidpoint,
-                                                           &halfDist,
-                                                           &alongDist);
+                  const bool didHit = GeomSlab::LineSphereBothIntersections (
+                    rayOrigin, rayDir, center, radius, &isectMidpoint,
+                    &halfDist, &alongDist);
 
                   if (didHit)
                     {
@@ -904,16 +900,12 @@ TEST (GeomSlabTest, TestRaySphereForwardBackwardIsect)
                   const Vect backwardsTo = rayOrigin - 5.0 * rayDir;
 
                   Vect hitPt;
-                  const bool didHit =
-                    GeomSlab::RaySphereForwardIntersection (rayOrigin, rayTo,
-                                                            center, radius,
-                                                            &hitPt);
+                  const bool didHit = GeomSlab::RaySphereForwardIntersection (
+                    rayOrigin, rayTo, center, radius, &hitPt);
                   Vect backHitPt;
                   const bool backwardsHit =
-                    GeomSlab::RaySphereBackwardIntersection (rayOrigin,
-                                                             backwardsTo,
-                                                             center, radius,
-                                                             &backHitPt);
+                    GeomSlab::RaySphereBackwardIntersection (
+                      rayOrigin, backwardsTo, center, radius, &backHitPt);
 
 
                   const bool lineShouldHit = sqrt (a * a + b * b) < (1.0 - eps);
@@ -938,9 +930,10 @@ TEST (GeomSlabTest, TestRaySphereForwardBackwardIsect)
                     }
                   const bool resultsMeanSomething =
                     rayShouldNotHit || rayShouldHit;
-                  if (resultsMeanSomething && ((didHit && rayShouldNotHit)
-                                               || (!didHit && rayShouldHit)
-                                               || (backwardsHit != didHit)))
+                  if (resultsMeanSomething
+                      && ((didHit && rayShouldNotHit)
+                          || (!didHit && rayShouldHit)
+                          || (backwardsHit != didHit)))
                     {
                       OB_LOG_ERROR ("rayOrigin %s\n"
                                     "rayDir %s\n"

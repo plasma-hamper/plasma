@@ -43,7 +43,8 @@ CompositeSlaw::Ref ExtractIngests (SlawRef s)
 }  // namespace
 
 ProteinComposite::ProteinComposite (SlawRef protein)
-    : descrips_ (proteincomposite::ExtractDescrips (protein)), ingests_ (proteincomposite::ExtractIngests (protein))
+    : descrips_ (proteincomposite::ExtractDescrips (protein)),
+      ingests_ (proteincomposite::ExtractIngests (protein))
 {
 }
 

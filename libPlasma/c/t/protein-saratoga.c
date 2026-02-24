@@ -89,9 +89,9 @@ int main (int ac, char **av)
     protein_from_ff (empty_list (), slaw_map_inline (s[6], s[7], s[8], s[9],
                                                      s[10], s[11], NULL));
 
-  protein p5 = protein_from_ff (slaw_list_inline (s[12], s[13], s[14], NULL),
-                                slaw_map_inline (s[15], s[16], s[17], s[18],
-                                                 s[19], s[20], NULL));
+  protein p5 = protein_from_ff (
+    slaw_list_inline (s[12], s[13], s[14], NULL),
+    slaw_map_inline (s[15], s[16], s[17], s[18], s[19], s[20], NULL));
 
 
   OBSERT (1 == slaw_list_count (protein_descrips (p1)));
@@ -165,8 +165,8 @@ int main (int ac, char **av)
   OBSERT (protein_has_descrip_string (p3, "erg"));
   OBSERT (protein_has_descrip_string (p3, "furze"));
   OBSERT (!protein_has_descrip_string (p3, "gorse"));
-  OBSERT (0 <= protein_search (p3, f (slaw_list_inline_c ("dirge", "erg",
-                                                          "furze", NULL))));
+  OBSERT (0 <= protein_search (
+            p3, f (slaw_list_inline_c ("dirge", "erg", "furze", NULL))));
   OBSERT (
     0 <= protein_search (p3, f (slaw_list_inline_c ("erg", "furze", NULL))));
   OBSERT (
@@ -267,8 +267,8 @@ int main (int ac, char **av)
   OBSERT (protein_has_descrip_string (p5, "nape"));
   OBSERT (protein_has_descrip_string (p5, "ooze"));
   OBSERT (!protein_has_descrip_string (p5, "pule"));
-  OBSERT (0 <= protein_search (p5, f (slaw_list_inline_c ("mumps", "nape",
-                                                          "ooze", NULL))));
+  OBSERT (0 <= protein_search (
+            p5, f (slaw_list_inline_c ("mumps", "nape", "ooze", NULL))));
   OBSERT (
     0 <= protein_search (p5, f (slaw_list_inline_c ("nape", "ooze", NULL))));
   OBSERT (

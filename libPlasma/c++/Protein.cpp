@@ -15,9 +15,7 @@ const pool_timestamp Protein::NO_TIME (-1);
 const int64 Protein::NO_INDEX (-1);
 
 
-Protein::~Protein ()
-{
-}
+Protein::~Protein () {}
 
 Protein::Protein (const Protein &o)
     : protein_ (o.protein_),

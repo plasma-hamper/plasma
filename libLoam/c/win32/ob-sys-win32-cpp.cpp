@@ -22,10 +22,11 @@ static MsgMap *mmptr;
 static char *ob_string_from_last_error (DWORD err)
 {
   char *msg = NULL;
-  if (0 != FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
-                            | FORMAT_MESSAGE_IGNORE_INSERTS
-                            | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                          NULL, err, 0, (LPTSTR) &msg, 0, NULL))
+  if (0
+      != FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
+                          | FORMAT_MESSAGE_IGNORE_INSERTS
+                          | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                        NULL, err, 0, (LPTSTR) &msg, 0, NULL))
     {
       char *ret = strdup (msg);
       LocalFree (msg);

@@ -154,9 +154,8 @@ void pool_cmd_fill_pool (pool_cmd_info *cmd)
 
   slaw hosename =
     slaw_string_format ("filling %s", ob_basename (cmd->pool_name));
-  OB_DIE_ON_ERR_CODE (0x20102008,
-                      pool_set_hose_name (cmd->ph,
-                                          slaw_string_emit (hosename)));
+  OB_DIE_ON_ERR_CODE (
+    0x20102008, pool_set_hose_name (cmd->ph, slaw_string_emit (hosename)));
   slaw_free (hosename);
 
   prot = pool_cmd_create_test_protein ("first");

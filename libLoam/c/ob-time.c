@@ -177,8 +177,9 @@ static unt64 windows_nanos (void)
       if (!QueryPerformanceCounter (&large))
         {
           ob_retort tort = ob_win32err_to_retort (GetLastError ());
-          OB_FATAL_ERROR_CODE (0x10070003, "QueryPerformanceCounter failed:\n"
-                                           "%s\n",
+          OB_FATAL_ERROR_CODE (0x10070003,
+                               "QueryPerformanceCounter failed:\n"
+                               "%s\n",
                                ob_error_string (tort));
         }
       unt64 diff = large.QuadPart - qpc_previous.QuadPart;
@@ -210,9 +211,8 @@ unt64 ob_monotonic_time (void)
   kern_return_t kr = mach_timebase_info (&mtidt);
   if (kr != KERN_SUCCESS)
     // Treating this error so harshly because it shouldn't ever happen.
-    OB_FATAL_ERROR_CODE (0x10070001,
-                         "mach_timebase_info returned %" OB_FMT_64 "d\n",
-                         (int64) kr);
+    OB_FATAL_ERROR_CODE (
+      0x10070001, "mach_timebase_info returned %" OB_FMT_64 "d\n", (int64) kr);
   nanos = (now * mtidt.numer) / mtidt.denom;
 #else
   struct timespec ts;

@@ -26,9 +26,10 @@ ob_retort ob_select2_prepare (ob_select2_t *sel, ob_select2_dir dir, int sock,
                              WSAGetLastError ());
           return OB_UNKNOWN_ERR;
         }
-      if (0 != WSAEventSelect (sock, socketEvent,
-                               FD_CLOSE
-                                 | (dir == OB_SEL2_SEND ? FD_WRITE : FD_READ)))
+      if (0
+          != WSAEventSelect (sock, socketEvent,
+                             FD_CLOSE
+                               | (dir == OB_SEL2_SEND ? FD_WRITE : FD_READ)))
         {
           OB_LOG_ERROR_CODE (0x20107001, "WSAEventSelect failed - %d\n",
                              WSAGetLastError ());
@@ -102,8 +103,9 @@ ob_retort ob_select2 (ob_select2_t *sel, pool_timestamp timeout, bool consume)
 
       default:
         // http://msdn.microsoft.com/en-us/library/ms687025(VS.85).aspx
-        OB_LOG_ERROR_CODE (0x20107004, "unexpected return value for "
-                                       "WaitForMultipleObjects = 0x%08x\n",
+        OB_LOG_ERROR_CODE (0x20107004,
+                           "unexpected return value for "
+                           "WaitForMultipleObjects = 0x%08x\n",
                            wait_res);
         return OB_UNKNOWN_ERR;
     }
@@ -115,9 +117,8 @@ ob_retort ob_select2 (ob_select2_t *sel, pool_timestamp timeout, bool consume)
   for (;;)
     {
       fd_set read_fds, write_fds, except_fds;
-      tp =
-        pool_timeout_to_timeval (private_incremental_timeout (timeout, &target),
-                                 &timeout_tv);
+      tp = pool_timeout_to_timeval (
+        private_incremental_timeout (timeout, &target), &timeout_tv);
       read_fds = sel->read_fds;
       write_fds = sel->write_fds;
       except_fds = sel->except_fds;
@@ -130,8 +131,9 @@ ob_retort ob_select2 (ob_select2_t *sel, pool_timestamp timeout, bool consume)
         }
       else if (nready == 0)
         return POOL_AWAIT_TIMEDOUT;
-      else if (sel->wake_fd >= 0 && (FD_ISSET (sel->wake_fd, &read_fds)
-                                     || FD_ISSET (sel->wake_fd, &except_fds)))
+      else if (sel->wake_fd >= 0
+               && (FD_ISSET (sel->wake_fd, &read_fds)
+                   || FD_ISSET (sel->wake_fd, &except_fds)))
         {
           if (consume)
             {
@@ -142,9 +144,10 @@ ob_retort ob_select2 (ob_select2_t *sel, pool_timestamp timeout, bool consume)
             }
           return POOL_AWAIT_WOKEN;
         }
-      else if (sel->sock_fd >= 0 && (FD_ISSET (sel->sock_fd, &read_fds)
-                                     || FD_ISSET (sel->sock_fd, &write_fds)
-                                     || FD_ISSET (sel->sock_fd, &except_fds)))
+      else if (sel->sock_fd >= 0
+               && (FD_ISSET (sel->sock_fd, &read_fds)
+                   || FD_ISSET (sel->sock_fd, &write_fds)
+                   || FD_ISSET (sel->sock_fd, &except_fds)))
         return OB_OK;
       else
         OB_LOG_ERROR_CODE (0x20107005,

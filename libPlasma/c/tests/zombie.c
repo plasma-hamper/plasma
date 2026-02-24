@@ -14,11 +14,9 @@ int main (int argc, char **argv)
   OB_DIE_ON_ERROR (OB_CHECK_ABI ());
 
   const char *poolname = argv[1];
-  protein pro =
-    protein_from_ff (NULL,
-                     slaw_map_inline_cf ("size", slaw_int64 (128 * KILOBYTE),
-                                         "resizable", slaw_boolean (true),
-                                         NULL));
+  protein pro = protein_from_ff (
+    NULL, slaw_map_inline_cf ("size", slaw_int64 (128 * KILOBYTE), "resizable",
+                              slaw_boolean (true), NULL));
   OB_DIE_ON_ERROR (pool_participate_creatingly (poolname, "mmap", &hose, pro));
   slaw releaseOptionSlaw = slaw_map_inline_ff (slaw_string ("auto-dispose"),
                                                slaw_boolean (true), NULL);

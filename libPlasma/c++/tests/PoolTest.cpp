@@ -9,8 +9,7 @@
 namespace {
 
 class PoolTest : public PoolTestBase
-{
-};
+{};
 
 TEST_F (PoolTest, Creation)
 {

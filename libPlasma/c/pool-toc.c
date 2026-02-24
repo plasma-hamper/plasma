@@ -27,10 +27,7 @@ struct pool_toc_s
   index_entry entries[1]; /* start of the circular buffer */
 };
 
-#define EMPTY_ENTRY_GUTS                                                       \
-  {                                                                            \
-    POOL_TOC_UNKNOWN_OFFSET, POOL_TOC_UNKNOWN_TIME                             \
-  }
+#define EMPTY_ENTRY_GUTS {POOL_TOC_UNKNOWN_OFFSET, POOL_TOC_UNKNOWN_TIME}
 
 static const index_entry EMPTY_ENTRY = EMPTY_ENTRY_GUTS;
 
@@ -199,8 +196,9 @@ static bool check_result (const pool_toc_t *pi, const pool_toc_entry *e)
 static void garbage_collect (pool_toc_t *pi, unt64 oldest_offset)
 {
   if (pi->count > pi->capacity)
-    OB_LOG_ERROR_CODE (0x20103000, "pi->count (%" OB_FMT_64 "u) is larger than "
-                                   "pi->capacity (%" OB_FMT_64 "u)\n",
+    OB_LOG_ERROR_CODE (0x20103000,
+                       "pi->count (%" OB_FMT_64 "u) is larger than "
+                       "pi->capacity (%" OB_FMT_64 "u)\n",
                        pi->count, pi->capacity);
   else if (pi->count == pi->capacity)
     {
@@ -272,9 +270,8 @@ static void add_entry (pool_toc_t *pi, const pool_toc_entry *e,
 
 /* ---------------------------------------------------------------------- */
 // Public interface
-const pool_toc_entry POOL_TOC_NULL_ENTRY = {POOL_TOC_UNKNOWN_IDX,
-                                            POOL_TOC_UNKNOWN_OFFSET,
-                                            POOL_TOC_UNKNOWN_TIME};
+const pool_toc_entry POOL_TOC_NULL_ENTRY = {
+  POOL_TOC_UNKNOWN_IDX, POOL_TOC_UNKNOWN_OFFSET, POOL_TOC_UNKNOWN_TIME};
 
 
 pool_toc_t *pool_toc_read (const byte *buffer)

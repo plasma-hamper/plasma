@@ -41,7 +41,7 @@ int main (int argc, char **argv)
                       NULL,  // Use parent's starting directory
                       &si,   // Pointer to STARTUPINFO structure
                       &pi)   // Pointer to PROCESS_INFORMATION structure
-      )
+  )
     {
       printf ("CreateProcess failed (%d).\n", GetLastError ());
       return 1;

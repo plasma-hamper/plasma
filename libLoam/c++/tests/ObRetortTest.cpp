@@ -216,20 +216,15 @@ TEST (ObRetortTest, Comparison2)
 
 
 class TylopodaPod : public ObRetortPod
-{
-};
+{};
 class VicunaPod : public TylopodaPod
-{
-};
+{};
 class AlpacaPod : public TylopodaPod
-{
-};
+{};
 class LlamaPod : public TylopodaPod
-{
-};
+{};
 class GuanacoPod : public TylopodaPod
-{
-};
+{};
 
 
 TEST (ObRetortTest, RetortPods)
@@ -339,7 +334,7 @@ TEST (ObRetortTest, RetortsInASet)
   vec.resize (st.size ());
   std::copy (st.begin (), st.end (), vec.begin ());
 #ifdef HAVE_STD_SHUFFLE
-  std::shuffle(vec.begin(), vec.end(), std::mt19937{std::random_device{}()});
+  std::shuffle (vec.begin (), vec.end (), std::mt19937{std::random_device{}()});
 #else
   std::random_shuffle (vec.begin (), vec.end ());
 #endif

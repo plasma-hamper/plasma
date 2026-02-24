@@ -132,7 +132,8 @@ static void init_server_context (void)
 
 ob_retort ob_tls_server_available (void)
 {
-  const ob_retort tort = ob_once (&ossl_server_once_control, init_server_context);
+  const ob_retort tort =
+    ob_once (&ossl_server_once_control, init_server_context);
   if (tort < OB_OK)
     return tort;
   return init_server_retort;
@@ -146,11 +147,10 @@ ob_retort ob_tls_server_launch_thread (int clear_sock, int cipher_sock,
   if (tort < OB_OK)
     return tort;
 
-  return ob_ossl_launch_thread (clear_sock, cipher_sock, context, SSL_accept,
-                                thr_out,
-                                (init_server_retort != POOL_ANONYMOUS_ONLY),
-                                anon_ok, client_auth_required, NULL, NULL,
-                                NULL);
+  return ob_ossl_launch_thread (
+    clear_sock, cipher_sock, context, SSL_accept, thr_out,
+    (init_server_retort != POOL_ANONYMOUS_ONLY), anon_ok, client_auth_required,
+    NULL, NULL, NULL);
 }
 
 ob_retort ob_tls_server_join_thread (pthread_t thr)

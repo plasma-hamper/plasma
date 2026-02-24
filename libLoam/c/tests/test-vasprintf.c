@@ -281,9 +281,10 @@ int main (int argc, char **argv)
                "string %s, hex %X, negative %" OB_FMT_64 "d", "theory",
                0xdeadbeef, OB_CONST_I64 (-1000000000000000000));
 
-      do_test (j, "This is a truly evil string, because it has a gr8 number of "
-                  "arguments 2 format, so if there R problems with not having "
-                  "va_copy on Windows, we should hopefully C them!",
+      do_test (j,
+               "This is a truly evil string, because it has a gr8 number of "
+               "arguments 2 format, so if there R problems with not having "
+               "va_copy on Windows, we should hopefully C them!",
                "%s is %x truly %c%c%c%c string, because it has %x%c"
                "gr%d number of arguments %d %s, so if there %c "
                "problems with not having %s on %s, we should %s "
@@ -291,9 +292,10 @@ int main (int argc, char **argv)
                "This", 10, 'e', 'v', 'i', 'l', 10, ' ', 8, 2, "format", 'R',
                "va_copy", "Windows", "hopefully", OB_CONST_I64 (12), '!');
 
-      do_test (j, "Parser error: while parsing a block mapping at "
-                  "line 9259457, column 5\n"
-                  "did not find expected key at line 9260367, column 5\n",
+      do_test (j,
+               "Parser error: while parsing a block mapping at "
+               "line 9259457, column 5\n"
+               "did not find expected key at line 9260367, column 5\n",
                "Parser error: %s at line %" OB_FMT_SIZE
                "d, column %" OB_FMT_SIZE "d\n"
                "%s at line %" OB_FMT_SIZE "d, column %" OB_FMT_SIZE "d\n",
@@ -307,10 +309,11 @@ int main (int argc, char **argv)
 
       char *a;
       int ret =
-        asprintf (&a, "%s is %x truly %c%c%c%c string, because it has %x%c"
-                      "gr%d number of arguments %d %s, so if there %c "
-                      "problems with not having %s on %s, we should %s "
-                      "%" OB_FMT_64 "X them%c",
+        asprintf (&a,
+                  "%s is %x truly %c%c%c%c string, because it has %x%c"
+                  "gr%d number of arguments %d %s, so if there %c "
+                  "problems with not having %s on %s, we should %s "
+                  "%" OB_FMT_64 "X them%c",
                   "This", 10, 'e', 'v', 'i', 'l', 10, ' ', 8, 2, "format", 'R',
                   "va_copy", "Windows", "hopefully", OB_CONST_I64 (12), '!');
       if (ret != strlen (expected))

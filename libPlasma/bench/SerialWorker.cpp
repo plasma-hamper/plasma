@@ -15,9 +15,7 @@ SerialWorker::~SerialWorker ()
     delete workers_[i].second;
 }
 
-SerialWorker::SerialWorker (const Config &cfg) : Worker (cfg)
-{
-}
+SerialWorker::SerialWorker (const Config &cfg) : Worker (cfg) {}
 
 void SerialWorker::Add (Worker *w)
 {

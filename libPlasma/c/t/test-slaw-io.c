@@ -56,9 +56,9 @@ static void slaw_playground (void)
 {
   slabu *sb;
 
-  something (__LINE__,
-             slaw_string (
-               "http://ophelia.media.mit.edu/downloads/jamie-gspeak.m4v"));
+  something (
+    __LINE__,
+    slaw_string ("http://ophelia.media.mit.edu/downloads/jamie-gspeak.m4v"));
 
   something (__LINE__, slaw_cons_ff (slaw_string ("QuacktimeBurper.cpp"),
                                      slaw_unt8 (97)));
@@ -88,10 +88,9 @@ static void slaw_playground (void)
   const char *str = "'SetGWorld' is deprecated (declared at "
                     "/System/Library/Frameworks/ApplicationServices.framework/"
                     "Frameworks/QD.framework/Headers/QDOffscreen.h:254)";
-  protein p =
-    protein_from_ff (slaw_list_inline_c (str, NULL),
-                     slaw_map_inline_cf ("2 and beyond",
-                                         slaw_float32 (OB_POSINF), NULL));
+  protein p = protein_from_ff (
+    slaw_list_inline_c (str, NULL),
+    slaw_map_inline_cf ("2 and beyond", slaw_float32 (OB_POSINF), NULL));
   something (__LINE__, p);
 
   // succeeds!

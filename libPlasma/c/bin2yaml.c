@@ -53,11 +53,9 @@ int main (int argc, char **argv)
   if (argc != 2)
     usage ();
 
-  slaw options =
-    slaw_map_inline_cf ("tag_numbers",  slaw_boolean (!lossy),
-                        "ordered_maps", slaw_boolean (!lossy),
-                        "directives",   slaw_boolean (directives),
-                        NULL);
+  slaw options = slaw_map_inline_cf (
+    "tag_numbers", slaw_boolean (!lossy), "ordered_maps", slaw_boolean (!lossy),
+    "directives", slaw_boolean (directives), NULL);
 
   err = slaw_input_open_binary (argv[0], &in);
   OB_DIE_ON_ERROR (err);

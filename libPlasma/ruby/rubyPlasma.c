@@ -433,25 +433,20 @@ OB_RUBYPLASMA_API void Init_rubyPlasma (void)
   rcStandardError = rb_define_class ("StandardError", rcException);
   rcSlawTypeTagError =
     rb_define_class_under (rcPlasmaModule, "SlawTypeTagError", rcStandardError);
-  rcPoolOperationError =
-    rb_define_class_under (rcPlasmaModule, "PoolOperationError",
-                           rcStandardError);
+  rcPoolOperationError = rb_define_class_under (
+    rcPlasmaModule, "PoolOperationError", rcStandardError);
   rcPoolInUseError = rb_define_class_under (rcPlasmaModule, "PoolInUseError",
                                             rcPoolOperationError);
   rcPoolExistsError = rb_define_class_under (rcPlasmaModule, "PoolExistsError",
                                              rcPoolOperationError);
-  rcPoolNotFoundError =
-    rb_define_class_under (rcPlasmaModule, "PoolNotFoundError",
-                           rcPoolOperationError);
-  rcPoolNoProteinError =
-    rb_define_class_under (rcPlasmaModule, "PoolNoProteinError",
-                           rcPoolOperationError);
-  rcPoolWithdrawnError =
-    rb_define_class_under (rcPlasmaModule, "PoolWithdrawnError",
-                           rcPoolOperationError);
-  rcPoolUnsupportedError =
-    rb_define_class_under (rcPlasmaModule, "PoolUnsupportedError",
-                           rcPoolOperationError);
+  rcPoolNotFoundError = rb_define_class_under (
+    rcPlasmaModule, "PoolNotFoundError", rcPoolOperationError);
+  rcPoolNoProteinError = rb_define_class_under (
+    rcPlasmaModule, "PoolNoProteinError", rcPoolOperationError);
+  rcPoolWithdrawnError = rb_define_class_under (
+    rcPlasmaModule, "PoolWithdrawnError", rcPoolOperationError);
+  rcPoolUnsupportedError = rb_define_class_under (
+    rcPlasmaModule, "PoolUnsupportedError", rcPoolOperationError);
   rcPoolFrozenError = rb_define_class_under (rcPlasmaModule, "PoolFrozenError",
                                              rcPoolOperationError);
   rcPoolFullError = rb_define_class_under (rcPlasmaModule, "PoolFullError",
@@ -855,9 +850,8 @@ static VALUE _new_slaw_from_c_slaw (bslaw cslaw, VALUE container,
   else
     rslaw = rb_class_new_instance (2, from_c_slaw_constructor_args, rcSlaw);
 
-  VALUE wrapped =
-    Data_Wrap_Struct (rb_cData, 0, (free_on_gc ? rubySlaw__slaw_free : NULL),
-                      (slaw) cslaw);
+  VALUE wrapped = Data_Wrap_Struct (
+    rb_cData, 0, (free_on_gc ? rubySlaw__slaw_free : NULL), (slaw) cslaw);
   rb_iv_set (rslaw, "@ruby_value", Qnil);
   rb_iv_set (rslaw, "@_c_slaw", wrapped);
   rb_iv_set (rslaw, "@type_tag", _c_type_tag (cslaw));

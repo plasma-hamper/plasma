@@ -130,8 +130,9 @@ funny_file:
     OB_LOG_ERROR_CODE (0x10020005, "%s while reading %s\n", strerror (erryes),
                        filename);
   else
-    OB_LOG_ERROR_CODE (0x10020006, "shouldn't have happened: neither feof nor "
-                                   "ferror on %s\n",
+    OB_LOG_ERROR_CODE (0x10020006,
+                       "shouldn't have happened: neither feof nor "
+                       "ferror on %s\n",
                        filename);
 
   free (s);
@@ -277,7 +278,12 @@ ob_retort ob_pipe (int fildes[2])
 // see PP_MAYBE and both go off and compute the result, that's
 // okay, because they'll both eventually set it to the same thing.
 // (So the second thread to finish is harmlessly redundant.)
-typedef enum { PP_NO, PP_YES, PP_MAYBE } possibly;
+typedef enum
+{
+  PP_NO,
+  PP_YES,
+  PP_MAYBE
+} possibly;
 
 // Parse a dotted version string into up to three components.
 // Returns the number of components parsed.
@@ -965,9 +971,9 @@ static ob_retort ob_evutil_ersatz_socketpair_ (int family, int type,
                                                int protocol,
                                                evutil_socket_t fd[2])
 {
-/* This code is originally from Tor.  Used with permission. */
+  /* This code is originally from Tor.  Used with permission. */
 
-/* This socketpair does not work when localhost is down. So
+  /* This socketpair does not work when localhost is down. So
          * it's really not the same thing at all. But it's close enough
          * for now, and really, when localhost is down sometimes, we
          * have other problems too.

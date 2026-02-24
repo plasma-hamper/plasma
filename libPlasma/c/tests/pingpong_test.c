@@ -352,10 +352,8 @@ static void test_resize (void)
 static void require_resizable (pool_cmd_info *pci)
 {
   slaw re = slaw_map_inline_cf ("resizable", slaw_boolean (true), NULL);
-  protein p =
-    protein_from_ff (NULL,
-                     slaw_maps_merge (protein_ingests (pci->create_options), re,
-                                      NULL));
+  protein p = protein_from_ff (
+    NULL, slaw_maps_merge (protein_ingests (pci->create_options), re, NULL));
   Free_Protein (pci->create_options);
   pci->create_options = p;
   slaw_free (re);
@@ -444,9 +442,8 @@ int main (int argc, char *argv[])
         {
           // let's get something in those pools to make it more challenging
           pool_hose ph;
-          OB_DIE_ON_ERROR (pool_participate_creatingly (pool_names[i], cmd.type,
-                                                        &ph,
-                                                        cmd.create_options));
+          OB_DIE_ON_ERROR (pool_participate_creatingly (
+            pool_names[i], cmd.type, &ph, cmd.create_options));
           // Fill pool almost full, but not quite
           // (So can't call pool_cmd_fill_pool(), which will wrap)
           const int goal = 7000;

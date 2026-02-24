@@ -92,8 +92,9 @@ static ob_retort __pool_create_semaphores (pool_hose ph)
       DWORD err = GetLastError ();
       if (mutex_handle == 0)
         {
-          OB_LOG_ERROR_CODE (0x2010c000, "__pool_create_semaphores could not "
-                                         "create mutex %s",
+          OB_LOG_ERROR_CODE (0x2010c000,
+                             "__pool_create_semaphores could not "
+                             "create mutex %s",
                              mutex_name);
           return POOL_SEMAPHORES_BADTH;
         }
@@ -164,8 +165,9 @@ static ob_retort pool_sem_lock (pool_hose ph, int index)
         return OB_OK;
 
       default:
-        OB_LOG_ERROR_CODE (0x2010c005, "unhandled WaitForSingleObject error in "
-                                       "pool_sem_lock - %d",
+        OB_LOG_ERROR_CODE (0x2010c005,
+                           "unhandled WaitForSingleObject error in "
+                           "pool_sem_lock - %d",
                            result);
         break;
     }

@@ -7,9 +7,7 @@ namespace oblong {
 namespace plasma {
 namespace bench {
 
-LoneWorker::LoneWorker (const Config &c) : Worker (c)
-{
-}
+LoneWorker::LoneWorker (const Config &c) : Worker (c) {}
 
 void LoneWorker::AddError (unt64 b, unt64 i, ob_retort r)
 {

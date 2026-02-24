@@ -165,9 +165,10 @@ static ob_retort pool_sem_destroy_semaphores (pool_hose ph,
           // then complain if the semaphore didn't exist.
           if (it_should_exist && dont_expect_sleep)
             {
-              OB_LOG_ERROR_CODE (0x2010a01e, "For pool '%s',\n"
-                                             "expected key 0x%08x to exist,\n"
-                                             "but got '%s'\n",
+              OB_LOG_ERROR_CODE (0x2010a01e,
+                                 "For pool '%s',\n"
+                                 "expected key 0x%08x to exist,\n"
+                                 "but got '%s'\n",
                                  ph->name, ph->sem_key, strerror (errno));
               return POOL_SEMAPHORES_BADTH;
             }
@@ -423,12 +424,12 @@ static void recreate_maliciously_deleted_semaphore (pool_hose ph)
         }
       if (errno != EINTR)
         {
-        /* Who knows what deep doo-doo we're in at this point,
+/* Who knows what deep doo-doo we're in at this point,
            * and since the user in question feels they shouldn't
            * have to look at error codes returned by our API,
            * we will exit for them.
            */
-        ugh:
+ugh:
           ob_nop ();  // what, you don't like declarations right after a label?
           const int erryes = errno;
           OB_FATAL_ERROR_CODE (0x2010a01f,
@@ -533,8 +534,9 @@ static ob_retort pool_sem_lock (pool_hose ph, int idx)
     }
   // Count can legitimately be 1 if it's locked by someone else, but never 2
   if (count > 1)
-    OB_FATAL_BUG_CODE (0x2010a00a, "hose '%s' pool '%s': '%s lock' count %d "
-                                   "(should be <= 1)\n",
+    OB_FATAL_BUG_CODE (0x2010a00a,
+                       "hose '%s' pool '%s': '%s lock' count %d "
+                       "(should be <= 1)\n",
                        ph->hose_name, ph->name, idx_to_str (idx), count);
 
 gross:
@@ -543,11 +545,12 @@ gross:
     {
       if ((errno == EINVAL) || (errno == EIDRM))
         {
-          OB_LOG_ERROR_CODE (0x2010a00b, "hose '%s' pool '%s' sem_id %d:\n"
-                                         "'%s lock' semop failed "
-                                         "with '%s' (%d),\nwhich probably "
-                                         "means somebody deleted a pool you "
-                                         "were still using\n",
+          OB_LOG_ERROR_CODE (0x2010a00b,
+                             "hose '%s' pool '%s' sem_id %d:\n"
+                             "'%s lock' semop failed "
+                             "with '%s' (%d),\nwhich probably "
+                             "means somebody deleted a pool you "
+                             "were still using\n",
                              ph->hose_name, ph->name, ph->sem_id,
                              idx_to_str (idx), strerror (errno), errno);
           return POOL_SEMAPHORES_BADTH;
@@ -590,8 +593,9 @@ gross:
       return POOL_SEMAPHORES_BADTH;
     }
   if (count != 0)
-    OB_FATAL_BUG_CODE (0x2010a010, "hose '%s' pool '%s': '%s lock' locked but "
-                                   "count %d (should be 0)\n",
+    OB_FATAL_BUG_CODE (0x2010a010,
+                       "hose '%s' pool '%s': '%s lock' locked but "
+                       "count %d (should be 0)\n",
                        ph->hose_name, ph->name, idx_to_str (idx), count);
   return OB_OK;
 }
@@ -621,8 +625,9 @@ static ob_retort pool_sem_unlock (pool_hose ph, int idx)
       return POOL_SEMAPHORES_BADTH;
     }
   if (count != 0)
-    OB_FATAL_BUG_CODE (0x2010a013, "hose '%s' pool '%s': '%s lock' count %d "
-                                   "(should be 0)\n",
+    OB_FATAL_BUG_CODE (0x2010a013,
+                       "hose '%s' pool '%s': '%s lock' count %d "
+                       "(should be 0)\n",
                        ph->hose_name, ph->name, idx_to_str (idx), count);
 
   // Actual unlock
@@ -673,8 +678,9 @@ static ob_retort pool_sem_unlock (pool_hose ph, int idx)
     }
   // Count can legitimately be 1 if it's locked by someone else, but never 2
   if (count > 1)
-    OB_FATAL_BUG_CODE (0x2010a019, "hose '%s' pool '%s': '%s lock' count %d "
-                                   "(should be <= 1)\n",
+    OB_FATAL_BUG_CODE (0x2010a019,
+                       "hose '%s' pool '%s': '%s lock' count %d "
+                       "(should be <= 1)\n",
                        ph->hose_name, ph->name, idx_to_str (idx), count);
   return OB_OK;
 }

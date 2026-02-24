@@ -1,0 +1,133 @@
+---
+# Reverse-engineered clang-format configuration for plasma
+# Based on analysis of existing code style
+
+Language: Cpp
+BasedOnStyle: GNU
+
+# Core indentation
+IndentWidth: 2
+UseTab: Never
+TabWidth: 2
+ContinuationIndentWidth: 2
+
+# Custom brace wrapping based on observed style
+# GNU-like for control statements (braces indented), but K&R for namespaces
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: false
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  IndentBraces: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# Column limit - appears to be around 80
+ColumnLimit: 80
+
+# DISTINCTIVE: Space before ALL parentheses including function calls
+# e.g., malloc (sizeof (slabu)), fprintf (stderr, ...)
+SpaceBeforeParens: Always
+
+# Pointer/reference alignment - space before pointer, attached to variable name
+# e.g., char *buf, not char* buf
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# Access modifiers (public:, private:) indented 1 space from class
+AccessModifierOffset: -1
+
+# Namespace handling - no indentation inside namespaces
+NamespaceIndentation: None
+
+# Switch/case - case labels indented inside switch braces
+IndentCaseLabels: true
+IndentCaseBlocks: false
+
+# Constructor initializer lists
+ConstructorInitializerIndentWidth: 4
+BreakConstructorInitializers: BeforeColon
+PackConstructorInitializers: NextLine
+
+# Allow short forms
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortLambdasOnASingleLine: Inline
+
+# Breaking and wrapping - keep return type on same line as function name
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeTernaryOperators: true
+
+# Alignment
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: false
+AlignEscapedNewlines: Right
+AlignOperands: Align
+AlignTrailingComments: true
+
+# Spacing
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Include sorting
+SortIncludes: false
+IncludeBlocks: Preserve
+
+# Macros
+# OB_PRIVATE is an alias for private/public access specifiers
+StatementMacros:
+  - OB_PRIVATE
+  - OB_PROTECTED
+
+# Other
+Cpp11BracedListStyle: true
+DeriveLineEnding: true
+DerivePointerAlignment: false
+FixNamespaceComments: false
+IndentGotoLabels: false
+IndentPPDirectives: None
+IndentWrappedFunctionNames: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 3
+ReflowComments: false
+SortUsingDeclarations: false
+UseCRLF: false
+---

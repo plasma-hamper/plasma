@@ -18,10 +18,11 @@
 
 static void usage (void)
 {
-  fprintf (stderr, "Usage: test-info [-t <type>] [-s <size>] [-i <toc cap>] "
-                   "<pool_name>\n"
-                   "\t<type> defaults to \"mmap\"\n"
-                   "\t<size> defaults to %" OB_FMT_64 "u bytes\n",
+  fprintf (stderr,
+           "Usage: test-info [-t <type>] [-s <size>] [-i <toc cap>] "
+           "<pool_name>\n"
+           "\t<type> defaults to \"mmap\"\n"
+           "\t<size> defaults to %" OB_FMT_64 "u bytes\n",
            (unt64) POOL_MMAP_DEFAULT_SIZE);
   exit (EXIT_FAILURE);
 }
@@ -31,7 +32,7 @@ int mainish (int argc, char **argv)
   pool_cmd_info cmd;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:v")) != -1)
     {
       switch (c)
@@ -82,9 +83,9 @@ int mainish (int argc, char **argv)
 
   unt64 sz = slaw_path_get_unt64 (terminal_info, "size", 923);
   if (sz != cmd.size)
-    OB_FATAL_ERROR_CODE (0x20411004, "expected size %" OB_FMT_64
-                                     "u, but got %" OB_FMT_64 "u\n",
-                         cmd.size, sz);
+    OB_FATAL_ERROR_CODE (
+      0x20411004, "expected size %" OB_FMT_64 "u, but got %" OB_FMT_64 "u\n",
+      cmd.size, sz);
 
   protein transport_info;
   pret = pool_get_info (cmd.ph, 0, &transport_info);
@@ -96,9 +97,8 @@ int mainish (int argc, char **argv)
     {
       slabu *sb = slabu_of_strings_from_split (cmd.pool_name, "://");
       const char *proto = slaw_string_emit (slabu_list_nth (sb, 0));
-      slabu *sb2 =
-        slabu_of_strings_from_split (slaw_string_emit (slabu_list_nth (sb, 1)),
-                                     "/");
+      slabu *sb2 = slabu_of_strings_from_split (
+        slaw_string_emit (slabu_list_nth (sb, 1)), "/");
       const char *host = slaw_string_emit (slabu_list_nth (sb2, 0));
       slabu *sb3 = slabu_of_strings_from_split (host, ":");
       if (slabu_count (sb3) == 2)
@@ -108,8 +108,9 @@ int mainish (int argc, char **argv)
           OB_DIE_ON_ERROR (slaw_to_unt64 (slabu_list_nth (sb3, 1), &port));
           unt64 p = slaw_path_get_unt64 (transport_info, "port", 923);
           if (p != port)
-            OB_FATAL_ERROR_CODE (0x20411006, "expected port %" OB_FMT_64
-                                             "u, but got %" OB_FMT_64 "u\n",
+            OB_FATAL_ERROR_CODE (0x20411006,
+                                 "expected port %" OB_FMT_64
+                                 "u, but got %" OB_FMT_64 "u\n",
                                  port, p);
         }
 

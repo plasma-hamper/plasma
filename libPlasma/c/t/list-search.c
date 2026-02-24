@@ -93,18 +93,16 @@ int main (int argc, char **argv)
                          "got %" OB_FMT_64 "d but expected %" OB_FMT_64 "d\n",
                          got, expected);
 
-  got = slaw_list_contigsearch_inline_f (lst, slaw_string ("man"),
-                                         slaw_string ("a"),
-                                         slaw_string ("plan"), NULL);
+  got = slaw_list_contigsearch_inline_f (
+    lst, slaw_string ("man"), slaw_string ("a"), slaw_string ("plan"), NULL);
   expected = 1;
   if (got != expected)
     OB_FATAL_ERROR_CODE (0x2030500a,
                          "got %" OB_FMT_64 "d but expected %" OB_FMT_64 "d\n",
                          got, expected);
 
-  got =
-    slaw_list_gapsearch_inline_f (lst, slaw_string ("plan"), slaw_string ("a"),
-                                  slaw_string ("panama"), NULL);
+  got = slaw_list_gapsearch_inline_f (
+    lst, slaw_string ("plan"), slaw_string ("a"), slaw_string ("panama"), NULL);
   expected = 3;
   if (got != expected)
     OB_FATAL_ERROR_CODE (0x2030500b,

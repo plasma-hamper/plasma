@@ -87,9 +87,9 @@ const char *ob_error_string_literal (ob_retort err)
       default:
         // See if this was an errno wrapped in a retort
         e = ob_retort_to_errno (err);
-	const char *s = strerror(e);
-	if (s)
-	  return s;
+        const char *s = strerror (e);
+        if (s)
+          return s;
         // if (e > 0 && e < NERR)
         //   {
         //     const char *s = ERRLIST[e];
@@ -134,6 +134,4 @@ bool ob_retort_exists (ob_retort ret)
   return (NULL != ob_error_string_literal (ret));
 }
 
-void ob_ignore_retort (OB_UNUSED ob_retort ret)
-{
-}
+void ob_ignore_retort (OB_UNUSED ob_retort ret) {}

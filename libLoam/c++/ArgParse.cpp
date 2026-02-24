@@ -381,9 +381,10 @@ ArgParse::ArgInfo ArgParse::Query (apstring name) const
   OptionHandler *oh = d->findOption (name, &no);
 
   if (isAlias && !oh)
-    OB_FATAL_BUG_CODE (0x12000006, "Invariant violated (alias '%s' without a "
-                                   "real option '%s' "
-                                   "behind it)\n",
+    OB_FATAL_BUG_CODE (0x12000006,
+                       "Invariant violated (alias '%s' without a "
+                       "real option '%s' "
+                       "behind it)\n",
                        name.utf8 (), ai.aliasFor.utf8 ());
 
   if (oh)
@@ -712,9 +713,7 @@ OptionHandler::OptionHandler (ArgParse::apstring usage_in, int separator_in)
 {
 }
 
-OptionHandler::~OptionHandler ()
-{
-}
+OptionHandler::~OptionHandler () {}
 
 bool OptionHandler::takesarg () const
 {
@@ -726,9 +725,7 @@ bool OptionHandler::allownegation () const
   return false;
 }
 
-void OptionHandler::reset ()
-{
-}
+void OptionHandler::reset () {}
 
 ArgParse::apstring OptionHandler::handleargsplit (ArgParse::apstring arg,
                                                   ArgParse::apstring prefix)

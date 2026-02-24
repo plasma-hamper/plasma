@@ -199,8 +199,9 @@ TEST (aptest1, UsageMessage)
   t2.Alias ("G", "incremental");
   t2.Alias ("g", "listed-incremental");
   t2.UsageHeader ("\nArchive format selection:", 37);
-  t2.ArgFlag ("V", "=NAME\acreate archive with volume name NAME\n      "
-                   "        PATTERN\aat list/extract time, a globbing PATTERN",
+  t2.ArgFlag ("V",
+              "=NAME\acreate archive with volume name NAME\n      "
+              "        PATTERN\aat list/extract time, a globbing PATTERN",
               &junkf);
   t2.Alias ("V", "label");
   t2.AllowOneCharOptionsToBeCombined ();

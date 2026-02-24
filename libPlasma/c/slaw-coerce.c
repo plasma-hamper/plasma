@@ -91,7 +91,8 @@ static ob_retort homemade_float64_to_unt64 (float64 src, unt64 *result)
   return homemade_float64bits_to_unt64 (bizarre.u, result);
 }
 
-typedef enum {
+typedef enum
+{
   NT_FINITE,
   NT_OVERFLOW,
   NT_INFINITY,
@@ -888,21 +889,21 @@ private_handle_empty (OB_UNUSED void *cookie, OB_UNUSED int vecsize,
   return SLAW_WRONG_LENGTH;
 }
 
-static const slaw_handler array_walk_handler =
-  {private_not_numeric,        private_not_numeric,
-   private_not_numeric_length, private_not_numeric,
-   private_not_numeric_length, private_not_numeric,
-   private_nop_array,          private_nop,
-   private_nop_length,         private_nop,
-   private_nop_length,         private_nop,
-   private_not_numeric,        private_not_numeric,
-   private_not_numeric,        private_not_numeric_string,
-   private_handle_int,         private_handle_unt,
-   private_handle_float,       private_handle_empty,
-   private_not_numeric,        private_not_numeric,
-   private_not_numeric_ptr,    private_not_numeric,
-   private_not_numeric,        private_not_numeric,
-   private_not_numeric,        private_not_numeric_ptr};
+static const slaw_handler array_walk_handler = {
+  private_not_numeric,        private_not_numeric,
+  private_not_numeric_length, private_not_numeric,
+  private_not_numeric_length, private_not_numeric,
+  private_nop_array,          private_nop,
+  private_nop_length,         private_nop,
+  private_nop_length,         private_nop,
+  private_not_numeric,        private_not_numeric,
+  private_not_numeric,        private_not_numeric_string,
+  private_handle_int,         private_handle_unt,
+  private_handle_float,       private_handle_empty,
+  private_not_numeric,        private_not_numeric,
+  private_not_numeric_ptr,    private_not_numeric,
+  private_not_numeric,        private_not_numeric,
+  private_not_numeric,        private_not_numeric_ptr};
 
 ob_retort slaw_to_vn (bslaw src, float64 *dest, int capacity, int *len)
 {

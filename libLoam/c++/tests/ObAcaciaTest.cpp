@@ -565,8 +565,9 @@ TEST (ObAcacia, DISABLED_Speed)
     if (OB_ALREADY_PRESENT == ac1.Append (*rr))
       dups++;
 
-  fprintf (stderr, "out of one million entries, <%d> duplicates "
-                   "dared show their ugly faces.\n",
+  fprintf (stderr,
+           "out of one million entries, <%d> duplicates "
+           "dared show their ugly faces.\n",
            dups);
 
   FatherTime uhr, nuke_uhr;
@@ -586,8 +587,9 @@ TEST (ObAcacia, DISABLED_Speed)
           }
           nuk += nuke_uhr.CurTime ();
         }
-      fprintf (stderr, "ACAC: [%d] iterations of [%d] "
-                       "insertions: %f seconds; tear-down in %f secs\n",
+      fprintf (stderr,
+               "ACAC: [%d] iterations of [%d] "
+               "insertions: %f seconds; tear-down in %f secs\n",
                w, chunk, uhr.CurTime () - nuk, nuk);
     }
 
@@ -606,8 +608,9 @@ TEST (ObAcacia, DISABLED_Speed)
           }
           nuk += nuke_uhr.CurTime ();
         }
-      fprintf (stderr, "UQTR: [%d] iterations of [%d] trove "
-                       "insertions: %f seconds; tear-down in %f secs\n",
+      fprintf (stderr,
+               "UQTR: [%d] iterations of [%d] trove "
+               "insertions: %f seconds; tear-down in %f secs\n",
                w, chunk, uhr.CurTime () - nuk, nuk);
     }
 
@@ -627,8 +630,9 @@ TEST (ObAcacia, DISABLED_Speed)
             ac.Remove (*rr);
           nuk += nuke_uhr.CurTime ();
         }
-      fprintf (stderr, "ACAC-rem: [%d] iterations of [%d] "
-                       "removals: %f seconds\n",
+      fprintf (stderr,
+               "ACAC-rem: [%d] iterations of [%d] "
+               "removals: %f seconds\n",
                w, chunk, nuk);
     }
 

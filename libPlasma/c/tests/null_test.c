@@ -35,7 +35,7 @@ int mainish (int argc, char *argv[])
   int64 idx;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
       switch (c)
@@ -83,22 +83,25 @@ int mainish (int argc, char *argv[])
 
   pret = pool_next (ph, &curr_prot, NULL, NULL);
   if (pret != OB_OK)
-    OB_FATAL_ERROR_CODE (0x20408001, "pool_next with null timestamp and index "
-                                     "addr failed: %s\n",
+    OB_FATAL_ERROR_CODE (0x20408001,
+                         "pool_next with null timestamp and index "
+                         "addr failed: %s\n",
                          ob_error_string (pret));
   Free_Protein (curr_prot);
 
   pret = pool_prev (ph, &curr_prot, NULL, NULL);
   if (pret != OB_OK)
-    OB_FATAL_ERROR_CODE (0x20408002, "pool_prev with null timestamp and index "
-                                     "addr failed: %s\n",
+    OB_FATAL_ERROR_CODE (0x20408002,
+                         "pool_prev with null timestamp and index "
+                         "addr failed: %s\n",
                          ob_error_string (pret));
   Free_Protein (curr_prot);
 
   pret = pool_await_next (ph, 0, &curr_prot, NULL, NULL);
   if (pret != OB_OK)
-    OB_FATAL_ERROR_CODE (0x20408003, "pool_next with null timestamp and index "
-                                     "addr failed: %s\n",
+    OB_FATAL_ERROR_CODE (0x20408003,
+                         "pool_next with null timestamp and index "
+                         "addr failed: %s\n",
                          ob_error_string (pret));
   Free_Protein (curr_prot);
 
@@ -108,22 +111,25 @@ int mainish (int argc, char *argv[])
 
   pret = pool_next (ph, &curr_prot, &ts, &idx);
   if ((pret != OB_OK) || (ts == 0) || idx != 0)
-    OB_FATAL_ERROR_CODE (0x20408004, "pool_next with non-null timestamp and "
-                                     "index addr failed: %s\n",
+    OB_FATAL_ERROR_CODE (0x20408004,
+                         "pool_next with non-null timestamp and "
+                         "index addr failed: %s\n",
                          ob_error_string (pret));
   Free_Protein (curr_prot);
 
   pret = pool_prev (ph, &curr_prot, &ts, &idx);
   if ((pret != OB_OK) || (ts == 0) || idx != 0)
-    OB_FATAL_ERROR_CODE (0x20408005, "pool_prev with null timestamp and index "
-                                     "addr failed: %s\n",
+    OB_FATAL_ERROR_CODE (0x20408005,
+                         "pool_prev with null timestamp and index "
+                         "addr failed: %s\n",
                          ob_error_string (pret));
   Free_Protein (curr_prot);
 
   pret = pool_await_next (ph, 0, &curr_prot, &ts, &idx);
   if ((pret != OB_OK) || (ts == 0) || idx != 0)
-    OB_FATAL_ERROR_CODE (0x20408006, "pool_next with null timestamp and index "
-                                     "addr failed: %s\n",
+    OB_FATAL_ERROR_CODE (0x20408006,
+                         "pool_next with null timestamp and index "
+                         "addr failed: %s\n",
                          ob_error_string (pret));
   Free_Protein (curr_prot);
 

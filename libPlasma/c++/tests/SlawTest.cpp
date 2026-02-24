@@ -202,8 +202,8 @@ SomeSlaw::SomeSlaw ()
       larger_meaning (int32 (42)),
       negativity (int8 (-1)),
       sixty_four_bits (unt64 (OB_CONST_U64 (0xdefacedbadfacade))),
-      really (bool(true)),
-      not_so_much (bool(false)),
+      really (bool (true)),
+      not_so_much (bool (false)),
       unready ("\303\246thelred-the-unready"),
       foo ("foo"),
       empty ("")

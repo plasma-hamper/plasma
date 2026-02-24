@@ -11,8 +11,8 @@ Rectangle::Rectangle (Vect corner_, Vect leg1_, Vect leg2_)
 
 Str Rectangle::AsStr () const
 {
-  return "Rectangle[c=" + corner.AsStr () + ", l1=" + leg1.AsStr () + ", l2="
-         + leg2.AsStr () + "]";
+  return "Rectangle[c=" + corner.AsStr () + ", l1=" + leg1.AsStr ()
+         + ", l2=" + leg2.AsStr () + "]";
 }
 
 bool Rectangle::IsValid () const

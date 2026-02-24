@@ -338,7 +338,8 @@ static ob_retort _pool_net_send_op (pool_net_data *net, int op_num,
   // Log large protein sends
   if (len > PLASMA_LARGE_TRANSFER_THRESHOLD)
     {
-      ob_log (OBLV_INFO, 0x20106002, "Sending large protein: %lld bytes (%.2f MB) for op %d\n",
+      ob_log (OBLV_INFO, 0x20106002,
+              "Sending large protein: %lld bytes (%.2f MB) for op %d\n",
               (long long) len, len / (1024.0 * 1024.0), op_num);
     }
 #endif
@@ -379,7 +380,8 @@ ob_retort pool_net_recv_op (pool_net_data *net, int *op_num, protein *ret_prot)
   // Log large protein receives
   if (len > PLASMA_LARGE_TRANSFER_THRESHOLD)
     {
-      ob_log (OBLV_INFO, 0x20106003, "Receiving large protein: %llu bytes (%.2f MB)\n",
+      ob_log (OBLV_INFO, 0x20106003,
+              "Receiving large protein: %llu bytes (%.2f MB)\n",
               (unsigned long long) len, len / (1024.0 * 1024.0));
     }
 #endif
@@ -968,9 +970,8 @@ static ob_retort pool_net_next_internal (pool_hose ph, protein *ret_prot,
               }
           case OB_FANCY_PREPARING:
             assert (fancy);
-            pret =
-              pool_net_recv_unusual_result (ph->net, POOL_CMD_FANCY_RESULT_1,
-                                            "rti", &remote_pret, &ts, &idx);
+            pret = pool_net_recv_unusual_result (
+              ph->net, POOL_CMD_FANCY_RESULT_1, "rti", &remote_pret, &ts, &idx);
             if (pret < OB_OK)
               continue;
             if (outstanding_compatible (&ph->net->outstanding, squished,
@@ -1006,11 +1007,9 @@ static ob_retort pool_net_next_internal (pool_hose ph, protein *ret_prot,
                   return pret;
                 else if (gotit)
                   {
-                    pret =
-                      pool_net_recv_unusual_result (ph->net,
-                                                    POOL_CMD_FANCY_RESULT_2,
-                                                    "rti", &remote_pret, &ts,
-                                                    &idx);
+                    pret = pool_net_recv_unusual_result (
+                      ph->net, POOL_CMD_FANCY_RESULT_2, "rti", &remote_pret,
+                      &ts, &idx);
                     if (pret < OB_OK)
                       continue;
                     if (remote_pret == OB_OK)
@@ -1048,9 +1047,8 @@ static ob_retort pool_net_next_internal (pool_hose ph, protein *ret_prot,
                 continue;
               }
             remote_pret = OB_OK;
-            pret =
-              pool_net_recv_unusual_result (ph->net, POOL_CMD_FANCY_RESULT_3,
-                                            "tip", &ts, &idx, ret_prot);
+            pret = pool_net_recv_unusual_result (
+              ph->net, POOL_CMD_FANCY_RESULT_3, "tip", &ts, &idx, ret_prot);
             set_outstanding (&ph->net->outstanding, OB_NO_AWAIT, 0, NULL);
             break;
           default:
@@ -1459,9 +1457,8 @@ static ob_retort pool_net_multi_add_awaiter_internal (pool_hose ph,
             continue;
           case OB_FANCY_PREPARING:
             assert (fancy);
-            pret =
-              pool_net_recv_unusual_result (ph->net, POOL_CMD_FANCY_RESULT_1,
-                                            "rti", &remote_pret, &ts, &idx);
+            pret = pool_net_recv_unusual_result (
+              ph->net, POOL_CMD_FANCY_RESULT_1, "rti", &remote_pret, &ts, &idx);
             if (pret < OB_OK)
               continue;
             if (outstanding_compatible (&ph->net->outstanding, squished,
@@ -1499,9 +1496,8 @@ static ob_retort pool_net_multi_add_awaiter_internal (pool_hose ph,
               }
             if (ret_prot == NULL && ret_index == NULL && ret_ts == NULL)
               return OB_OK;  // leave as "arrived" if no info is needed
-            pret =
-              pool_net_recv_unusual_result (ph->net, POOL_CMD_FANCY_RESULT_3,
-                                            "tip", &ts, &idx, ret_prot);
+            pret = pool_net_recv_unusual_result (
+              ph->net, POOL_CMD_FANCY_RESULT_3, "tip", &ts, &idx, ret_prot);
             set_outstanding (&ph->net->outstanding, OB_NO_AWAIT, 0, NULL);
             if (pret >= OB_OK)
               {
@@ -1555,11 +1551,11 @@ static ob_retort pool_net_multi_add_awaiter_internal (pool_hose ph,
 
 void pool_net_multi_remove_awaiter (OB_UNUSED pool_hose ph)
 {
-// Dummy awaiter removal, needed for the multi-pool code.  At present,
-// we never tear down await state explicitly - it always happens as a
-// by-product of sending the next command.  This keeps us from having
-// to set up and tear down awaits for multi-pool awaits on every
-// single call.
+  // Dummy awaiter removal, needed for the multi-pool code.  At present,
+  // we never tear down await state explicitly - it always happens as a
+  // by-product of sending the next command.  This keeps us from having
+  // to set up and tear down awaits for multi-pool awaits on every
+  // single call.
 
 #ifdef _MSC_VER
   //actually we do need this awaiter removal method!
@@ -1575,12 +1571,10 @@ void pool_net_multi_remove_awaiter (OB_UNUSED pool_hose ph)
 
 static slaw convert_fetch_op_to_slaw (pool_fetch_op ops)
 {
-  return slaw_map_inline_cf ("idx",    slaw_int64 (ops.idx),
-                             "des",    slaw_boolean (ops.want_descrips),
-                             "ing",    slaw_boolean (ops.want_ingests),
-                             "roff",   slaw_int64 (ops.rude_offset),
-                             "rbytes", slaw_int64 (ops.rude_length),
-                             NULL);
+  return slaw_map_inline_cf (
+    "idx", slaw_int64 (ops.idx), "des", slaw_boolean (ops.want_descrips), "ing",
+    slaw_boolean (ops.want_ingests), "roff", slaw_int64 (ops.rude_offset),
+    "rbytes", slaw_int64 (ops.rude_length), NULL);
 }
 
 static slaw convert_fetch_ops_to_slaw (const pool_fetch_op *ops, int64 nops)
@@ -1626,9 +1620,8 @@ static ob_retort convert_slaw_to_fetch_ops (bslaw s, pool_fetch_op *ops,
   bslaw el = NULL;
   ob_retort tort = OB_OK;
   for (i = 0; i < nops; i++)
-    ob_err_accum (&tort,
-                  convert_slaw_to_fetch_op (el = slaw_list_emit_next (s, el),
-                                            &(ops[i]), clamp));
+    ob_err_accum (&tort, convert_slaw_to_fetch_op (
+                           el = slaw_list_emit_next (s, el), &(ops[i]), clamp));
   return tort;
 }
 

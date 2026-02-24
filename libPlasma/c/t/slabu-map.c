@@ -178,9 +178,8 @@ int main (int argc, char **argv)
   test (sb);
   got = slabu_list_find_c (sb, "I am not a cons");
   if (got != SLAW_NOT_FOUND)
-    OB_FATAL_ERROR_CODE (0x2030c010,
-                         "expected SLAW_NOT_FOUND and got %" OB_FMT_64 "d\n",
-                         got);
+    OB_FATAL_ERROR_CODE (
+      0x2030c010, "expected SLAW_NOT_FOUND and got %" OB_FMT_64 "d\n", got);
   slabu_free (sb);
 
   sb = slabu_new ();

@@ -22,7 +22,7 @@ int main (int argc, char *argv[])
   pool_cmd_info cmd;
   int c;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
 
   while ((c = getopt (argc, argv, "s:t:")) != -1)
     {
@@ -44,8 +44,9 @@ int main (int argc, char *argv[])
 
   ob_retort pret = pool_create (cmd.pool_name, cmd.type, cmd.create_options);
   if ((pret != OB_OK) && (pret != POOL_EXISTS))
-    OB_FATAL_ERROR_CODE (0x20200000, "Can't create %s: %" OB_FMT_RETORT "d"
-                                     "\n",
+    OB_FATAL_ERROR_CODE (0x20200000,
+                         "Can't create %s: %" OB_FMT_RETORT "d"
+                         "\n",
                          cmd.pool_name, pret);
 
   pool_cmd_fill_pool (&cmd);

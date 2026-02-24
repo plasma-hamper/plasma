@@ -12,10 +12,11 @@
 
 static void usage (void)
 {
-  fprintf (stderr, "Usage: test-bigger [-t <type>] [-s <size>] [-i <toc cap>] "
-                   "<pool_name>\n"
-                   "\t<type> defaults to \"mmap\"\n"
-                   "\t<size> defaults to %" OB_FMT_64 "u bytes\n",
+  fprintf (stderr,
+           "Usage: test-bigger [-t <type>] [-s <size>] [-i <toc cap>] "
+           "<pool_name>\n"
+           "\t<type> defaults to \"mmap\"\n"
+           "\t<size> defaults to %" OB_FMT_64 "u bytes\n",
            (unt64) POOL_MMAP_DEFAULT_SIZE);
   exit (EXIT_FAILURE);
 }
@@ -28,7 +29,7 @@ static int mainish (int argc, char **argv)
   protein p;
   ob_retort expected;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:v")) != -1)
     {
       switch (c)
@@ -65,19 +66,15 @@ static int mainish (int argc, char **argv)
 
   // Let's make a protein slightly bigger than the pool
   int ret = EXIT_SUCCESS;
-  protein big =
-    protein_from_ff (NULL, slaw_map_inline_cf ("this is too big",
-                                               slaw_int8_array_filled (sz, -1),
-                                               NULL));
-  protein medium =
-    protein_from_ff (NULL,
-                     slaw_map_inline_cf ("this should not be too big",
-                                         slaw_int8_array_filled (sz / 2, -1),
-                                         NULL));
-  protein tiny =
-    protein_from_ff (NULL,
-                     slaw_map_inline_cf ("this is very small",
-                                         slaw_int8_array_filled (0, -1), NULL));
+  protein big = protein_from_ff (
+    NULL, slaw_map_inline_cf ("this is too big",
+                              slaw_int8_array_filled (sz, -1), NULL));
+  protein medium = protein_from_ff (
+    NULL, slaw_map_inline_cf ("this should not be too big",
+                              slaw_int8_array_filled (sz / 2, -1), NULL));
+  protein tiny = protein_from_ff (
+    NULL, slaw_map_inline_cf ("this is very small",
+                              slaw_int8_array_filled (0, -1), NULL));
 
   // And try to deposit it
   pret = pool_deposit (cmd.ph, big, &idx);

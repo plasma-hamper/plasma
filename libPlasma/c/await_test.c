@@ -129,8 +129,9 @@ static void *await_main (void *arg)
       else if (prot == NULL)
         {
           pool_withdraw (ph);
-          OB_LOG_ERROR_CODE (0x2040002f, "[u%d] await thread %d prot was NULL, "
-                                         "returning 1\n",
+          OB_LOG_ERROR_CODE (0x2040002f,
+                             "[u%d] await thread %d prot was NULL, "
+                             "returning 1\n",
                              ubi, thread_num);
           return (void *) 1;
         }
@@ -369,8 +370,9 @@ static void *forever_await_main (void *arg)
   if (pret == POOL_AWAIT_WOKEN)
     return (void *) 0;
 
-  OB_LOG_ERROR_CODE (0x20400016, "[u%d] pool_await_next returned '%s' but "
-                                 "expected POOL_AWAIT_WOKEN\n",
+  OB_LOG_ERROR_CODE (0x20400016,
+                     "[u%d] pool_await_next returned '%s' but "
+                     "expected POOL_AWAIT_WOKEN\n",
                      ubi, ob_error_string (pret));
 
   return (void *) 1;
@@ -396,8 +398,9 @@ static void *wakeup_main (void *arg)
   // We can't just depend on the return (void*)1 to fail the test,
   // because if the wakeup failed, forever_await_main will wait forever,
   // and the test will never exit at all.
-  OB_FATAL_ERROR_CODE (0x20400019, "[u%d] pool_hose_wake_up returned '%s' but "
-                                   "expected OB_OK\n",
+  OB_FATAL_ERROR_CODE (0x20400019,
+                       "[u%d] pool_hose_wake_up returned '%s' but "
+                       "expected OB_OK\n",
                        ubi, ob_error_string (err));
   return (void *) 1;
 }
@@ -478,8 +481,9 @@ static pthread_t *create_threads (int my_nthreads,
   int i;
   pthread_t *threads = (pthread_t *) malloc (my_nthreads * sizeof (*threads));
   if (!threads)
-    OB_FATAL_ERROR_CODE (0x20400030, "[u%d] Can't allocate thread struct array "
-                                     "for %d threads\n",
+    OB_FATAL_ERROR_CODE (0x20400030,
+                         "[u%d] Can't allocate thread struct array "
+                         "for %d threads\n",
                          ubi, my_nthreads);
 
   for (i = 0; i < my_nthreads; i++)
@@ -589,10 +593,9 @@ static int mainish (int argc, char *argv[])
       forever_awaiting_gang = NULL;
       pret = pool_create (cmd.pool_name, cmd.type, cmd.create_options);
       if (pret != OB_OK)
-        OB_FATAL_ERROR_CODE (0x20400020,
-                             "[u%d] no can create %s (%" OB_FMT_64 "u): %s\n",
-                             ubi, cmd.pool_name, cmd.size,
-                             ob_error_string (pret));
+        OB_FATAL_ERROR_CODE (
+          0x20400020, "[u%d] no can create %s (%" OB_FMT_64 "u): %s\n", ubi,
+          cmd.pool_name, cmd.size, ob_error_string (pret));
 
       // Each thread must now open the pool to get its own private pool
       // hose, otherwise they will stomp on each other's pool indexes.

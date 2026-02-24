@@ -72,9 +72,9 @@ on 1 byte), but shoehorning those bytes into integers efficiently is messy.
 -------------------------------------------------------------------------------
 */
 
-#define hashsize(n) ((unt32)1<<(n))
-#define hashmask(n) (hashsize(n)-1)
-#define rot(x,k) (((x)<<(k)) | ((x)>>(32-(k))))
+#define hashsize(n) ((unt32) 1 << (n))
+#define hashmask(n) (hashsize (n) - 1)
+#define rot(x, k) (((x) << (k)) | ((x) >> (32 - (k))))
 
 /*
 -------------------------------------------------------------------------------
@@ -120,15 +120,27 @@ on, and rotates are much kinder to the top and bottom bits, so I used
 rotates.
 -------------------------------------------------------------------------------
 */
-#define mix32(a,b,c) \
-{ \
-  a -= c;  a ^= rot(c, 4);  c += b; \
-  b -= a;  b ^= rot(a, 6);  a += c; \
-  c -= b;  c ^= rot(b, 8);  b += a; \
-  a -= c;  a ^= rot(c,16);  c += b; \
-  b -= a;  b ^= rot(a,19);  a += c; \
-  c -= b;  c ^= rot(b, 4);  b += a; \
-}
+#define mix32(a, b, c)                                                         \
+  {                                                                            \
+    a -= c;                                                                    \
+    a ^= rot (c, 4);                                                           \
+    c += b;                                                                    \
+    b -= a;                                                                    \
+    b ^= rot (a, 6);                                                           \
+    a += c;                                                                    \
+    c -= b;                                                                    \
+    c ^= rot (b, 8);                                                           \
+    b += a;                                                                    \
+    a -= c;                                                                    \
+    a ^= rot (c, 16);                                                          \
+    c += b;                                                                    \
+    b -= a;                                                                    \
+    b ^= rot (a, 19);                                                          \
+    a += c;                                                                    \
+    c -= b;                                                                    \
+    c ^= rot (b, 4);                                                           \
+    b += a;                                                                    \
+  }
 
 /*
 -------------------------------------------------------------------------------
@@ -155,16 +167,23 @@ and these came close:
  11  8 15 26 3 22 24
 -------------------------------------------------------------------------------
 */
-#define final(a,b,c) \
-{ \
-  c ^= b; c -= rot(b,14); \
-  a ^= c; a -= rot(c,11); \
-  b ^= a; b -= rot(a,25); \
-  c ^= b; c -= rot(b,16); \
-  a ^= c; a -= rot(c,4);  \
-  b ^= a; b -= rot(a,14); \
-  c ^= b; c -= rot(b,24); \
-}
+#define final(a, b, c)                                                         \
+  {                                                                            \
+    c ^= b;                                                                    \
+    c -= rot (b, 14);                                                          \
+    a ^= c;                                                                    \
+    a -= rot (c, 11);                                                          \
+    b ^= a;                                                                    \
+    b -= rot (a, 25);                                                          \
+    c ^= b;                                                                    \
+    c -= rot (b, 16);                                                          \
+    a ^= c;                                                                    \
+    a -= rot (c, 4);                                                           \
+    b ^= a;                                                                    \
+    b -= rot (a, 14);                                                          \
+    c ^= b;                                                                    \
+    c -= rot (b, 24);                                                          \
+  }
 
 /*
 -------------------------------------------------------------------------------
@@ -193,32 +212,37 @@ acceptable.  Do NOT use for cryptographic purposes.
 -------------------------------------------------------------------------------
 */
 
-unt32 ob_jenkins_hash( const void *key, size_t length, unt32 initval)
+unt32 ob_jenkins_hash (const void *key, size_t length, unt32 initval)
 {
-  unt32 a,b,c;                                          /* internal state */
-  union { const void *ptr; size_t i; } u;     /* needed for Mac Powerbook G4 */
+  unt32 a, b, c; /* internal state */
+  union
+  {
+    const void *ptr;
+    size_t i;
+  } u; /* needed for Mac Powerbook G4 */
   const bool vg = RUNNING_ON_VALGRIND;
 
   /* Set up the internal state */
-  a = b = c = 0xdeadbeef + ((unt32)length) + initval;
+  a = b = c = 0xdeadbeef + ((unt32) length) + initval;
 
   u.ptr = key;
-  if (HASH_LITTLE_ENDIAN && ((u.i & 0x3) == 0)) {
-    const unt32 *k = (const unt32 *)key;         /* read 32-bit chunks */
-
-    /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
-    while (length > 12)
+  if (HASH_LITTLE_ENDIAN && ((u.i & 0x3) == 0))
     {
-      a += k[0];
-      b += k[1];
-      c += k[2];
-      mix32(a,b,c);
-      length -= 12;
-      k += 3;
-    }
+      const unt32 *k = (const unt32 *) key; /* read 32-bit chunks */
 
-    /*----------------------------- handle the last (probably partial) block */
-    /*
+      /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
+      while (length > 12)
+        {
+          a += k[0];
+          b += k[1];
+          c += k[2];
+          mix32 (a, b, c);
+          length -= 12;
+          k += 3;
+        }
+
+      /*----------------------------- handle the last (probably partial) block */
+      /*
      * "k[2]&0xffffff" actually reads beyond the end of the string, but
      * then masks off the part it's not allowed to read.  Because the
      * string is aligned, the masked-off tail is in the same word as the
@@ -227,152 +251,234 @@ unt32 ob_jenkins_hash( const void *key, size_t length, unt32 initval)
      * still catch it and complain.  The masking trick does make the hash
      * noticably faster for short strings (like English words).
      */
-    if (! vg)
-      {
+      if (!vg)
+        {
+          switch (length)
+            {
+              case 12:
+                c += k[2];
+                b += k[1];
+                a += k[0];
+                break;
+              case 11:
+                c += k[2] & 0xffffff;
+                b += k[1];
+                a += k[0];
+                break;
+              case 10:
+                c += k[2] & 0xffff;
+                b += k[1];
+                a += k[0];
+                break;
+              case 9:
+                c += k[2] & 0xff;
+                b += k[1];
+                a += k[0];
+                break;
+              case 8:
+                b += k[1];
+                a += k[0];
+                break;
+              case 7:
+                b += k[1] & 0xffffff;
+                a += k[0];
+                break;
+              case 6:
+                b += k[1] & 0xffff;
+                a += k[0];
+                break;
+              case 5:
+                b += k[1] & 0xff;
+                a += k[0];
+                break;
+              case 4:
+                a += k[0];
+                break;
+              case 3:
+                a += k[0] & 0xffffff;
+                break;
+              case 2:
+                a += k[0] & 0xffff;
+                break;
+              case 1:
+                a += k[0] & 0xff;
+                break;
+              case 0:
+                return c; /* zero length strings require no mixing */
+            }
+        }
+      else /* make valgrind happy */
+        {
+          const unt8 *k8 = (const unt8 *) k;
+          switch (length)
+            {
+              case 12:
+                c += k[2];
+                b += k[1];
+                a += k[0];
+                break;
+              case 11:
+                c += ((unt32) k8[10]) << 16; /* fall through */
+              case 10:
+                c += ((unt32) k8[9]) << 8; /* fall through */
+              case 9:
+                c += k8[8]; /* fall through */
+              case 8:
+                b += k[1];
+                a += k[0];
+                break;
+              case 7:
+                b += ((unt32) k8[6]) << 16; /* fall through */
+              case 6:
+                b += ((unt32) k8[5]) << 8; /* fall through */
+              case 5:
+                b += k8[4]; /* fall through */
+              case 4:
+                a += k[0];
+                break;
+              case 3:
+                a += ((unt32) k8[2]) << 16; /* fall through */
+              case 2:
+                a += ((unt32) k8[1]) << 8; /* fall through */
+              case 1:
+                a += k8[0];
+                break;
+              case 0:
+                return c;
+            }
 
-    switch(length)
+        } /* !valgrind */
+    }
+  else if (HASH_LITTLE_ENDIAN && ((u.i & 0x1) == 0))
     {
-    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
-    case 11: c+=k[2]&0xffffff; b+=k[1]; a+=k[0]; break;
-    case 10: c+=k[2]&0xffff; b+=k[1]; a+=k[0]; break;
-    case 9 : c+=k[2]&0xff; b+=k[1]; a+=k[0]; break;
-    case 8 : b+=k[1]; a+=k[0]; break;
-    case 7 : b+=k[1]&0xffffff; a+=k[0]; break;
-    case 6 : b+=k[1]&0xffff; a+=k[0]; break;
-    case 5 : b+=k[1]&0xff; a+=k[0]; break;
-    case 4 : a+=k[0]; break;
-    case 3 : a+=k[0]&0xffffff; break;
-    case 2 : a+=k[0]&0xffff; break;
-    case 1 : a+=k[0]&0xff; break;
-    case 0 : return c;              /* zero length strings require no mixing */
+      const unt16 *k = (const unt16 *) key; /* read 16-bit chunks */
+      const unt8 *k8;
+
+      /*--------------- all but last block: aligned reads and different mixing */
+      while (length > 12)
+        {
+          a += k[0] + (((unt32) k[1]) << 16);
+          b += k[2] + (((unt32) k[3]) << 16);
+          c += k[4] + (((unt32) k[5]) << 16);
+          mix32 (a, b, c);
+          length -= 12;
+          k += 6;
+        }
+
+      /*----------------------------- handle the last (probably partial) block */
+      k8 = (const unt8 *) k;
+      switch (length)
+        {
+          case 12:
+            c += k[4] + (((unt32) k[5]) << 16);
+            b += k[2] + (((unt32) k[3]) << 16);
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 11:
+            c += ((unt32) k8[10]) << 16; /* fall through */
+          case 10:
+            c += k[4];
+            b += k[2] + (((unt32) k[3]) << 16);
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 9:
+            c += k8[8]; /* fall through */
+          case 8:
+            b += k[2] + (((unt32) k[3]) << 16);
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 7:
+            b += ((unt32) k8[6]) << 16; /* fall through */
+          case 6:
+            b += k[2];
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 5:
+            b += k8[4]; /* fall through */
+          case 4:
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 3:
+            a += ((unt32) k8[2]) << 16; /* fall through */
+          case 2:
+            a += k[0];
+            break;
+          case 1:
+            a += k8[0];
+            break;
+          case 0:
+            return c; /* zero length requires no mixing */
+        }
+    }
+  else
+    { /* need to read the key one byte at a time */
+      const unt8 *k = (const unt8 *) key;
+
+      /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
+      while (length > 12)
+        {
+          a += k[0];
+          a += ((unt32) k[1]) << 8;
+          a += ((unt32) k[2]) << 16;
+          a += ((unt32) k[3]) << 24;
+          b += k[4];
+          b += ((unt32) k[5]) << 8;
+          b += ((unt32) k[6]) << 16;
+          b += ((unt32) k[7]) << 24;
+          c += k[8];
+          c += ((unt32) k[9]) << 8;
+          c += ((unt32) k[10]) << 16;
+          c += ((unt32) k[11]) << 24;
+          mix32 (a, b, c);
+          length -= 12;
+          k += 12;
+        }
+
+      /*-------------------------------- last block: affect all 32 bits of (c) */
+      switch (length) /* all the case statements fall through */
+        {
+          case 12:
+            c += ((unt32) k[11]) << 24;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 11:
+            c += ((unt32) k[10]) << 16;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 10:
+            c += ((unt32) k[9]) << 8;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 9:
+            c += k[8];
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 8:
+            b += ((unt32) k[7]) << 24;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 7:
+            b += ((unt32) k[6]) << 16;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 6:
+            b += ((unt32) k[5]) << 8;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 5:
+            b += k[4];
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 4:
+            a += ((unt32) k[3]) << 24;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 3:
+            a += ((unt32) k[2]) << 16;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 2:
+            a += ((unt32) k[1]) << 8;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 1:
+            a += k[0];
+            break;
+          case 0:
+            return c;
+        }
     }
 
-      }
-    else /* make valgrind happy */
-      {
-
-    const unt8  *k8 = (const unt8 *)k;
-    switch(length)
-    {
-    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
-    case 11: c+=((unt32)k8[10])<<16;  /* fall through */
-    case 10: c+=((unt32)k8[9])<<8;    /* fall through */
-    case 9 : c+=k8[8];                   /* fall through */
-    case 8 : b+=k[1]; a+=k[0]; break;
-    case 7 : b+=((unt32)k8[6])<<16;   /* fall through */
-    case 6 : b+=((unt32)k8[5])<<8;    /* fall through */
-    case 5 : b+=k8[4];                   /* fall through */
-    case 4 : a+=k[0]; break;
-    case 3 : a+=((unt32)k8[2])<<16;   /* fall through */
-    case 2 : a+=((unt32)k8[1])<<8;    /* fall through */
-    case 1 : a+=k8[0]; break;
-    case 0 : return c;
-    }
-
-      } /* !valgrind */
-
-  } else if (HASH_LITTLE_ENDIAN && ((u.i & 0x1) == 0)) {
-    const unt16 *k = (const unt16 *)key;         /* read 16-bit chunks */
-    const unt8  *k8;
-
-    /*--------------- all but last block: aligned reads and different mixing */
-    while (length > 12)
-    {
-      a += k[0] + (((unt32)k[1])<<16);
-      b += k[2] + (((unt32)k[3])<<16);
-      c += k[4] + (((unt32)k[5])<<16);
-      mix32(a,b,c);
-      length -= 12;
-      k += 6;
-    }
-
-    /*----------------------------- handle the last (probably partial) block */
-    k8 = (const unt8 *)k;
-    switch(length)
-    {
-    case 12: c+=k[4]+(((unt32)k[5])<<16);
-             b+=k[2]+(((unt32)k[3])<<16);
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 11: c+=((unt32)k8[10])<<16;     /* fall through */
-    case 10: c+=k[4];
-             b+=k[2]+(((unt32)k[3])<<16);
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 9 : c+=k8[8];                      /* fall through */
-    case 8 : b+=k[2]+(((unt32)k[3])<<16);
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 7 : b+=((unt32)k8[6])<<16;      /* fall through */
-    case 6 : b+=k[2];
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 5 : b+=k8[4];                      /* fall through */
-    case 4 : a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 3 : a+=((unt32)k8[2])<<16;      /* fall through */
-    case 2 : a+=k[0];
-             break;
-    case 1 : a+=k8[0];
-             break;
-    case 0 : return c;                     /* zero length requires no mixing */
-    }
-
-  } else {                        /* need to read the key one byte at a time */
-    const unt8 *k = (const unt8 *)key;
-
-    /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
-    while (length > 12)
-    {
-      a += k[0];
-      a += ((unt32)k[1])<<8;
-      a += ((unt32)k[2])<<16;
-      a += ((unt32)k[3])<<24;
-      b += k[4];
-      b += ((unt32)k[5])<<8;
-      b += ((unt32)k[6])<<16;
-      b += ((unt32)k[7])<<24;
-      c += k[8];
-      c += ((unt32)k[9])<<8;
-      c += ((unt32)k[10])<<16;
-      c += ((unt32)k[11])<<24;
-      mix32(a,b,c);
-      length -= 12;
-      k += 12;
-    }
-
-    /*-------------------------------- last block: affect all 32 bits of (c) */
-    switch(length)                   /* all the case statements fall through */
-    {
-    case 12: c+=((unt32)k[11])<<24;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 11: c+=((unt32)k[10])<<16;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 10: c+=((unt32)k[9])<<8;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 9 : c+=k[8];
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 8 : b+=((unt32)k[7])<<24;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 7 : b+=((unt32)k[6])<<16;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 6 : b+=((unt32)k[5])<<8;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 5 : b+=k[4];
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 4 : a+=((unt32)k[3])<<24;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 3 : a+=((unt32)k[2])<<16;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 2 : a+=((unt32)k[1])<<8;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 1 : a+=k[0];
-             break;
-    case 0 : return c;
-    }
-  }
-
-  final(a,b,c);
+  final (a, b, c);
   return c;
 }
 
@@ -387,37 +493,42 @@ unt32 ob_jenkins_hash( const void *key, size_t length, unt32 initval)
  * the key.  *pc is better mixed than *pb, so use *pc first.  If you want
  * a 64-bit value do something like "*pc + (((uint64_t)*pb)<<32)".
  */
-void ob_jenkins_hash2(
-  const void *key,       /* the key to hash */
-  size_t      length,    /* length of the key */
-  unt32   *pc,        /* IN: primary initval, OUT: primary hash */
-  unt32   *pb)        /* IN: secondary initval, OUT: secondary hash */
+void ob_jenkins_hash2 (
+  const void *key, /* the key to hash */
+  size_t length,   /* length of the key */
+  unt32 *pc,       /* IN: primary initval, OUT: primary hash */
+  unt32 *pb)       /* IN: secondary initval, OUT: secondary hash */
 {
-  unt32 a,b,c;                                          /* internal state */
-  union { const void *ptr; size_t i; } u;     /* needed for Mac Powerbook G4 */
+  unt32 a, b, c; /* internal state */
+  union
+  {
+    const void *ptr;
+    size_t i;
+  } u; /* needed for Mac Powerbook G4 */
   const bool vg = RUNNING_ON_VALGRIND;
 
   /* Set up the internal state */
-  a = b = c = 0xdeadbeef + ((unt32)length) + *pc;
+  a = b = c = 0xdeadbeef + ((unt32) length) + *pc;
   c += *pb;
 
   u.ptr = key;
-  if (HASH_LITTLE_ENDIAN && ((u.i & 0x3) == 0)) {
-    const unt32 *k = (const unt32 *)key;         /* read 32-bit chunks */
-
-    /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
-    while (length > 12)
+  if (HASH_LITTLE_ENDIAN && ((u.i & 0x3) == 0))
     {
-      a += k[0];
-      b += k[1];
-      c += k[2];
-      mix32(a,b,c);
-      length -= 12;
-      k += 3;
-    }
+      const unt32 *k = (const unt32 *) key; /* read 32-bit chunks */
 
-    /*----------------------------- handle the last (probably partial) block */
-    /*
+      /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
+      while (length > 12)
+        {
+          a += k[0];
+          b += k[1];
+          c += k[2];
+          mix32 (a, b, c);
+          length -= 12;
+          k += 3;
+        }
+
+      /*----------------------------- handle the last (probably partial) block */
+      /*
      * "k[2]&0xffffff" actually reads beyond the end of the string, but
      * then masks off the part it's not allowed to read.  Because the
      * string is aligned, the masked-off tail is in the same word as the
@@ -426,153 +537,244 @@ void ob_jenkins_hash2(
      * still catch it and complain.  The masking trick does make the hash
      * noticably faster for short strings (like English words).
      */
-    if (! vg)
-      {
+      if (!vg)
+        {
+          switch (length)
+            {
+              case 12:
+                c += k[2];
+                b += k[1];
+                a += k[0];
+                break;
+              case 11:
+                c += k[2] & 0xffffff;
+                b += k[1];
+                a += k[0];
+                break;
+              case 10:
+                c += k[2] & 0xffff;
+                b += k[1];
+                a += k[0];
+                break;
+              case 9:
+                c += k[2] & 0xff;
+                b += k[1];
+                a += k[0];
+                break;
+              case 8:
+                b += k[1];
+                a += k[0];
+                break;
+              case 7:
+                b += k[1] & 0xffffff;
+                a += k[0];
+                break;
+              case 6:
+                b += k[1] & 0xffff;
+                a += k[0];
+                break;
+              case 5:
+                b += k[1] & 0xff;
+                a += k[0];
+                break;
+              case 4:
+                a += k[0];
+                break;
+              case 3:
+                a += k[0] & 0xffffff;
+                break;
+              case 2:
+                a += k[0] & 0xffff;
+                break;
+              case 1:
+                a += k[0] & 0xff;
+                break;
+              case 0:
+                *pc = c;
+                *pb = b;
+                return; /* zero length strings require no mixing */
+            }
+        }
+      else /* make valgrind happy */
+        {
+          const unt8 *k8 = (const unt8 *) k;
+          switch (length)
+            {
+              case 12:
+                c += k[2];
+                b += k[1];
+                a += k[0];
+                break;
+              case 11:
+                c += ((unt32) k8[10]) << 16; /* fall through */
+              case 10:
+                c += ((unt32) k8[9]) << 8; /* fall through */
+              case 9:
+                c += k8[8]; /* fall through */
+              case 8:
+                b += k[1];
+                a += k[0];
+                break;
+              case 7:
+                b += ((unt32) k8[6]) << 16; /* fall through */
+              case 6:
+                b += ((unt32) k8[5]) << 8; /* fall through */
+              case 5:
+                b += k8[4]; /* fall through */
+              case 4:
+                a += k[0];
+                break;
+              case 3:
+                a += ((unt32) k8[2]) << 16; /* fall through */
+              case 2:
+                a += ((unt32) k8[1]) << 8; /* fall through */
+              case 1:
+                a += k8[0];
+                break;
+              case 0:
+                *pc = c;
+                *pb = b;
+                return; /* zero length strings require no mixing */
+            }
 
-    switch(length)
+        } /* !valgrind */
+    }
+  else if (HASH_LITTLE_ENDIAN && ((u.i & 0x1) == 0))
     {
-    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
-    case 11: c+=k[2]&0xffffff; b+=k[1]; a+=k[0]; break;
-    case 10: c+=k[2]&0xffff; b+=k[1]; a+=k[0]; break;
-    case 9 : c+=k[2]&0xff; b+=k[1]; a+=k[0]; break;
-    case 8 : b+=k[1]; a+=k[0]; break;
-    case 7 : b+=k[1]&0xffffff; a+=k[0]; break;
-    case 6 : b+=k[1]&0xffff; a+=k[0]; break;
-    case 5 : b+=k[1]&0xff; a+=k[0]; break;
-    case 4 : a+=k[0]; break;
-    case 3 : a+=k[0]&0xffffff; break;
-    case 2 : a+=k[0]&0xffff; break;
-    case 1 : a+=k[0]&0xff; break;
-    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
+      const unt16 *k = (const unt16 *) key; /* read 16-bit chunks */
+      const unt8 *k8;
+
+      /*--------------- all but last block: aligned reads and different mixing */
+      while (length > 12)
+        {
+          a += k[0] + (((unt32) k[1]) << 16);
+          b += k[2] + (((unt32) k[3]) << 16);
+          c += k[4] + (((unt32) k[5]) << 16);
+          mix32 (a, b, c);
+          length -= 12;
+          k += 6;
+        }
+
+      /*----------------------------- handle the last (probably partial) block */
+      k8 = (const unt8 *) k;
+      switch (length)
+        {
+          case 12:
+            c += k[4] + (((unt32) k[5]) << 16);
+            b += k[2] + (((unt32) k[3]) << 16);
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 11:
+            c += ((unt32) k8[10]) << 16; /* fall through */
+          case 10:
+            c += k[4];
+            b += k[2] + (((unt32) k[3]) << 16);
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 9:
+            c += k8[8]; /* fall through */
+          case 8:
+            b += k[2] + (((unt32) k[3]) << 16);
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 7:
+            b += ((unt32) k8[6]) << 16; /* fall through */
+          case 6:
+            b += k[2];
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 5:
+            b += k8[4]; /* fall through */
+          case 4:
+            a += k[0] + (((unt32) k[1]) << 16);
+            break;
+          case 3:
+            a += ((unt32) k8[2]) << 16; /* fall through */
+          case 2:
+            a += k[0];
+            break;
+          case 1:
+            a += k8[0];
+            break;
+          case 0:
+            *pc = c;
+            *pb = b;
+            return; /* zero length strings require no mixing */
+        }
+    }
+  else
+    { /* need to read the key one byte at a time */
+      const unt8 *k = (const unt8 *) key;
+
+      /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
+      while (length > 12)
+        {
+          a += k[0];
+          a += ((unt32) k[1]) << 8;
+          a += ((unt32) k[2]) << 16;
+          a += ((unt32) k[3]) << 24;
+          b += k[4];
+          b += ((unt32) k[5]) << 8;
+          b += ((unt32) k[6]) << 16;
+          b += ((unt32) k[7]) << 24;
+          c += k[8];
+          c += ((unt32) k[9]) << 8;
+          c += ((unt32) k[10]) << 16;
+          c += ((unt32) k[11]) << 24;
+          mix32 (a, b, c);
+          length -= 12;
+          k += 12;
+        }
+
+      /*-------------------------------- last block: affect all 32 bits of (c) */
+      switch (length) /* all the case statements fall through */
+        {
+          case 12:
+            c += ((unt32) k[11]) << 24;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 11:
+            c += ((unt32) k[10]) << 16;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 10:
+            c += ((unt32) k[9]) << 8;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 9:
+            c += k[8];
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 8:
+            b += ((unt32) k[7]) << 24;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 7:
+            b += ((unt32) k[6]) << 16;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 6:
+            b += ((unt32) k[5]) << 8;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 5:
+            b += k[4];
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 4:
+            a += ((unt32) k[3]) << 24;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 3:
+            a += ((unt32) k[2]) << 16;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 2:
+            a += ((unt32) k[1]) << 8;
+            // fallthru (for Coverity; e. g. bug 1509)
+          case 1:
+            a += k[0];
+            break;
+          case 0:
+            *pc = c;
+            *pb = b;
+            return; /* zero length strings require no mixing */
+        }
     }
 
-      }
-    else /* make valgrind happy */
-      {
-
-    const unt8  *k8 = (const unt8 *)k;
-    switch(length)
-    {
-    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
-    case 11: c+=((unt32)k8[10])<<16;  /* fall through */
-    case 10: c+=((unt32)k8[9])<<8;    /* fall through */
-    case 9 : c+=k8[8];                   /* fall through */
-    case 8 : b+=k[1]; a+=k[0]; break;
-    case 7 : b+=((unt32)k8[6])<<16;   /* fall through */
-    case 6 : b+=((unt32)k8[5])<<8;    /* fall through */
-    case 5 : b+=k8[4];                   /* fall through */
-    case 4 : a+=k[0]; break;
-    case 3 : a+=((unt32)k8[2])<<16;   /* fall through */
-    case 2 : a+=((unt32)k8[1])<<8;    /* fall through */
-    case 1 : a+=k8[0]; break;
-    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
-    }
-
-      } /* !valgrind */
-
-  } else if (HASH_LITTLE_ENDIAN && ((u.i & 0x1) == 0)) {
-    const unt16 *k = (const unt16 *)key;         /* read 16-bit chunks */
-    const unt8  *k8;
-
-    /*--------------- all but last block: aligned reads and different mixing */
-    while (length > 12)
-    {
-      a += k[0] + (((unt32)k[1])<<16);
-      b += k[2] + (((unt32)k[3])<<16);
-      c += k[4] + (((unt32)k[5])<<16);
-      mix32(a,b,c);
-      length -= 12;
-      k += 6;
-    }
-
-    /*----------------------------- handle the last (probably partial) block */
-    k8 = (const unt8 *)k;
-    switch(length)
-    {
-    case 12: c+=k[4]+(((unt32)k[5])<<16);
-             b+=k[2]+(((unt32)k[3])<<16);
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 11: c+=((unt32)k8[10])<<16;     /* fall through */
-    case 10: c+=k[4];
-             b+=k[2]+(((unt32)k[3])<<16);
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 9 : c+=k8[8];                      /* fall through */
-    case 8 : b+=k[2]+(((unt32)k[3])<<16);
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 7 : b+=((unt32)k8[6])<<16;      /* fall through */
-    case 6 : b+=k[2];
-             a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 5 : b+=k8[4];                      /* fall through */
-    case 4 : a+=k[0]+(((unt32)k[1])<<16);
-             break;
-    case 3 : a+=((unt32)k8[2])<<16;      /* fall through */
-    case 2 : a+=k[0];
-             break;
-    case 1 : a+=k8[0];
-             break;
-    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
-    }
-
-  } else {                        /* need to read the key one byte at a time */
-    const unt8 *k = (const unt8 *)key;
-
-    /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
-    while (length > 12)
-    {
-      a += k[0];
-      a += ((unt32)k[1])<<8;
-      a += ((unt32)k[2])<<16;
-      a += ((unt32)k[3])<<24;
-      b += k[4];
-      b += ((unt32)k[5])<<8;
-      b += ((unt32)k[6])<<16;
-      b += ((unt32)k[7])<<24;
-      c += k[8];
-      c += ((unt32)k[9])<<8;
-      c += ((unt32)k[10])<<16;
-      c += ((unt32)k[11])<<24;
-      mix32(a,b,c);
-      length -= 12;
-      k += 12;
-    }
-
-    /*-------------------------------- last block: affect all 32 bits of (c) */
-    switch(length)                   /* all the case statements fall through */
-    {
-    case 12: c+=((unt32)k[11])<<24;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 11: c+=((unt32)k[10])<<16;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 10: c+=((unt32)k[9])<<8;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 9 : c+=k[8];
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 8 : b+=((unt32)k[7])<<24;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 7 : b+=((unt32)k[6])<<16;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 6 : b+=((unt32)k[5])<<8;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 5 : b+=k[4];
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 4 : a+=((unt32)k[3])<<24;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 3 : a+=((unt32)k[2])<<16;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 2 : a+=((unt32)k[1])<<8;
-             // fallthru (for Coverity; e. g. bug 1509)
-    case 1 : a+=k[0];
-             break;
-    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
-    }
-  }
-
-  final(a,b,c);
-  *pc=c; *pb=b;
+  final (a, b, c);
+  *pc = c;
+  *pb = b;
 }
 
 /* HashLen16() is inlined and comes from ob-hash-common.h.
@@ -581,7 +783,8 @@ void ob_jenkins_hash2(
  * separate file)
  */
 
-unt64 ob_city_hash64_with_seeds(const void *s, size_t len,
-                                unt64 seed0, unt64 seed1) {
-  return HashLen16(ob_city_hash64(s, len) - seed0, seed1);
+unt64 ob_city_hash64_with_seeds (const void *s, size_t len, unt64 seed0,
+                                 unt64 seed1)
+{
+  return HashLen16 (ob_city_hash64 (s, len) - seed0, seed1);
 }

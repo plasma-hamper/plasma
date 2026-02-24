@@ -19,7 +19,7 @@ int main (int argc, char **argv)
 
   pool_cmd_info cmd;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
 
   if (pool_cmd_get_poolname (&cmd, argc, argv, optind))
     usage ();

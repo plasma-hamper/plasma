@@ -108,8 +108,9 @@ static void *thread_main (void *ignored)
 
       if (j != SIZE)
         {
-          fprintf (stderr, "On iteration %d, expected list length to be %d "
-                           "but it was %d\n",
+          fprintf (stderr,
+                   "On iteration %d, expected list length to be %d "
+                   "but it was %d\n",
                    i, SIZE, j);
           exit (EXIT_FAILURE);
         }

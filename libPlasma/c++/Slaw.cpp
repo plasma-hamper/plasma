@@ -42,25 +42,15 @@ const Slaw &Slaw::Null ()
   return A_NULL_SLAW;
 }
 
-Slaw::~Slaw ()
-{
-}
+Slaw::~Slaw () {}
 
-Slaw::Slaw ()
-{
-}
+Slaw::Slaw () {}
 
-Slaw::Slaw (slaw s) : slaw_ (s)
-{
-}
+Slaw::Slaw (slaw s) : slaw_ (s) {}
 
-Slaw::Slaw (detail::SlawRef s) : slaw_ (s)
-{
-}
+Slaw::Slaw (detail::SlawRef s) : slaw_ (s) {}
 
-Slaw::Slaw (detail::CompositeSlaw::Ref c) : composite_ (c)
-{
-}
+Slaw::Slaw (detail::CompositeSlaw::Ref c) : composite_ (c) {}
 
 /* ---------------------------------------------------------------------- */
 // Equality and typing

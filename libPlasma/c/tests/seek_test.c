@@ -35,7 +35,7 @@ int mainish (int argc, char *argv[])
   int c;
   pool_cmd_info cmd;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
       switch (c)
@@ -100,10 +100,9 @@ int mainish (int argc, char *argv[])
         OB_FATAL_ERROR_CODE (0x2040e003, "deposit protein failed: %s\n",
                              ob_error_string (pret));
       if ((i == 0) && (idx != 0))
-        OB_FATAL_ERROR_CODE (0x2040e004,
-                             "deposit returned wrong index: %" OB_FMT_64
-                             "d (should be 0)\n",
-                             idx);
+        OB_FATAL_ERROR_CODE (
+          0x2040e004,
+          "deposit returned wrong index: %" OB_FMT_64 "d (should be 0)\n", idx);
     }
 
   // Test that pool_curr gives first protein on start
@@ -253,9 +252,9 @@ int mainish (int argc, char *argv[])
       Free_Protein (curr_prot);
       OB_DIE_ON_ERROR (pool_index (ph, &cidx));
       if (cidx != idx)
-        OB_FATAL_ERROR_CODE (0x2040e024, "Got %" OB_FMT_64
-                                         "d, but expected %" OB_FMT_64 "d\n",
-                             cidx, idx);
+        OB_FATAL_ERROR_CODE (
+          0x2040e024, "Got %" OB_FMT_64 "d, but expected %" OB_FMT_64 "d\n",
+          cidx, idx);
     }
   // Check that we really are out of proteins
   pret = pool_prev (ph, &curr_prot, &ts, NULL);
@@ -318,9 +317,9 @@ int mainish (int argc, char *argv[])
   Free_Protein (curr_prot);
   OB_DIE_ON_ERROR (pool_index (clone_ph, &cidx));
   if (cidx != idx + 1)
-    OB_FATAL_ERROR_CODE (0x2040e032, "Got %" OB_FMT_64
-                                     "d, but expected %" OB_FMT_64 "d + 1\n",
-                         cidx, idx);
+    OB_FATAL_ERROR_CODE (
+      0x2040e032, "Got %" OB_FMT_64 "d, but expected %" OB_FMT_64 "d + 1\n",
+      cidx, idx);
 
   // Search for protein in the past
   slaw search = slaw_string ("descrip_0");
@@ -350,9 +349,9 @@ int mainish (int argc, char *argv[])
   Free_Slaw (search);
   OB_DIE_ON_ERROR (pool_index (ph, &cidx));
   if (cidx != idx + 1)
-    OB_FATAL_ERROR_CODE (0x2040e038, "Got %" OB_FMT_64
-                                     "d, but expected %" OB_FMT_64 "d + 1\n",
-                         cidx, idx);
+    OB_FATAL_ERROR_CODE (
+      0x2040e038, "Got %" OB_FMT_64 "d, but expected %" OB_FMT_64 "d + 1\n",
+      cidx, idx);
 
   // Test that index starts at the end of the pool on participate
 
@@ -385,9 +384,10 @@ int mainish (int argc, char *argv[])
     OB_FATAL_ERROR_CODE (0x2040e03c, "pool_index failed: %s\n",
                          ob_error_string (pret));
   if (start_index != (NUM_PROTEINS))
-    OB_FATAL_ERROR_CODE (0x2040e03d, "pool index at participate_creatingly "
-                                     "time is %" OB_FMT_64 "d"
-                                     ", should be %d\n",
+    OB_FATAL_ERROR_CODE (0x2040e03d,
+                         "pool index at participate_creatingly "
+                         "time is %" OB_FMT_64 "d"
+                         ", should be %d\n",
                          start_index, NUM_PROTEINS - 1);
 
   // Not necessary but good habit

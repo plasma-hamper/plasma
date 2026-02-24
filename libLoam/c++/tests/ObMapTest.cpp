@@ -31,12 +31,12 @@ TEST (ObMapTest, RangedForLoopInts)
   int sum = 0;
   for (auto i : inttrove)
     {
-      static_assert (std::is_same<decltype (i),
-                                  ObCons<int64, int64, UnspecifiedMemMgmt,
-                                         UnspecifiedMemMgmt> *>::value,
-                     "std::begin(ObMap<int64, int64>) should return an "
-                     "iterator with elements of type ObCons<int64,int64, "
-                     "UnspecifiedMemMgmt, UnspecifiedMemMgmt>");
+      static_assert (
+        std::is_same<decltype (i), ObCons<int64, int64, UnspecifiedMemMgmt,
+                                          UnspecifiedMemMgmt> *>::value,
+        "std::begin(ObMap<int64, int64>) should return an "
+        "iterator with elements of type ObCons<int64,int64, "
+        "UnspecifiedMemMgmt, UnspecifiedMemMgmt>");
       sum += i->Car ();
     }
   EXPECT_EQ (5, inttrove.Count ());
@@ -56,13 +56,13 @@ TEST (ObMapTest, RangedForLoopObRefs)
 
   for (auto dorf : dorves)
     {
-      static_assert (std::is_same<decltype (dorf),
-                                  ObCons<Dorf *, Dorf *, UnspecifiedMemMgmt,
-                                         UnspecifiedMemMgmt> *>::value,
-                     "std::begin(ObMap<AnkleObject *, AnkleObject *>) should "
-                     "return an iterator with elements of type "
-                     "ObCons<AnkleObject *,AnkleObject *, UnspecifiedMemMgmt, "
-                     "UnspecifiedMemMgmt>");
+      static_assert (
+        std::is_same<decltype (dorf), ObCons<Dorf *, Dorf *, UnspecifiedMemMgmt,
+                                             UnspecifiedMemMgmt> *>::value,
+        "std::begin(ObMap<AnkleObject *, AnkleObject *>) should "
+        "return an iterator with elements of type "
+        "ObCons<AnkleObject *,AnkleObject *, UnspecifiedMemMgmt, "
+        "UnspecifiedMemMgmt>");
       strings.Put (dorf->Car ()->s, dorf->Cdr ()->s);
     }
   EXPECT_EQ (strings.NthKey (0), "avert");

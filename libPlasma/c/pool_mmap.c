@@ -851,13 +851,12 @@ static void check_oldest_newest_diff (const pool_mmap_data *d, ob_retort *errp)
   diff = (diff >= 0) ? diff : -diff;
   if (diff > d->mapped_size)
     {
-      OB_LOG_ERROR_CODE (0x20104008, "hose '%s' pool '%s': "
-                                     "Difference between newest (%" OB_FMT_64
-                                     "u) and oldest (%" OB_FMT_64
-                                     "u) greater than pool size (%" OB_FMT_64
-                                     "u > %" OB_FMT_64 "u)\n",
-                         hname (d), pname (d), newest_entry, oldest_entry, diff,
-                         d->mapped_size);
+      OB_LOG_ERROR_CODE (
+        0x20104008,
+        "hose '%s' pool '%s': "
+        "Difference between newest (%" OB_FMT_64 "u) and oldest (%" OB_FMT_64
+        "u) greater than pool size (%" OB_FMT_64 "u > %" OB_FMT_64 "u)\n",
+        hname (d), pname (d), newest_entry, oldest_entry, diff, d->mapped_size);
       *errp = POOL_CORRUPT;
     }
 }
@@ -1002,9 +1001,10 @@ static byte *entry_to_address_internal (const pool_mmap_data *d, unt64 entry,
   unt64 offset = entry % d->mapped_size;
   if (offset < POOL_MMAP_PROTEINS_START_OFFSET (d))
     {
-      snprintf (errmsg, errmsg_len, "Entry %" OB_FMT_64 "u was unexpectedly "
-                                    "in pool header\n"
-                                    "(%" OB_FMT_64 "u < %" OB_FMT_64 "u)\n",
+      snprintf (errmsg, errmsg_len,
+                "Entry %" OB_FMT_64 "u was unexpectedly "
+                "in pool header\n"
+                "(%" OB_FMT_64 "u < %" OB_FMT_64 "u)\n",
                 entry, offset, POOL_MMAP_PROTEINS_START_OFFSET (d));
       *errp = POOL_CORRUPT;
       return (byte *) &nothing;
@@ -1067,8 +1067,9 @@ static unt64 get_first_entry (const pool_mmap_data *d, ob_retort *errp)
   unt64 first_entry = newest_entry - offset;
   // Add back in the protein start offset
   first_entry += POOL_MMAP_PROTEINS_START_OFFSET (d);
-  OB_LOG_DEBUG_CODE (0x20104046, "newest = 0x%016" OB_FMT_64 "x\n"
-                                 "first  = 0x%016" OB_FMT_64 "x\n",
+  OB_LOG_DEBUG_CODE (0x20104046,
+                     "newest = 0x%016" OB_FMT_64 "x\n"
+                     "first  = 0x%016" OB_FMT_64 "x\n",
                      newest_entry, first_entry);
   return first_entry;
 }
@@ -1090,9 +1091,10 @@ static unt64 get_first_valid_entry (const pool_mmap_data *d, ob_retort *errp)
   if (already_failed (errp))
     return 0;
 
-  OB_LOG_DEBUG_CODE (0x20104045, "mapped_size = 0x%016" OB_FMT_64 "x\n"
-                                 "oldest      = 0x%016" OB_FMT_64 "x\n"
-                                 "first       = 0x%016" OB_FMT_64 "x\n",
+  OB_LOG_DEBUG_CODE (0x20104045,
+                     "mapped_size = 0x%016" OB_FMT_64 "x\n"
+                     "oldest      = 0x%016" OB_FMT_64 "x\n"
+                     "first       = 0x%016" OB_FMT_64 "x\n",
                      d->mapped_size, oldest, first);
   if (oldest > first)
     return oldest;
@@ -1408,9 +1410,8 @@ static int64 jumpback_size_from_entry_safe (const pool_mmap_data *d,
 {
   if (already_failed (errp))
     return 0;
-  int64 jumpback =
-    *(volatile int64 *) entry_to_address (d, entry - POOL_MMAP_JUMPBACK_LEN,
-                                          errp);
+  int64 jumpback = *(volatile int64 *) entry_to_address (
+    d, entry - POOL_MMAP_JUMPBACK_LEN, errp);
   if (is_entry_stompled (d, entry, errp) || already_failed (errp))
     return -1;
   if (jumpback <= (POOL_MMAP_JUMPBACK_LEN + POOL_MMAP_PROTEIN_OFFSET (d)))
@@ -1768,35 +1769,34 @@ static unt64 pool_prepare_write (pool_mmap_data *d, bprotein p, ob_retort *errp)
       if ((new_oldest_entry != write_entry)
           && (new_oldest_index >= (newest_index + 1)))
         {
-          OB_LOG_ERROR_CODE (0x20104018, "hose '%s' pool '%s': "
-                                         "new oldest index (%" OB_FMT_64
-                                         "u) passed write index (%" OB_FMT_64
-                                         "u) during wraparound\n",
-                             hname (d), pname (d), new_oldest_index,
-                             newest_index + 1);
+          OB_LOG_ERROR_CODE (
+            0x20104018,
+            "hose '%s' pool '%s': "
+            "new oldest index (%" OB_FMT_64 "u) passed write index (%" OB_FMT_64
+            "u) during wraparound\n",
+            hname (d), pname (d), new_oldest_index, newest_index + 1);
           *errp = POOL_CORRUPT;
           return 0;
         }
       if (new_oldest_index < oldest_index)
         {
-          OB_LOG_ERROR_CODE (0x20104019,
-                             "hose '%s' pool '%s': "
-                             "new oldest index (%" OB_FMT_64
-                             "u) is before old oldest "
-                             "index (%" OB_FMT_64 "u) during wraparound\n"
-                             "Some additional info for debugging bug 2085:\n"
-                             "newest_index = %" OB_FMT_64 "u\n"
-                             "first_index  = %" OB_FMT_64 "u\n"
-                             "new_oldest_entry = 0x%016" OB_FMT_64 "x\n"
-                             "newest_entry     = 0x%016" OB_FMT_64 "x\n"
-                             "oldest_entry     = 0x%016" OB_FMT_64 "x\n"
-                             "first_entry      = 0x%016" OB_FMT_64 "x\n"
-                             "sz = %" OB_FMT_64 "u\n"
-                             "write_len = %" OB_FMT_64 "u\n",
-                             hname (d), pname (d), new_oldest_index,
-                             oldest_index, newest_index, first_index,
-                             new_oldest_entry, newest_entry, oldest_entry,
-                             first_entry, sz, write_len);
+          OB_LOG_ERROR_CODE (
+            0x20104019,
+            "hose '%s' pool '%s': "
+            "new oldest index (%" OB_FMT_64 "u) is before old oldest "
+            "index (%" OB_FMT_64 "u) during wraparound\n"
+            "Some additional info for debugging bug 2085:\n"
+            "newest_index = %" OB_FMT_64 "u\n"
+            "first_index  = %" OB_FMT_64 "u\n"
+            "new_oldest_entry = 0x%016" OB_FMT_64 "x\n"
+            "newest_entry     = 0x%016" OB_FMT_64 "x\n"
+            "oldest_entry     = 0x%016" OB_FMT_64 "x\n"
+            "first_entry      = 0x%016" OB_FMT_64 "x\n"
+            "sz = %" OB_FMT_64 "u\n"
+            "write_len = %" OB_FMT_64 "u\n",
+            hname (d), pname (d), new_oldest_index, oldest_index, newest_index,
+            first_index, new_oldest_entry, newest_entry, oldest_entry,
+            first_entry, sz, write_len);
           *errp = POOL_CORRUPT;
           return 0;
         }
@@ -1824,11 +1824,11 @@ static unt64 pool_prepare_write (pool_mmap_data *d, bprotein p, ob_retort *errp)
     }
   if ((write_addr + write_len) > (d->mem + d->mapped_size))
     {
-      OB_LOG_ERROR_CODE (0x2010401c, "hose '%s' pool '%s': "
-                                     "CORRUPTION!!! write %p - %" OB_FMT_64
-                                     "u > pool size %p\n",
-                         hname (d), pname (d), write_addr, write_len,
-                         d->mem + d->mapped_size);
+      OB_LOG_ERROR_CODE (
+        0x2010401c,
+        "hose '%s' pool '%s': "
+        "CORRUPTION!!! write %p - %" OB_FMT_64 "u > pool size %p\n",
+        hname (d), pname (d), write_addr, write_len, d->mem + d->mapped_size);
       *errp = POOL_CORRUPT;
       return 0;
     }
@@ -1956,9 +1956,10 @@ ob_retort pool_mmap_deposit (pool_hose ph, bprotein p, int64 *idx,
   unt64 write_entry = pool_prepare_write (d, p, &pret);
   if (former_newest_entry == write_entry && !already_failed (&pret))
     {
-      OB_LOG_ERROR_CODE (0x2010401d, "hose '%s' pool '%s': "
-                                     "CORRUPTION!!! prepare write returned "
-                                     "newest entry %" OB_FMT_64 "u\n",
+      OB_LOG_ERROR_CODE (0x2010401d,
+                         "hose '%s' pool '%s': "
+                         "CORRUPTION!!! prepare write returned "
+                         "newest entry %" OB_FMT_64 "u\n",
                          hname (d), pname (d), write_entry);
       pret = POOL_CORRUPT;
     }
@@ -2002,13 +2003,12 @@ ob_retort pool_mmap_deposit (pool_hose ph, bprotein p, int64 *idx,
     {
       pool_toc_entry e = {newest_index, newest_entry, timestamp};
       if (!pool_toc_append (d->ptoc, e, get_oldest_entry (d)))
-        OB_LOG_ERROR_CODE (0x2010401e,
-                           "hose '%s' pool '%s': "
-                           "failure registering protein in pool index: "
-                           "offset: %" OB_FMT_64
-                           "u, time: %lf, index: %" OB_FMT_64 "u\n",
-                           hname (d), pname (d), write_entry, timestamp,
-                           newest_index);
+        OB_LOG_ERROR_CODE (
+          0x2010401e,
+          "hose '%s' pool '%s': "
+          "failure registering protein in pool index: "
+          "offset: %" OB_FMT_64 "u, time: %lf, index: %" OB_FMT_64 "u\n",
+          hname (d), pname (d), write_entry, timestamp, newest_index);
     }
 
   if (!already_failed (&pret))
@@ -2229,10 +2229,11 @@ static bool find_starting_point (const pool_mmap_data *d, int64 target_index,
       *starting_index = entry_to_index (d, *starting_entry, errp);
     }
 
-  OB_LOG_DEBUG_CODE (0x20104043, "cached_okay  = %s\n"
-                                 "target_index = %" OB_FMT_64 "d\n"
-                                 "first_index  = %" OB_FMT_64 "d\n"
-                                 "first_entry  = 0x%016" OB_FMT_64 "x\n",
+  OB_LOG_DEBUG_CODE (0x20104043,
+                     "cached_okay  = %s\n"
+                     "target_index = %" OB_FMT_64 "d\n"
+                     "first_index  = %" OB_FMT_64 "d\n"
+                     "first_entry  = 0x%016" OB_FMT_64 "x\n",
                      cached_okay ? "true" : "false", target_index, first_index,
                      first_entry);
 
@@ -2249,7 +2250,7 @@ static bool find_starting_point (const pool_mmap_data *d, int64 target_index,
     {
       *ending_entry = get_newest_entry (d);
       *ending_index = entry_to_index (d, *ending_entry, errp);
-    is_backwards_search_point_okay:
+is_backwards_search_point_okay:
       if (entry_to_address (d, *ending_entry, errp)
             > entry_to_address (d, first_entry, errp)
           && !is_entry_stompled (d, first_entry, errp))
@@ -2320,9 +2321,10 @@ static bool find_next_index (const pool_mmap_data *d, int64 *idx, unt64 *entry,
   // Sanity check the new index - maybe we got garbage?
   if (*idx != last_index + 1)
     {
-      OB_LOG_ERROR_CODE (0x2010401f, "hose '%s' pool '%s': "
-                                     "Next search index %" OB_FMT_64 "u"
-                                     " but last search index %" OB_FMT_64 "u\n",
+      OB_LOG_ERROR_CODE (0x2010401f,
+                         "hose '%s' pool '%s': "
+                         "Next search index %" OB_FMT_64 "u"
+                         " but last search index %" OB_FMT_64 "u\n",
                          hname (d), pname (d), *idx, last_index);
       *errp = POOL_CORRUPT;
       return false;
@@ -2376,8 +2378,9 @@ static bool find_in_range (pool_mmap_data *d, int64 idx, unt64 *ret_entry,
   unt64 success_count = 0, failure_count = 0, count = 0, step = 0;
   while (seeking && !already_failed (errp))
     {
-      if (count++ == 0 || (count > TOO_SMALL_TO_MATTER && !refined && step != 0
-                           && count % step == 0))
+      if (count++ == 0
+          || (count > TOO_SMALL_TO_MATTER && !refined && step != 0
+              && count % step == 0))
         {
           bool approx_found = false;
           refined =
@@ -2452,11 +2455,12 @@ static ob_retort find_entry (pool_mmap_data *d, int64 idx, unt64 *ret_entry)
   while (find_starting_point (d, idx, &search_index, &search_entry,
                               &backwards_index, &backwards_entry, &tort))
     {
-      OB_LOG_DEBUG_CODE (0x20104042, "idx             = %" OB_FMT_64 "d\n"
-                                     "search_index    = %" OB_FMT_64 "d\n"
-                                     "search_entry    = 0x%016" OB_FMT_64 "x\n"
-                                     "backwards_index = %" OB_FMT_64 "d\n"
-                                     "backwards_entry = 0x%016" OB_FMT_64 "x\n",
+      OB_LOG_DEBUG_CODE (0x20104042,
+                         "idx             = %" OB_FMT_64 "d\n"
+                         "search_index    = %" OB_FMT_64 "d\n"
+                         "search_entry    = 0x%016" OB_FMT_64 "x\n"
+                         "backwards_index = %" OB_FMT_64 "d\n"
+                         "backwards_entry = 0x%016" OB_FMT_64 "x\n",
                          idx, search_index, search_entry, backwards_index,
                          backwards_entry);
       if (find_in_range (d, idx, ret_entry, &search_index, &search_entry,
@@ -2836,10 +2840,11 @@ static OB_UNUSED ob_retort pool_mmap_nth_protein1 (pool_mmap_data *d, int64 idx,
   // Sanity check on protein size
   if (len <= 0 || len > MAX_SLAW_SIZE)
     {
-      OB_LOG_ERROR_CODE (0x20104051, "hose '%s' pool '%s':\n"
-                                     "protein length %" OB_FMT_64 "d is\n"
-                                     "greater than maximum %" OB_FMT_64 "u,\n"
-                                     "and therefore probably bogus.\n",
+      OB_LOG_ERROR_CODE (0x20104051,
+                         "hose '%s' pool '%s':\n"
+                         "protein length %" OB_FMT_64 "d is\n"
+                         "greater than maximum %" OB_FMT_64 "u,\n"
+                         "and therefore probably bogus.\n",
                          hname (d), pname (d), len, MAX_SLAW_SIZE);
       return POOL_CORRUPT;
     }
@@ -2971,7 +2976,12 @@ static void one_flag (bslaw options, unt64 *current, const char *name,
     *current &= ~flag;
 }
 
-typedef enum { NEVER, RESIZABLE, ALWAYS } when_supported;
+typedef enum
+{
+  NEVER,
+  RESIZABLE,
+  ALWAYS
+} when_supported;
 
 typedef struct
 {
@@ -2984,20 +2994,20 @@ typedef struct
 
 // names must be alphabetized, because we use bsearch()
 static const option_info pool_opts[] = {
-  {"auto-dispose",   'a', NEVER,     RESIZABLE, POOL_FLAG_AUTO_DISPOSE},
-  {"checksum",       'c', RESIZABLE, NEVER,     POOL_FLAG_CHECKSUM},
-  {"flock",          'l', RESIZABLE, NEVER,     POOL_FLAG_FLOCK},
-  {"frozen",         'f', RESIZABLE, RESIZABLE, POOL_FLAG_FROZEN},
-  {"group",          0,   ALWAYS,    NEVER,     0},
-  {"index-capacity", 0,   ALWAYS,    NEVER,     0},
-  {"mode",           0,   ALWAYS,    NEVER,     0},
-  {"owner",          0,   ALWAYS,    NEVER,     0},
-  {"resizable",      0,   ALWAYS,    NEVER,     0},
-  {"single-file",    0,   ALWAYS,    NEVER,     0},
-  {"size",           0,   ALWAYS,    RESIZABLE, 0},
+  {"auto-dispose", 'a', NEVER, RESIZABLE, POOL_FLAG_AUTO_DISPOSE},
+  {"checksum", 'c', RESIZABLE, NEVER, POOL_FLAG_CHECKSUM},
+  {"flock", 'l', RESIZABLE, NEVER, POOL_FLAG_FLOCK},
+  {"frozen", 'f', RESIZABLE, RESIZABLE, POOL_FLAG_FROZEN},
+  {"group", 0, ALWAYS, NEVER, 0},
+  {"index-capacity", 0, ALWAYS, NEVER, 0},
+  {"mode", 0, ALWAYS, NEVER, 0},
+  {"owner", 0, ALWAYS, NEVER, 0},
+  {"resizable", 0, ALWAYS, NEVER, 0},
+  {"single-file", 0, ALWAYS, NEVER, 0},
+  {"size", 0, ALWAYS, RESIZABLE, 0},
   {"stop-when-full", 's', RESIZABLE, RESIZABLE, POOL_FLAG_STOP_WHEN_FULL},
-  {"sync",           'S', RESIZABLE, RESIZABLE, POOL_FLAG_SYNC},
-  {"toc-capacity",   0,   ALWAYS,    NEVER,     0},
+  {"sync", 'S', RESIZABLE, RESIZABLE, POOL_FLAG_SYNC},
+  {"toc-capacity", 0, ALWAYS, NEVER, 0},
 };
 
 #define NUM_OPTIONS (sizeof (pool_opts) / sizeof (pool_opts[0]))
@@ -3031,8 +3041,9 @@ static void validate_option (const char *oname, const char *pnam,
       default:
         OB_FATAL_BUG_CODE (0x2010404d, "impossible\n");
     }
-  OB_LOG_WARNING_CODE (0x2010404e, "For pool '%s':\n"
-                                   "'%s' is %s in %s\n",
+  OB_LOG_WARNING_CODE (0x2010404e,
+                       "For pool '%s':\n"
+                       "'%s' is %s in %s\n",
                        pnam, oname, why, fname);
 }
 
@@ -3049,9 +3060,8 @@ static void validate_options (const char *pnam, bslaw map, unt8 mmv,
       // XXX: passing strcmp for comparison is slightly evil and depends
       // on the fact that name is the first member of the structure
       // and is NUL-terminated.
-      option_info *found =
-        (option_info *) bsearch (oname, pool_opts, NUM_OPTIONS, sizeof (pool_opts[0]),
-                                 (bs_func) strcmp);
+      option_info *found = (option_info *) bsearch (
+        oname, pool_opts, NUM_OPTIONS, sizeof (pool_opts[0]), (bs_func) strcmp);
       when_supported sup = NEVER;
       if (found)
         sup = (create ? found->create : found->change);
@@ -3299,8 +3309,9 @@ ob_retort pool_mmap_participate (pool_hose ph)
       for (i = 0; i < 32; i++)
         {
           if (0 != (1 & (flags >> i)))
-            OB_LOG_ERROR_CODE (0x2010403b, "For pool '%s',\n"
-                                           "mmap flag %d is not supported\n",
+            OB_LOG_ERROR_CODE (0x2010403b,
+                               "For pool '%s',\n"
+                               "mmap flag %d is not supported\n",
                                ph->name, i);
         }
       // Well, it's really more like "unsupported feature", but "wrong
@@ -3494,22 +3505,17 @@ ob_retort pool_mmap_info (pool_hose ph, int64 hops, protein *return_prot)
   const unt64 toc_step = pool_toc_step (d->ptoc);
   const unt64 toc_count = pool_toc_count (d->ptoc);
   slaw flagslaw = map_from_flags (flags);
-  slaw ingests =
-    slaw_map_inline_cf ("type",           slaw_string ("mmap"),
-                        "terminal",       slaw_boolean (true),
-                        "size",           slaw_unt64 (get_file_size (d)),
-                        "size-used",      slaw_unt64 (size_used),
-                        "mmap-pool-version", slaw_unt32 (get_mmap_version (d)),
-                        "slaw-version", slaw_unt32 (get_slaw_version (d)),
-                        // for backwards compatibility
-                        "index-capacity", slaw_unt64 (toc_capacity),
-                        "index-step",     slaw_unt64 (toc_step),
-                        "index-count",    slaw_unt64 (toc_count),
-                        // these new names are preferred
-                        "toc-capacity",   slaw_unt64 (toc_capacity),
-                        "toc-step",       slaw_unt64 (toc_step),
-                        "toc-count",      slaw_unt64 (toc_count),
-                        NULL);
+  slaw ingests = slaw_map_inline_cf (
+    "type", slaw_string ("mmap"), "terminal", slaw_boolean (true), "size",
+    slaw_unt64 (get_file_size (d)), "size-used", slaw_unt64 (size_used),
+    "mmap-pool-version", slaw_unt32 (get_mmap_version (d)), "slaw-version",
+    slaw_unt32 (get_slaw_version (d)),
+    // for backwards compatibility
+    "index-capacity", slaw_unt64 (toc_capacity), "index-step",
+    slaw_unt64 (toc_step), "index-count", slaw_unt64 (toc_count),
+    // these new names are preferred
+    "toc-capacity", slaw_unt64 (toc_capacity), "toc-step",
+    slaw_unt64 (toc_step), "toc-count", slaw_unt64 (toc_count), NULL);
   if (!ingests || !flagslaw)
     {
       slaw_free (ingests);
@@ -3562,13 +3568,14 @@ typedef struct
 
 static void print_how2 (how_to_resize_it how2)
 {
-  OB_LOG_DEBUG_CODE (0x2010403e, "new_oldest_entry = 0x%016" OB_FMT_64 "x\n"
-                                 "new_newest_entry = 0x%016" OB_FMT_64 "x\n"
-                                 "new_size         = 0x%016" OB_FMT_64 "x\n"
-                                 "old_size         = 0x%016" OB_FMT_64 "x\n"
-                                 "memmove_src      = 0x%016" OB_FMT_64 "x\n"
-                                 "memmove_dst      = 0x%016" OB_FMT_64 "x\n"
-                                 "memmove_size     = 0x%016" OB_FMT_64 "x\n",
+  OB_LOG_DEBUG_CODE (0x2010403e,
+                     "new_oldest_entry = 0x%016" OB_FMT_64 "x\n"
+                     "new_newest_entry = 0x%016" OB_FMT_64 "x\n"
+                     "new_size         = 0x%016" OB_FMT_64 "x\n"
+                     "old_size         = 0x%016" OB_FMT_64 "x\n"
+                     "memmove_src      = 0x%016" OB_FMT_64 "x\n"
+                     "memmove_dst      = 0x%016" OB_FMT_64 "x\n"
+                     "memmove_size     = 0x%016" OB_FMT_64 "x\n",
                      how2.new_oldest_entry, how2.new_newest_entry,
                      how2.new_size, how2.old_size, how2.memmove_src,
                      how2.memmove_dst, how2.memmove_size);
@@ -3751,19 +3758,20 @@ static how_to_resize_it figure_out_how (pool_mmap_data *d, unt64 new_size,
   how2.old_size = get_file_size (d);
   const unt64 seg1_off = seg1_start % how2.old_size;
   const unt64 seg2_off = seg2_start % how2.old_size;
-  OB_LOG_DEBUG_CODE (0x20104044, "old_first   = 0x%016" OB_FMT_64 "x\n"
-                                 "old_last    = 0x%016" OB_FMT_64 "x\n"
-                                 "size_last   = 0x%016" OB_FMT_64 "x\n"
-                                 "old_oldest  = 0x%016" OB_FMT_64 "x\n"
-                                 "old_newest  = 0x%016" OB_FMT_64 "x\n"
-                                 "size_newest = 0x%016" OB_FMT_64 "x\n"
-                                 "seg1_start  = 0x%016" OB_FMT_64 "x\n"
-                                 "seg1_len    = 0x%016" OB_FMT_64 "x\n"
-                                 "seg2_start  = 0x%016" OB_FMT_64 "x\n"
-                                 "seg2_len    = 0x%016" OB_FMT_64 "x\n"
-                                 "hdr_size    = 0x%016" OB_FMT_64 "x\n"
-                                 "seg1_off    = 0x%016" OB_FMT_64 "x\n"
-                                 "seg2_off    = 0x%016" OB_FMT_64 "x\n",
+  OB_LOG_DEBUG_CODE (0x20104044,
+                     "old_first   = 0x%016" OB_FMT_64 "x\n"
+                     "old_last    = 0x%016" OB_FMT_64 "x\n"
+                     "size_last   = 0x%016" OB_FMT_64 "x\n"
+                     "old_oldest  = 0x%016" OB_FMT_64 "x\n"
+                     "old_newest  = 0x%016" OB_FMT_64 "x\n"
+                     "size_newest = 0x%016" OB_FMT_64 "x\n"
+                     "seg1_start  = 0x%016" OB_FMT_64 "x\n"
+                     "seg1_len    = 0x%016" OB_FMT_64 "x\n"
+                     "seg2_start  = 0x%016" OB_FMT_64 "x\n"
+                     "seg2_len    = 0x%016" OB_FMT_64 "x\n"
+                     "hdr_size    = 0x%016" OB_FMT_64 "x\n"
+                     "seg1_off    = 0x%016" OB_FMT_64 "x\n"
+                     "seg2_off    = 0x%016" OB_FMT_64 "x\n",
                      old_first, old_last, size_last, old_oldest, old_newest,
                      size_newest, seg1_start, seg1_len, seg2_start, seg2_len,
                      hdr_size, seg1_off, seg2_off);
@@ -3806,9 +3814,10 @@ static how_to_resize_it figure_out_how (pool_mmap_data *d, unt64 new_size,
       return how2;
     }
   const unt64 new_available = new_size - hdr_size;
-  OB_LOG_DEBUG_CODE (0x20104041, "seg1_len      = 0x%016" OB_FMT_64 "x\n"
-                                 "new_available = 0x%016" OB_FMT_64 "x\n"
-                                 "noseg2        = %s\n",
+  OB_LOG_DEBUG_CODE (0x20104041,
+                     "seg1_len      = 0x%016" OB_FMT_64 "x\n"
+                     "new_available = 0x%016" OB_FMT_64 "x\n"
+                     "noseg2        = %s\n",
                      seg1_len, new_available, noseg2 ? "true" : "false");
   if (seg1_len > new_available || noseg2)
     {
@@ -3829,9 +3838,10 @@ static how_to_resize_it figure_out_how (pool_mmap_data *d, unt64 new_size,
           how2.new_newest_entry = 0;
           return how2;
         }
-      OB_LOG_DEBUG_CODE (0x2010403f, "seg1_src     = 0x%016" OB_FMT_64 "x\n"
-                                     "new_seg1_off = 0x%016" OB_FMT_64 "x\n"
-                                     "new_seg1_len = 0x%016" OB_FMT_64 "x\n",
+      OB_LOG_DEBUG_CODE (0x2010403f,
+                         "seg1_src     = 0x%016" OB_FMT_64 "x\n"
+                         "new_seg1_off = 0x%016" OB_FMT_64 "x\n"
+                         "new_seg1_len = 0x%016" OB_FMT_64 "x\n",
                          seg1_src, new_seg1_off, new_seg1_len);
       how2.memmove_src = seg1_src;
       how2.memmove_dst = new_seg1_off;
@@ -3856,9 +3866,10 @@ static how_to_resize_it figure_out_how (pool_mmap_data *d, unt64 new_size,
         return how2;
       const unt64 seg2_src = seg2_off + seg2_len - new_seg2_len;
       const unt64 new_seg2_off = new_size - new_seg2_len;
-      OB_LOG_DEBUG_CODE (0x20104040, "seg2_src     = 0x%016" OB_FMT_64 "x\n"
-                                     "new_seg2_off = 0x%016" OB_FMT_64 "x\n"
-                                     "new_seg2_len = 0x%016" OB_FMT_64 "x\n",
+      OB_LOG_DEBUG_CODE (0x20104040,
+                         "seg2_src     = 0x%016" OB_FMT_64 "x\n"
+                         "new_seg2_off = 0x%016" OB_FMT_64 "x\n"
+                         "new_seg2_len = 0x%016" OB_FMT_64 "x\n",
                          seg2_src, new_seg2_off, new_seg2_len);
       how2.memmove_src = seg2_src;
       how2.memmove_dst = new_seg2_off;

@@ -22,8 +22,9 @@
       int k;                                                                   \
       if (sizeof (typ) != bsize)                                               \
         {                                                                      \
-          OB_LOG_ERROR_CODE (0x20004000, "For type %s, %" OB_FMT_SIZE          \
-                                         "d != %d unexpectedly!\n",            \
+          OB_LOG_ERROR_CODE (0x20004000,                                       \
+                             "For type %s, %" OB_FMT_SIZE                      \
+                             "d != %d unexpectedly!\n",                        \
                              #typ, sizeof (typ), bsize);                       \
           return SLAW_CORRUPT_SLAW;                                            \
         }                                                                      \
@@ -44,8 +45,9 @@
       int k;                                                                   \
       if (sizeof (typ) != bsize)                                               \
         {                                                                      \
-          OB_LOG_ERROR_CODE (0x20004001, "For type %s, %" OB_FMT_SIZE          \
-                                         "d != %d unexpectedly!\n",            \
+          OB_LOG_ERROR_CODE (0x20004001,                                       \
+                             "For type %s, %" OB_FMT_SIZE                      \
+                             "d != %d unexpectedly!\n",                        \
                              #typ, sizeof (typ), bsize);                       \
           return SLAW_CORRUPT_SLAW;                                            \
         }                                                                      \
@@ -66,8 +68,9 @@
       int k;                                                                   \
       if (sizeof (typ) != bsize)                                               \
         {                                                                      \
-          OB_LOG_ERROR_CODE (0x20004002, "For type %s, %" OB_FMT_SIZE          \
-                                         "d != %d unexpectedly!\n",            \
+          OB_LOG_ERROR_CODE (0x20004002,                                       \
+                             "For type %s, %" OB_FMT_SIZE                      \
+                             "d != %d unexpectedly!\n",                        \
                              #typ, sizeof (typ), bsize);                       \
           return SLAW_CORRUPT_SLAW;                                            \
         }                                                                      \
@@ -114,9 +117,9 @@
                                    {el->re, el->im});                          \
             HANDLE_COMPLEX_VECTOR (2, v2##typ##c, largetyp, hand,              \
                                    {el->x.re, el->y.re, el->x.im, el->y.im});  \
-            HANDLE_COMPLEX_VECTOR (3, v3##typ##c, largetyp, hand,              \
-                                   {el->x.re, el->y.re, el->z.re, el->x.im,    \
-                                    el->y.im, el->z.im});                      \
+            HANDLE_COMPLEX_VECTOR (                                            \
+              3, v3##typ##c, largetyp, hand,                                   \
+              {el->x.re, el->y.re, el->z.re, el->x.im, el->y.im, el->z.im});   \
             HANDLE_COMPLEX_VECTOR (4, v4##typ##c, largetyp, hand,              \
                                    {el->x.re, el->y.re, el->z.re, el->w.re,    \
                                     el->x.im, el->y.im, el->z.im, el->w.im});  \
@@ -247,10 +250,9 @@ ob_retort slaw_walk_versioned (void *cookie, const slaw_handler *handler,
 
   if (arrayLen == 0)
     {
-      return handler->handle_empty_array (cookie, vecLen, isMVec, isComplex,
-                                          isUnsigned, isFloat,
-                                          (isStumpy ? (isWide ? 16 : 8)
-                                                    : (isWide ? 64 : 32)));
+      return handler->handle_empty_array (
+        cookie, vecLen, isMVec, isComplex, isUnsigned, isFloat,
+        (isStumpy ? (isWide ? 16 : 8) : (isWide ? 64 : 32)));
     }
 
   if (isArray)
@@ -1053,8 +1055,9 @@ static ob_retort sf_handle_nonstd_protein (void *cookie, const void *pp,
   unt64 p_len = protein_len (p);
   if (p_len != len)
     {
-      OB_LOG_ERROR_CODE (0x20004007, "nonstandard protein is %" OB_FMT_64 "u"
-                                     " but thought it was %" OB_FMT_64 "u\n",
+      OB_LOG_ERROR_CODE (0x20004007,
+                         "nonstandard protein is %" OB_FMT_64 "u"
+                         " but thought it was %" OB_FMT_64 "u\n",
                          p_len, len);
       return SLAW_CORRUPT_SLAW;
     }
@@ -1107,32 +1110,32 @@ static ob_retort sf_handle_rude_data (void *cookie, const void *d, int64 len)
   return OB_OK;
 }
 
-const slaw_handler slaw_fabrication_handler =
-  {sf_begin_cons,
-   sf_end_cons,
-   sf_begin_list, /* same function to begin list or map */
-   sf_end_map,
-   sf_begin_list,
-   sf_end_list,
-   sf_begin_array,
-   sf_end_array,
-   sf_begin_multivector,
-   sf_end_multivector,
-   sf_begin_vector,
-   sf_end_vector,
-   sf_begin_complex,
-   sf_end_complex,
-   sf_handle_nil,
-   sf_handle_string,
-   sf_handle_int,
-   sf_handle_unt,
-   sf_handle_float,
-   sf_handle_empty_array,
-   sf_begin_protein,
-   sf_end_protein,
-   sf_handle_nonstd_protein,
-   sf_begin_descrips,
-   sf_end_descips,
-   sf_begin_ingests,
-   sf_end_ingests,
-   sf_handle_rude_data};
+const slaw_handler slaw_fabrication_handler = {
+  sf_begin_cons,
+  sf_end_cons,
+  sf_begin_list, /* same function to begin list or map */
+  sf_end_map,
+  sf_begin_list,
+  sf_end_list,
+  sf_begin_array,
+  sf_end_array,
+  sf_begin_multivector,
+  sf_end_multivector,
+  sf_begin_vector,
+  sf_end_vector,
+  sf_begin_complex,
+  sf_end_complex,
+  sf_handle_nil,
+  sf_handle_string,
+  sf_handle_int,
+  sf_handle_unt,
+  sf_handle_float,
+  sf_handle_empty_array,
+  sf_begin_protein,
+  sf_end_protein,
+  sf_handle_nonstd_protein,
+  sf_begin_descrips,
+  sf_end_descips,
+  sf_begin_ingests,
+  sf_end_ingests,
+  sf_handle_rude_data};

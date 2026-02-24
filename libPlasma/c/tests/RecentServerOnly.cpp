@@ -23,10 +23,8 @@ static void require_resizable (pool_cmd_info *cmd)
 {
   slaw re = slaw_map_inline_cf ("resizable", slaw_boolean (true), "single-file",
                                 slaw_boolean (true), NULL);
-  protein p =
-    protein_from_ff (NULL,
-                     slaw_maps_merge (protein_ingests (cmd->create_options), re,
-                                      NULL));
+  protein p = protein_from_ff (
+    NULL, slaw_maps_merge (protein_ingests (cmd->create_options), re, NULL));
   Free_Protein (cmd->create_options);
   cmd->create_options = p;
   slaw_free (re);
@@ -43,10 +41,9 @@ TEST (RecentServerOnly, FailedPermissionize)
       pool_cmd_info cmd;
       slaw perm = slaw_map_inline_cc ("owner", "root", NULL);
       pool_cmd_options_from_env (&cmd);
-      protein opts =
-        protein_from_ff (NULL,
-                         slaw_maps_merge (protein_ingests (cmd.create_options),
-                                          perm, NULL));
+      protein opts = protein_from_ff (
+        NULL,
+        slaw_maps_merge (protein_ingests (cmd.create_options), perm, NULL));
       const ob_retort expected = ob_errno_to_retort (EPERM);
       const ob_retort actual = pool_create (cmd.pool_name, cmd.type, opts);
       EXPECT_TORTEQ (expected, actual);
@@ -167,9 +164,7 @@ static void no_nested_pool (swap_func maybe_swap)
   pool_cmd_free_options (&cmd);
 }
 
-static void dont_swap (slaw &a, slaw &b)
-{
-}
+static void dont_swap (slaw &a, slaw &b) {}
 
 static void do_swap (slaw &a, slaw &b)
 {
@@ -801,51 +796,51 @@ static void *deposit_one_protein (void *arg)
   return NULL;
 }
 
-static const char *const weird_names[] =
-  {"foobar",
-   "foo/bar",
-   "foo.bar",
-   "Something with spaces in it!",
-   "^^^ I like hats ^^^",
-   "f",
-   "I am a legal pool name ;)",
-   "This used to not be legal... but now it is!",
-   "$100",
-   "commercial",
-   "conscience",
-   "null",
-   "LPT1 is not legal as a pool name, but it's okay as part of a longer name",
-   "a name with   in it",
-   "a name with ! in it",
-   "a name with # in it",
-   "a name with $ in it",
-   "a name with % in it",
-   "a name with & in it",
-   "a name with ' in it",
-   "a name with ( in it",
-   "a name with ) in it",
-   "a name with + in it",
-   "a name with , in it",
-   "a name with - in it",
-   "a name with . in it",
-   "a name with ; in it",
-   "a name with = in it",
-   "a name with @ in it",
-   "a name with [ in it",
-   "a name with ] in it",
-   "a name with ^ in it",
-   "a name with _ in it",
-   "a name with ` in it",
-   "a name with { in it",
-   "a name with } in it",
-   "a name with ~ in it",
-   " the final frontier",
-   "CONOUT",
-   "foo/COM10/bar",
-   "AUX1",
-   "COM0",
-   "LPT0",
-   "Trey thinks no one will put %s/or %f/or worse, %n/in a pool name"};
+static const char *const weird_names[] = {
+  "foobar",
+  "foo/bar",
+  "foo.bar",
+  "Something with spaces in it!",
+  "^^^ I like hats ^^^",
+  "f",
+  "I am a legal pool name ;)",
+  "This used to not be legal... but now it is!",
+  "$100",
+  "commercial",
+  "conscience",
+  "null",
+  "LPT1 is not legal as a pool name, but it's okay as part of a longer name",
+  "a name with   in it",
+  "a name with ! in it",
+  "a name with # in it",
+  "a name with $ in it",
+  "a name with % in it",
+  "a name with & in it",
+  "a name with ' in it",
+  "a name with ( in it",
+  "a name with ) in it",
+  "a name with + in it",
+  "a name with , in it",
+  "a name with - in it",
+  "a name with . in it",
+  "a name with ; in it",
+  "a name with = in it",
+  "a name with @ in it",
+  "a name with [ in it",
+  "a name with ] in it",
+  "a name with ^ in it",
+  "a name with _ in it",
+  "a name with ` in it",
+  "a name with { in it",
+  "a name with } in it",
+  "a name with ~ in it",
+  " the final frontier",
+  "CONOUT",
+  "foo/COM10/bar",
+  "AUX1",
+  "COM0",
+  "LPT0",
+  "Trey thinks no one will put %s/or %f/or worse, %n/in a pool name"};
 
 TEST (RecentServerOnly, WeirdPoolNames)
 {
@@ -889,8 +884,8 @@ TEST (RecentServerOnly, WeirdPoolNames)
         {
           protein p = NULL;
           pthread_t thr;
-          EXPECT_EQ (0, pthread_create (&thr, NULL, deposit_one_protein,
-                                        (void *) name));
+          EXPECT_EQ (
+            0, pthread_create (&thr, NULL, deposit_one_protein, (void *) name));
           EXPECT_TORTEQ (OB_OK, pool_await_next (ph, 600, &p, NULL, NULL));
           EXPECT_EQ (0, pthread_join (thr, NULL));
           Free_Protein (p);
@@ -1163,17 +1158,16 @@ static protein toupee (void)
 {
   return protein_from_ff (
     slaw_list_inline_c ("limerick", NULL),
-    slaw_map_inline_cf ("author", slaw_string ("jh"), "president",
-                        slaw_string ("Leslie Lynch King, Jr."), "bug",
-                        slaw_unt16 (2072), "text",
-                        slaw_list_inline_c ("ford kept reporters at bay",
-                                            "through use of a robo-toupee:",
-                                            "when questioned, he'd shrug",
-                                            "and say \"talk to the rug\",",
-                                            "which then said \"no comment "
-                                            "today\".",
-                                            NULL),
-                        NULL));
+    slaw_map_inline_cf (
+      "author", slaw_string ("jh"), "president",
+      slaw_string ("Leslie Lynch King, Jr."), "bug", slaw_unt16 (2072), "text",
+      slaw_list_inline_c (
+        "ford kept reporters at bay", "through use of a robo-toupee:",
+        "when questioned, he'd shrug", "and say \"talk to the rug\",",
+        "which then said \"no comment "
+        "today\".",
+        NULL),
+      NULL));
 }
 
 TEST (RecentServerOnly, StopWhenFull)
@@ -1183,10 +1177,8 @@ TEST (RecentServerOnly, StopWhenFull)
   require_resizable (&cmd);
 
   slaw stop = slaw_map_inline_cf ("stop-when-full", slaw_boolean (true), NULL);
-  protein opts =
-    protein_from_ff (NULL,
-                     slaw_maps_merge (protein_ingests (cmd.create_options),
-                                      stop, NULL));
+  protein opts = protein_from_ff (
+    NULL, slaw_maps_merge (protein_ingests (cmd.create_options), stop, NULL));
   Free_Slaw (stop);
 
   EXPECT_TORTEQ (OB_OK, pool_create (cmd.pool_name, cmd.type, opts));

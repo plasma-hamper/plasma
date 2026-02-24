@@ -127,7 +127,7 @@ static char *generate_tmp (OB_UNUSED va_list unused)
 #ifdef _MSC_VER
       || tmp[last] == '\\'
 #endif
-      )
+  )
     tmp[last] = 0; /* nuke that trailing slash! */
   return tmp;
 }
@@ -137,8 +137,9 @@ static char *generate_user_gspeak_dir (OB_UNUSED va_list unused)
 {
   char *buf = (char *) malloc (MAX_PATH);
   if (buf
-      && S_OK == SHGetFolderPath (NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL,
-                                  SHGFP_TYPE_CURRENT, buf))
+      && S_OK
+           == SHGetFolderPath (NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL,
+                               SHGFP_TYPE_CURRENT, buf))
     {
       ob_safe_append_string (buf, MAX_PATH, "\\oblong");
       return (buf);
@@ -274,7 +275,7 @@ static void measure_or_populate_path (va_list ap, char *dst, size_t *pos)
             }
         }
       first = false;
-    tinue:
+tinue:
       ob_nop ();  // label has to be followed by a statement; so there!
     }
   // NUL-terminate the string
@@ -832,9 +833,9 @@ ob_retort ob_rmdir_p (const char *dir)
 
 #define ALLOCA_STRDUP(x)                                                       \
   (tmp_size = 1 + strlen ((x)),                                                \
-   (char *) memcpy (8 + (char *) ob_make_undefined (alloca (tmp_size + 16),    \
-                                                    tmp_size + 16),            \
-                    (x), tmp_size))
+   (char *) memcpy (                                                           \
+     8 + (char *) ob_make_undefined (alloca (tmp_size + 16), tmp_size + 16),   \
+     (x), tmp_size))
 
 ob_retort ob_rmdir_p_ex (const char *dir, const char *stop)
 {
@@ -855,7 +856,7 @@ ob_retort ob_rmdir_p_ex (const char *dir, const char *stop)
           || errno == EACCES || errno == EPERM || errno == EROFS
           || errno == ENOTDIR  // e. g. a symlink: bug 1144
           || errno == EINVAL   // tried to delete current dir: bug 1340
-          )
+      )
         // Don't complain about "expected" errors; just stop recursing
         return OB_OK;
       else

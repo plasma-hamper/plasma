@@ -30,7 +30,7 @@ int mainish (int argc, char *argv[])
   const char *actual;
   const char *expected;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "i:s:t:")) != -1)
     {
       switch (c)
@@ -71,8 +71,9 @@ int mainish (int argc, char *argv[])
 
   if (pret != OB_OK)
     {
-      OB_LOG_ERROR_CODE (0x2040d001, "pool_rewind on empty pool returned %s, "
-                                     "but expected OB_OK\n",
+      OB_LOG_ERROR_CODE (0x2040d001,
+                         "pool_rewind on empty pool returned %s, "
+                         "but expected OB_OK\n",
                          ob_error_string (pret));
       retcode = EXIT_FAILURE;
       goto cleanup;

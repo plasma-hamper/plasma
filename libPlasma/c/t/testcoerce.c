@@ -134,14 +134,12 @@ int main (int argc, char **argv)
   err = slaw_to_unt64 (f (slaw_list_inline_c ("0x0015ed", NULL)), &x);
   report_unt64 ('r', x, err);
 
-  err = slaw_to_unt64 (f (slaw_int64_array_filled (1, OB_CONST_I64 (
-                                                        -4503599627370495))),
-                       &x);
+  err = slaw_to_unt64 (
+    f (slaw_int64_array_filled (1, OB_CONST_I64 (-4503599627370495))), &x);
   report_unt64 ('s', x, err);
 
-  err = slaw_to_unt64 (f (slaw_unt64_array_filled (1, OB_CONST_U64 (
-                                                        4503599627370495))),
-                       &x);
+  err = slaw_to_unt64 (
+    f (slaw_unt64_array_filled (1, OB_CONST_U64 (4503599627370495))), &x);
   report_unt64 ('t', x, err);
 
   err =
@@ -233,14 +231,12 @@ int main (int argc, char **argv)
   err = slaw_to_int64 (f (slaw_list_inline_c ("0x0015ed", NULL)), &y);
   report_int64 ('r', y, err);
 
-  err = slaw_to_int64 (f (slaw_int64_array_filled (1, OB_CONST_I64 (
-                                                        -4503599627370495))),
-                       &y);
+  err = slaw_to_int64 (
+    f (slaw_int64_array_filled (1, OB_CONST_I64 (-4503599627370495))), &y);
   report_int64 ('s', y, err);
 
-  err = slaw_to_int64 (f (slaw_unt64_array_filled (1, OB_CONST_U64 (
-                                                        4503599627370495))),
-                       &y);
+  err = slaw_to_int64 (
+    f (slaw_unt64_array_filled (1, OB_CONST_U64 (4503599627370495))), &y);
   report_int64 ('t', y, err);
 
   err =
@@ -333,14 +329,12 @@ int main (int argc, char **argv)
   err = slaw_to_float64 (f (slaw_list_inline_c ("0x0015ed", NULL)), &z);
   report_float64 ('r', z, err);
 
-  err = slaw_to_float64 (f (slaw_int64_array_filled (1, OB_CONST_I64 (
-                                                          -4503599627370495))),
-                         &z);
+  err = slaw_to_float64 (
+    f (slaw_int64_array_filled (1, OB_CONST_I64 (-4503599627370495))), &z);
   report_float64 ('s', z, err);
 
-  err = slaw_to_float64 (f (slaw_unt64_array_filled (1, OB_CONST_U64 (
-                                                          4503599627370495))),
-                         &z);
+  err = slaw_to_float64 (
+    f (slaw_unt64_array_filled (1, OB_CONST_U64 (4503599627370495))), &z);
   report_float64 ('t', z, err);
 
   err =

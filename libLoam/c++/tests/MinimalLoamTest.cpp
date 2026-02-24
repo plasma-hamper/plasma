@@ -551,10 +551,9 @@ TEST_F (QuatTest, QuatFromRandomRot)
           OB_LOG_ERROR ("(%d) failure in %s approx= %s", i,
                         rot_rand.AsStr ().utf8 (),
                         should_be_same.AsStr ().utf8 ());
-          OB_LOG_ERROR ("over, up, norm \n[%s,\n %s,\n %s]",
-                        over.AsStr ().utf8 (),
-                        norm.Cross (over).AsStr ().utf8 (),
-                        norm.AsStr ().utf8 ());
+          OB_LOG_ERROR (
+            "over, up, norm \n[%s,\n %s,\n %s]", over.AsStr ().utf8 (),
+            norm.Cross (over).AsStr ().utf8 (), norm.AsStr ().utf8 ());
         }
       EXPECT_TRUE (rot_rand.RotApproxEquals (should_be_same, eps));
       // test is a bit *strict* -- but it'll be interesting to see when
@@ -644,9 +643,8 @@ TEST_F (QuatTest, QuatToFromRotationMatrix_Bug_2367)
 
   EXPECT_TRUE (
     q_mine.QuatRotVect (XZ).ApproxEquals (m_mine.TransformVect (XZ), eps));
-  EXPECT_TRUE (q_mine.Conj ()
-                 .QuatRotVect (XZ)
-                 .ApproxEquals (m_mine.Transpose ().TransformVect (XZ), eps));
+  EXPECT_TRUE (q_mine.Conj ().QuatRotVect (XZ).ApproxEquals (
+    m_mine.Transpose ().TransformVect (XZ), eps));
   EXPECT_TRUE (
     q2.QuatRotVect (XZ).ApproxEquals (m_mine.TransformVect (XZ), eps));
   EXPECT_TRUE (

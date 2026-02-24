@@ -84,10 +84,9 @@ class MockServer
     while (!announce_)
       usleep (10000);
     ZEROCONF_LOG_DEBUG ("MOCK: Announcing %s", me->Name ());
-    zc_server_data *sd =
-      zeroconf_server_announce (me->server_.Name (), ZEROCONF_SERVICE_TYPE,
-                                me->server_.Type (), me->server_.Port (), NULL,
-                                NULL);
+    zc_server_data *sd = zeroconf_server_announce (
+      me->server_.Name (), ZEROCONF_SERVICE_TYPE, me->server_.Type (),
+      me->server_.Port (), NULL, NULL);
     if (!sd)
       {
         ZEROCONF_LOG_ERROR ("Announcement failed for %s", me->Name ());
@@ -108,7 +107,7 @@ class MockServer
       gethostname (host, 256);
     const int p = getpid ();
     char name[512];
-    int namelen = snprintf (name, sizeof(name), "%d=)%d(>>=%s", p, i, host);
+    int namelen = snprintf (name, sizeof (name), "%d=)%d(>>=%s", p, i, host);
     if (namelen >= ZEROCONF_MAX_SERVICE_LEN)
       {
         ZEROCONF_LOG_ERROR ("service name %s too long", name);

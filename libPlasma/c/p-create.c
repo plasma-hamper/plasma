@@ -56,7 +56,7 @@ int main (int argc, char **argv)
   slabu *sb = slabu_new ();
   int gr = 0;
 
-  memset(&cmd, 0, sizeof(cmd));
+  memset (&cmd, 0, sizeof (cmd));
   while ((c = getopt (argc, argv, "g:m:s:t:i:u:vzqGRSFl4c")) != -1)
     {
       switch (c)
@@ -132,10 +132,8 @@ int main (int argc, char **argv)
   pool_cmd_setup_options (&cmd);
 
   slaw perm = slaw_map_f (sb);
-  protein opts =
-    protein_from_ff (NULL,
-                     slaw_maps_merge (protein_ingests (cmd.create_options),
-                                      perm, NULL));
+  protein opts = protein_from_ff (
+    NULL, slaw_maps_merge (protein_ingests (cmd.create_options), perm, NULL));
 
   for (i = 0; i < argc; i++)
     {

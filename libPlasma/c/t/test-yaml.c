@@ -59,9 +59,9 @@ static int mainish (int argc, char **argv)
 
   // check that int64 and float64 are 8-byte aligned
   if (u1 % 8 != 0 || u2 % 8 != 0)
-    OB_FATAL_ERROR_CODE (0x20316009, "%" OB_FMT_64 "x or %" OB_FMT_64
-                                     "x is not 8-byte aligned\n",
-                         u1, u2);
+    OB_FATAL_ERROR_CODE (
+      0x20316009, "%" OB_FMT_64 "x or %" OB_FMT_64 "x is not 8-byte aligned\n",
+      u1, u2);
 
   slaw_free (s);
   slaw_free (s2);

@@ -53,79 +53,86 @@ static void get_socket_info (ob_sock_t sock, char *buf, size_t buflen)
 {
 #ifndef _MSC_VER
   struct sockaddr_storage local_addr, peer_addr;
-  socklen_t addrlen = sizeof(local_addr);
-  
+  socklen_t addrlen = sizeof (local_addr);
+
   buf[0] = '\0';
-  
+
   // Get local address
-  if (getsockname(sock, (struct sockaddr *)&local_addr, &addrlen) == 0)
+  if (getsockname (sock, (struct sockaddr *) &local_addr, &addrlen) == 0)
     {
       char local_str[INET6_ADDRSTRLEN + 16];  // IP + port
       char peer_str[INET6_ADDRSTRLEN + 16];
-      
+
       // Format local address
       if (local_addr.ss_family == AF_INET)
         {
-          struct sockaddr_in *addr4 = (struct sockaddr_in *)&local_addr;
+          struct sockaddr_in *addr4 = (struct sockaddr_in *) &local_addr;
           char ip[INET_ADDRSTRLEN];
-          inet_ntop(AF_INET, &addr4->sin_addr, ip, sizeof(ip));
-          snprintf(local_str, sizeof(local_str), "%s:%d", ip, ntohs(addr4->sin_port));
+          inet_ntop (AF_INET, &addr4->sin_addr, ip, sizeof (ip));
+          snprintf (local_str, sizeof (local_str), "%s:%d", ip,
+                    ntohs (addr4->sin_port));
         }
       else if (local_addr.ss_family == AF_INET6)
         {
-          struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)&local_addr;
+          struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *) &local_addr;
           char ip[INET6_ADDRSTRLEN];
-          inet_ntop(AF_INET6, &addr6->sin6_addr, ip, sizeof(ip));
-          snprintf(local_str, sizeof(local_str), "[%s]:%d", ip, ntohs(addr6->sin6_port));
+          inet_ntop (AF_INET6, &addr6->sin6_addr, ip, sizeof (ip));
+          snprintf (local_str, sizeof (local_str), "[%s]:%d", ip,
+                    ntohs (addr6->sin6_port));
         }
       else
         {
-          snprintf(local_str, sizeof(local_str), "<unknown family %d>", local_addr.ss_family);
+          snprintf (local_str, sizeof (local_str), "<unknown family %d>",
+                    local_addr.ss_family);
         }
-      
+
       // Get peer address
-      addrlen = sizeof(peer_addr);
-      if (getpeername(sock, (struct sockaddr *)&peer_addr, &addrlen) == 0)
+      addrlen = sizeof (peer_addr);
+      if (getpeername (sock, (struct sockaddr *) &peer_addr, &addrlen) == 0)
         {
           // Format peer address
           if (peer_addr.ss_family == AF_INET)
             {
-              struct sockaddr_in *addr4 = (struct sockaddr_in *)&peer_addr;
+              struct sockaddr_in *addr4 = (struct sockaddr_in *) &peer_addr;
               char ip[INET_ADDRSTRLEN];
-              inet_ntop(AF_INET, &addr4->sin_addr, ip, sizeof(ip));
-              snprintf(peer_str, sizeof(peer_str), "%s:%d", ip, ntohs(addr4->sin_port));
+              inet_ntop (AF_INET, &addr4->sin_addr, ip, sizeof (ip));
+              snprintf (peer_str, sizeof (peer_str), "%s:%d", ip,
+                        ntohs (addr4->sin_port));
             }
           else if (peer_addr.ss_family == AF_INET6)
             {
-              struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)&peer_addr;
+              struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *) &peer_addr;
               char ip[INET6_ADDRSTRLEN];
-              inet_ntop(AF_INET6, &addr6->sin6_addr, ip, sizeof(ip));
-              snprintf(peer_str, sizeof(peer_str), "[%s]:%d", ip, ntohs(addr6->sin6_port));
+              inet_ntop (AF_INET6, &addr6->sin6_addr, ip, sizeof (ip));
+              snprintf (peer_str, sizeof (peer_str), "[%s]:%d", ip,
+                        ntohs (addr6->sin6_port));
             }
           else
             {
-              snprintf(peer_str, sizeof(peer_str), "<unknown family %d>", peer_addr.ss_family);
+              snprintf (peer_str, sizeof (peer_str), "<unknown family %d>",
+                        peer_addr.ss_family);
             }
-          
-          snprintf(buf, buflen, " (fd %d: %s -> %s)",
-                   sock, local_str, peer_str);
+
+          snprintf (buf, buflen, " (fd %d: %s -> %s)", sock, local_str,
+                    peer_str);
         }
       else
         {
           // getpeername failed, socket might be disconnected
           int err = errno;
-          snprintf(buf, buflen, " (fd %d: %s -> <disconnected: %s>)",
-                   sock, local_str, strerror(err));
+          snprintf (buf, buflen, " (fd %d: %s -> <disconnected: %s>)", sock,
+                    local_str, strerror (err));
         }
     }
   else
     {
       // getsockname failed
       int err = errno;
-      snprintf(buf, buflen, " (fd %d: <getsockname failed: %s>)", sock, strerror(err));
+      snprintf (buf, buflen, " (fd %d: <getsockname failed: %s>)", sock,
+                strerror (err));
     }
 #else
-  snprintf(buf, buflen, " (fd %d)", sock);
+  snprintf (buf, buflen, " (fd %d)", sock);
 #endif
 }
 
@@ -200,21 +207,23 @@ ob_retort pool_tcp_send_nbytes (ob_sock_t sock, const void *buf, size_t len,
           if (nwritten == -1 && erryes == EPIPE)
             {
               close_warning_count++;
-              float64 now = ob_current_time();
-              
+              float64 now = ob_current_time ();
+
               if (now - last_close_warning_time > WARNING_THROTTLE_SECS)
                 {
                   char sock_info[256];
-                  get_socket_info(sock, sock_info, sizeof(sock_info));
+                  get_socket_info (sock, sock_info, sizeof (sock_info));
                   unt64 count = close_warning_count;
                   close_warning_count = 0;
-                  
+
                   if (count > 1)
                     {
-                      OB_LOG_WARNING_CODE (0x20108027,
-                                           "socket was closed unexpectedly %s (occurred %llu times in last %.0f seconds)",
-                                           sock_info, (unsigned long long)count, 
-                                           WARNING_THROTTLE_SECS);
+                      OB_LOG_WARNING_CODE (
+                        0x20108027,
+                        "socket was closed unexpectedly %s (occurred %llu "
+                        "times in last %.0f seconds)",
+                        sock_info, (unsigned long long) count,
+                        WARNING_THROTTLE_SECS);
                     }
                   else
                     {
@@ -229,12 +238,12 @@ ob_retort pool_tcp_send_nbytes (ob_sock_t sock, const void *buf, size_t len,
           else
             {
               char sock_info[256];
-              get_socket_info(sock, sock_info, sizeof(sock_info));
-              OB_LOG_WARNING_CODE (0x20108000,
-                                   "send() returned %" OB_FMT_SIZE "d with "
-                                   "errno '%s' with %" OB_FMT_SIZE
-                                   "d bytes left %s\n",
-                                   nwritten, strerror (erryes), nleft, sock_info);
+              get_socket_info (sock, sock_info, sizeof (sock_info));
+              OB_LOG_WARNING_CODE (
+                0x20108000,
+                "send() returned %" OB_FMT_SIZE "d with "
+                "errno '%s' with %" OB_FMT_SIZE "d bytes left %s\n",
+                nwritten, strerror (erryes), nleft, sock_info);
               pret = POOL_SEND_BADTH;
             }
           errno = erryes;
@@ -313,21 +322,23 @@ ob_retort pool_tcp_recv_nbytes (ob_sock_t sock, void *buf, size_t len,
           if (nread == 0)
             {
               close_warning_count++;
-              float64 now = ob_current_time();
-              
+              float64 now = ob_current_time ();
+
               if (now - last_close_warning_time > WARNING_THROTTLE_SECS)
                 {
                   char sock_info[256];
-                  get_socket_info(sock, sock_info, sizeof(sock_info));
+                  get_socket_info (sock, sock_info, sizeof (sock_info));
                   unt64 count = close_warning_count;
                   close_warning_count = 0;
-                  
+
                   if (count > 1)
                     {
-                      OB_LOG_WARNING_CODE (0x20108028,
-                                           "socket was closed unexpectedly %s (occurred %llu times in last %.0f seconds)",
-                                           sock_info, (unsigned long long)count,
-                                           WARNING_THROTTLE_SECS);
+                      OB_LOG_WARNING_CODE (
+                        0x20108028,
+                        "socket was closed unexpectedly %s (occurred %llu "
+                        "times in last %.0f seconds)",
+                        sock_info, (unsigned long long) count,
+                        WARNING_THROTTLE_SECS);
                     }
                   else
                     {
@@ -342,7 +353,7 @@ ob_retort pool_tcp_recv_nbytes (ob_sock_t sock, void *buf, size_t len,
           else
             {
               char sock_info[256];
-              get_socket_info(sock, sock_info, sizeof(sock_info));
+              get_socket_info (sock, sock_info, sizeof (sock_info));
               OB_LOG_WARNING_CODE (0x20108001,
                                    "recv() returned %" OB_FMT_SIZE "d with "
                                    "errno '%s' with %" OB_FMT_SIZE
@@ -389,7 +400,8 @@ static ob_retort pool_tcp_close (unt64 code, pool_net_data *net)
 }
 
 
-typedef enum {
+typedef enum
+{
   Ob_Insecure,      /* don't use TLS */
   Ob_Opportunistic, /* use TLS if available; allow anonymous */
   Ob_Secure         /* require TLS with certificate */
@@ -478,10 +490,11 @@ static ob_retort parse_pseudo_uri (const char *full_pool_name,
     }
   else
     {
-    unknown_proto:
+unknown_proto:
       *hostname = 0; /* NUL-terminate protocol in "uri" for printing */
-      OB_LOG_ERROR_CODE (0x20108026, "Didn't expect '%s' as a protocol\n"
-                                     "in '%s'\n",
+      OB_LOG_ERROR_CODE (0x20108026,
+                         "Didn't expect '%s' as a protocol\n"
+                         "in '%s'\n",
                          uri, full_pool_name);
       free (uri);
       return POOL_POOLNAME_BADTH;
@@ -711,14 +724,16 @@ static ob_retort negotiate_version (pool_net_data *net,
   else if (net->net_version > POOL_TCP_VERSION_CURRENT)
     {
       if (net->net_version == 'H' && net->slaw_version == 'T')
-        OB_LOG_ERROR_CODE (0x20108021, "%s:%s\n"
-                                       "looks like it might be an http\n"
-                                       "server, not a pool server!\n",
+        OB_LOG_ERROR_CODE (0x20108021,
+                           "%s:%s\n"
+                           "looks like it might be an http\n"
+                           "server, not a pool server!\n",
                            hostname, port_str);
       else
-        OB_LOG_ERROR_CODE (0x20108020, "%s:%s\n"
-                                       "server claims protocol %d/slaw %d,\n"
-                                       "but we only know protocol %d/slaw %d\n",
+        OB_LOG_ERROR_CODE (0x20108020,
+                           "%s:%s\n"
+                           "server claims protocol %d/slaw %d,\n"
+                           "but we only know protocol %d/slaw %d\n",
                            hostname, port_str, net->net_version,
                            net->slaw_version, POOL_TCP_VERSION_CURRENT,
                            SLAW_VERSION_CURRENT);
@@ -833,39 +848,43 @@ ob_retort ob_common_sockopts (ob_sock_t fd)
                   sizeof (bufsize))
       != 0)
     {
-      OB_LOG_WARNING_CODE (0x20108026, "setsockopt/SO_RCVBUF: '%s' (continuing anyway)\n",
+      OB_LOG_WARNING_CODE (0x20108026,
+                           "setsockopt/SO_RCVBUF: '%s' (continuing anyway)\n",
                            ob_sockmsg ());
     }
-  
+
   if (setsockopt (fd, SOL_SOCKET, SO_SNDBUF, EVIL_SOCKOPT_CAST (&bufsize),
                   sizeof (bufsize))
       != 0)
     {
-      OB_LOG_WARNING_CODE (0x20108027, "setsockopt/SO_SNDBUF: '%s' (continuing anyway)\n",
+      OB_LOG_WARNING_CODE (0x20108027,
+                           "setsockopt/SO_SNDBUF: '%s' (continuing anyway)\n",
                            ob_sockmsg ());
     }
 
 #ifdef HAVE_TCP_USER_TIMEOUT
   // Set TCP timeout for large transfers
   int timeout_ms = PLASMA_TCP_TIMEOUT_MS;
-  if (setsockopt (fd, IPPROTO_TCP, TCP_USER_TIMEOUT, EVIL_SOCKOPT_CAST (&timeout_ms),
-                  sizeof (timeout_ms))
+  if (setsockopt (fd, IPPROTO_TCP, TCP_USER_TIMEOUT,
+                  EVIL_SOCKOPT_CAST (&timeout_ms), sizeof (timeout_ms))
       != 0)
     {
-      OB_LOG_WARNING_CODE (0x20108028, "setsockopt/TCP_USER_TIMEOUT: '%s' (continuing anyway)\n",
-                           ob_sockmsg ());
+      OB_LOG_WARNING_CODE (
+        0x20108028, "setsockopt/TCP_USER_TIMEOUT: '%s' (continuing anyway)\n",
+        ob_sockmsg ());
     }
 #endif
 
 #ifdef HAVE_TCP_KEEPINTVL
   // Reduce keepalive interval to 30 seconds
   int keepintvl = 30;
-  if (setsockopt (fd, IPPROTO_TCP, TCP_KEEPINTVL, EVIL_SOCKOPT_CAST (&keepintvl),
-                  sizeof (keepintvl))
+  if (setsockopt (fd, IPPROTO_TCP, TCP_KEEPINTVL,
+                  EVIL_SOCKOPT_CAST (&keepintvl), sizeof (keepintvl))
       != 0)
     {
-      OB_LOG_WARNING_CODE (0x20108029, "setsockopt/TCP_KEEPINTVL: '%s' (continuing anyway)\n",
-                           ob_sockmsg ());
+      OB_LOG_WARNING_CODE (
+        0x20108029, "setsockopt/TCP_KEEPINTVL: '%s' (continuing anyway)\n",
+        ob_sockmsg ());
     }
 #endif
 
@@ -876,12 +895,13 @@ ob_retort ob_common_sockopts (ob_sock_t fd)
                   sizeof (keepidle))
       != 0)
     {
-      OB_LOG_WARNING_CODE (0x2010802a, "setsockopt/TCP_KEEPIDLE: '%s' (continuing anyway)\n",
-                           ob_sockmsg ());
+      OB_LOG_WARNING_CODE (
+        0x2010802a, "setsockopt/TCP_KEEPIDLE: '%s' (continuing anyway)\n",
+        ob_sockmsg ());
     }
 #endif
-#endif // !_MSC_VER
-#endif // PLASMA_ENABLE_TCP_OPTIMIZATIONS
+#endif  // !_MSC_VER
+#endif  // PLASMA_ENABLE_TCP_OPTIMIZATIONS
 
   return ob_nosigpipe_sockopt (fd);
 }
@@ -926,8 +946,9 @@ static ob_retort my_connect1 (const struct addrinfo *ai, ob_sock_t *fd_out)
     {
       ob_retort ort = ob_close_socket (fd);
       if (ort < OB_OK)
-        OB_LOG_ERROR_CODE (0x20108007, "ob_close_socket on fail path "
-                                       "for ob_common_socketopts:\n%s\n",
+        OB_LOG_ERROR_CODE (0x20108007,
+                           "ob_close_socket on fail path "
+                           "for ob_common_socketopts:\n%s\n",
                            ob_error_string (ort));
       return tort;
     }
@@ -941,8 +962,9 @@ static ob_retort my_connect1 (const struct addrinfo *ai, ob_sock_t *fd_out)
                          ob_error_string (conntort), ai->ai_family);
       ob_retort ort = ob_close_socket (fd);
       if (ort < OB_OK)
-        OB_LOG_ERROR_CODE (0x20108009, "ob_close_socket on fail path "
-                                       "for connect:\n%s\n",
+        OB_LOG_ERROR_CODE (0x20108009,
+                           "ob_close_socket on fail path "
+                           "for connect:\n%s\n",
                            ob_error_string (ort));
       return POOL_SERVER_UNREACH;
     }
@@ -1524,7 +1546,7 @@ static ob_retort pool_tcp_rename (pool_hose ph, const char *old_name,
   if (!d || !dn)
     {
       pret = OB_NO_MEM;
-    early_exit:
+early_exit:
       free_parsed_pseudo_uri (d);
       free_parsed_pseudo_uri (dn);
       return pret;
@@ -1544,8 +1566,9 @@ static ob_retort pool_tcp_rename (pool_hose ph, const char *old_name,
 
   pret =
     pool_tcp_make_connection (old_name, &net, &invalid_wait_obj, d, ph->ctx);
-  if (pret == OB_OK && (0 != strcmp (d->hostname, dn->hostname)
-                        || 0 != strcmp (d->port_str, dn->port_str)))
+  if (pret == OB_OK
+      && (0 != strcmp (d->hostname, dn->hostname)
+          || 0 != strcmp (d->port_str, dn->port_str)))
     {
       OB_LOG_ERROR_CODE (0x2010801a, "Can't rename from %s:%s to %s:%s\n",
                          d->hostname, d->port_str, dn->hostname, dn->port_str);
@@ -1643,14 +1666,11 @@ static ob_retort pool_tcp_info (pool_hose ph, int64 hops, protein *return_prot)
     {
       parsed_pseudo_uri *d = get_parsed_pseudo_uri (ph);
       int32 port = atoi (d->port_str);
-      slaw ingests =
-        slaw_map_inline_cf ("type",             slaw_string ("tcp"),
-                            "terminal",         slaw_boolean (false),
-                            "host",             slaw_string (d->hostname),
-                            "port",             slaw_int32 (port),
-                            "net-pool-version", slaw_unt32 (ph->net->net_version),
-                            "slaw-version",     slaw_unt32 (ph->net->slaw_version),
-                            NULL);
+      slaw ingests = slaw_map_inline_cf (
+        "type", slaw_string ("tcp"), "terminal", slaw_boolean (false), "host",
+        slaw_string (d->hostname), "port", slaw_int32 (port),
+        "net-pool-version", slaw_unt32 (ph->net->net_version), "slaw-version",
+        slaw_unt32 (ph->net->slaw_version), NULL);
       if (!ingests)
         return OB_NO_MEM;
       *return_prot = protein_from_ff (NULL, ingests);

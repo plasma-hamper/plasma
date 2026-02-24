@@ -26,21 +26,21 @@
 #define SLAW_TAG_PREFIX "tag:oblong.com,2009:slaw/"
 #define YAML_TAG_PREFIX "tag:yaml.org,2002:"
 
-#define SLAW_MAP_TAG         (yaml_char_t *) YAML_TAG_PREFIX "map"
-#define SLAW_OMAP_TAG        (yaml_char_t *) YAML_TAG_PREFIX "omap"
-#define SLAW_LIST_TAG        (yaml_char_t *) YAML_TAG_PREFIX "seq"
-#define SLAW_ARRAY_TAG       (yaml_char_t *) SLAW_TAG_PREFIX "array"
+#define SLAW_MAP_TAG (yaml_char_t *) YAML_TAG_PREFIX "map"
+#define SLAW_OMAP_TAG (yaml_char_t *) YAML_TAG_PREFIX "omap"
+#define SLAW_LIST_TAG (yaml_char_t *) YAML_TAG_PREFIX "seq"
+#define SLAW_ARRAY_TAG (yaml_char_t *) SLAW_TAG_PREFIX "array"
 #define SLAW_MULTIVECTOR_TAG (yaml_char_t *) SLAW_TAG_PREFIX "multivector"
-#define SLAW_VECTOR_TAG      (yaml_char_t *) SLAW_TAG_PREFIX "vector"
-#define SLAW_COMPLEX_TAG     (yaml_char_t *) SLAW_TAG_PREFIX "complex"
-#define SLAW_NULL_TAG        (yaml_char_t *) YAML_TAG_PREFIX "null"
-#define SLAW_STRING_TAG      (yaml_char_t *) YAML_TAG_PREFIX "str"
-#define SLAW_PROTEIN_TAG     (yaml_char_t *) SLAW_TAG_PREFIX "protein"
-#define SLAW_NONSTD_TAG      (yaml_char_t *) SLAW_TAG_PREFIX "nonstd"
-#define SLAW_CONS_TAG        (yaml_char_t *) SLAW_TAG_PREFIX "cons"
-#define SLAW_BOOL_TAG        (yaml_char_t *) YAML_TAG_PREFIX "bool"
-#define SLAW_BINARY_TAG      (yaml_char_t *) YAML_TAG_PREFIX "binary"
-#define SLAW_BADUTF8_TAG     (yaml_char_t *) SLAW_TAG_PREFIX "badutf8"
+#define SLAW_VECTOR_TAG (yaml_char_t *) SLAW_TAG_PREFIX "vector"
+#define SLAW_COMPLEX_TAG (yaml_char_t *) SLAW_TAG_PREFIX "complex"
+#define SLAW_NULL_TAG (yaml_char_t *) YAML_TAG_PREFIX "null"
+#define SLAW_STRING_TAG (yaml_char_t *) YAML_TAG_PREFIX "str"
+#define SLAW_PROTEIN_TAG (yaml_char_t *) SLAW_TAG_PREFIX "protein"
+#define SLAW_NONSTD_TAG (yaml_char_t *) SLAW_TAG_PREFIX "nonstd"
+#define SLAW_CONS_TAG (yaml_char_t *) SLAW_TAG_PREFIX "cons"
+#define SLAW_BOOL_TAG (yaml_char_t *) YAML_TAG_PREFIX "bool"
+#define SLAW_BINARY_TAG (yaml_char_t *) YAML_TAG_PREFIX "binary"
+#define SLAW_BADUTF8_TAG (yaml_char_t *) SLAW_TAG_PREFIX "badutf8"
 
 /* If you were to read the YAML spec:
  *
@@ -60,7 +60,8 @@
  */
 #define SLAW_BROKEN_STRING_TAG (yaml_char_t *) YAML_TAG_PREFIX "string"
 
-typedef enum sly_plain_scalar_type {
+typedef enum sly_plain_scalar_type
+{
   SLY_SCALAR_NULL,
   SLY_SCALAR_BOOL,
   SLY_SCALAR_10,
@@ -388,10 +389,11 @@ static unt64 base64_to_bin_convert (unt64 base64_len, const char *base64,
   return idst;
 }
 
-typedef enum {
-  NOT_IN_A_MAP         = 10,
+typedef enum
+{
+  NOT_IN_A_MAP = 10,
   INSIDE_UNORDERED_MAP = 20,
-  INSIDE_ORDERED_MAP   = 30
+  INSIDE_ORDERED_MAP = 30
 } mappiness;
 
 typedef struct sly_emitter_info
@@ -640,9 +642,8 @@ static ob_retort sly_begin_map (void *cookie, int64 unused)
       ob_retort err = info_push (info, INSIDE_ORDERED_MAP);
       if (err < OB_OK)
         return err;
-      if (yaml_sequence_start_event_initialize (&event, NULL, SLAW_OMAP_TAG,
-                                                false,
-                                                YAML_BLOCK_SEQUENCE_STYLE)
+      if (yaml_sequence_start_event_initialize (
+            &event, NULL, SLAW_OMAP_TAG, false, YAML_BLOCK_SEQUENCE_STYLE)
           && yaml_emitter_emit (emitter, &event))
         return OB_OK;
       else
@@ -877,20 +878,18 @@ static ob_retort sly_handle_string (void *cookie, const char *utf8, int64 len)
 
       base64_len = bin_to_base64_convert (len, (byte *) utf8, buf_len, b64buf);
 
-      ysei =
-        yaml_scalar_event_initialize (&event, NULL, SLAW_BADUTF8_TAG,
-                                      (yaml_char_t *) b64buf, base64_len, false,
-                                      false, YAML_LITERAL_SCALAR_STYLE);
+      ysei = yaml_scalar_event_initialize (
+        &event, NULL, SLAW_BADUTF8_TAG, (yaml_char_t *) b64buf, base64_len,
+        false, false, YAML_LITERAL_SCALAR_STYLE);
     }
   else
     {
       if (multiline)
         style = YAML_LITERAL_SCALAR_STYLE;
 
-      ysei = yaml_scalar_event_initialize (&event, NULL, SLAW_STRING_TAG,
-                                           (yaml_char_t *) utf8, len,
-                                           (style == YAML_PLAIN_SCALAR_STYLE),
-                                           true, style);
+      ysei = yaml_scalar_event_initialize (
+        &event, NULL, SLAW_STRING_TAG, (yaml_char_t *) utf8, len,
+        (style == YAML_PLAIN_SCALAR_STYLE), true, style);
     }
 
   if (!ysei)
@@ -930,10 +929,9 @@ static ob_retort sly_handle_int (void *cookie, int64 val, int bits)
 
   snprintf (tag, sizeof (tag), "%si%d", SLAW_TAG_PREFIX, bits);
   snprintf (buf, sizeof (buf), "%" OB_FMT_64 "d", val);
-  if (yaml_scalar_event_initialize (&event, NULL, (yaml_char_t *) tag,
-                                    (yaml_char_t *) buf, strlen (buf),
-                                    !info->tag_numbers, false,
-                                    YAML_PLAIN_SCALAR_STYLE)
+  if (yaml_scalar_event_initialize (
+        &event, NULL, (yaml_char_t *) tag, (yaml_char_t *) buf, strlen (buf),
+        !info->tag_numbers, false, YAML_PLAIN_SCALAR_STYLE)
       && yaml_emitter_emit (emitter, &event))
     return OB_OK;
   else
@@ -960,10 +958,9 @@ static ob_retort sly_handle_unt (void *cookie, unt64 val, int bits)
       snprintf (tag, sizeof (tag), "%su%d", SLAW_TAG_PREFIX, bits);
       snprintf (buf, sizeof (buf), "%" OB_FMT_64 "u", val);
     }
-  if (yaml_scalar_event_initialize (&event, NULL, (yaml_char_t *) tag,
-                                    (yaml_char_t *) buf, strlen (buf),
-                                    (bits == 1 || !info->tag_numbers), false,
-                                    YAML_PLAIN_SCALAR_STYLE)
+  if (yaml_scalar_event_initialize (
+        &event, NULL, (yaml_char_t *) tag, (yaml_char_t *) buf, strlen (buf),
+        (bits == 1 || !info->tag_numbers), false, YAML_PLAIN_SCALAR_STYLE)
       && yaml_emitter_emit (emitter, &event))
     return OB_OK;
   else
@@ -1001,10 +998,9 @@ static ob_retort sly_handle_float (void *cookie, float64 val, int bits)
         break;
     }
 
-  if (yaml_scalar_event_initialize (&event, NULL, (yaml_char_t *) tag,
-                                    (yaml_char_t *) buf, strlen (buf),
-                                    !info->tag_numbers, false,
-                                    YAML_PLAIN_SCALAR_STYLE)
+  if (yaml_scalar_event_initialize (
+        &event, NULL, (yaml_char_t *) tag, (yaml_char_t *) buf, strlen (buf),
+        !info->tag_numbers, false, YAML_PLAIN_SCALAR_STYLE)
       && yaml_emitter_emit (emitter, &event))
     return OB_OK;
   else
@@ -1213,42 +1209,42 @@ static ob_retort sly_write_slaw_to_yaml (sly_emitter_info *emitter, bslaw s)
 
 // yaml => events
 
-#define SE_ARRAY        OB_CONST_U64 (0x32b9c7ec210c1a04)
-#define SE_BADUTF8      OB_CONST_U64 (0xa71e08969f161fb7)
-#define SE_BINARY       OB_CONST_U64 (0x5cafcc4621b348fa)
-#define SE_BOOL         OB_CONST_U64 (0xb6492c832b82f189)
-#define SE_COMPLEX      OB_CONST_U64 (0x2195c54d76476112)
-#define SE_CONS         OB_CONST_U64 (0xf7b4a5d51438b792)
-#define SE_DESCRIPS     OB_CONST_U64 (0x3f8d4bbcea903711)
-#define SE_F32          OB_CONST_U64 (0x479db3b52758c108)
-#define SE_F64          OB_CONST_U64 (0xcd876fe462578c4f)
-#define SE_I16          OB_CONST_U64 (0xa8024548a1ca2305)
-#define SE_I32          OB_CONST_U64 (0xa489c4c31b630c5a)
-#define SE_I64          OB_CONST_U64 (0xc940065b925d3a15)
-#define SE_I8           OB_CONST_U64 (0xa266b0470338e398)
-#define SE_INGESTS      OB_CONST_U64 (0x16a60446ba1f5119)
-#define SE_MAP          OB_CONST_U64 (0xb17678ff2f939aa2)
-#define SE_MULTIVECTOR  OB_CONST_U64 (0x5b6eb1410fe7bd04)
+#define SE_ARRAY OB_CONST_U64 (0x32b9c7ec210c1a04)
+#define SE_BADUTF8 OB_CONST_U64 (0xa71e08969f161fb7)
+#define SE_BINARY OB_CONST_U64 (0x5cafcc4621b348fa)
+#define SE_BOOL OB_CONST_U64 (0xb6492c832b82f189)
+#define SE_COMPLEX OB_CONST_U64 (0x2195c54d76476112)
+#define SE_CONS OB_CONST_U64 (0xf7b4a5d51438b792)
+#define SE_DESCRIPS OB_CONST_U64 (0x3f8d4bbcea903711)
+#define SE_F32 OB_CONST_U64 (0x479db3b52758c108)
+#define SE_F64 OB_CONST_U64 (0xcd876fe462578c4f)
+#define SE_I16 OB_CONST_U64 (0xa8024548a1ca2305)
+#define SE_I32 OB_CONST_U64 (0xa489c4c31b630c5a)
+#define SE_I64 OB_CONST_U64 (0xc940065b925d3a15)
+#define SE_I8 OB_CONST_U64 (0xa266b0470338e398)
+#define SE_INGESTS OB_CONST_U64 (0x16a60446ba1f5119)
+#define SE_MAP OB_CONST_U64 (0xb17678ff2f939aa2)
+#define SE_MULTIVECTOR OB_CONST_U64 (0x5b6eb1410fe7bd04)
 #define SE_NON_SPECIFIC OB_CONST_U64 (0x095934e7f55b39ba)
-#define SE_NONSTD       OB_CONST_U64 (0xd70c69f2b823fb40)
-#define SE_NULL         OB_CONST_U64 (0x9e34c34e89b60f38)
-#define SE_OMAP         OB_CONST_U64 (0x42443404839a2550)
-#define SE_PROTEIN      OB_CONST_U64 (0xdf8a6b35e9acd602)
-#define SE_RUDE_DATA    OB_CONST_U64 (0xf5cb44dedc2dd3d4)
-#define SE_SEQ          OB_CONST_U64 (0xd7ec31d8a099ef3c)
-#define SE_STRING       OB_CONST_U64 (0x2e7062203251384f)
-#define SE_STR          OB_CONST_U64 (0x6e17023b1ba5ddbf)
-#define SE_U16          OB_CONST_U64 (0x2cdc5570e3b4f4c0)
-#define SE_U32          OB_CONST_U64 (0xa1d53e6f55db8ac8)
-#define SE_U64          OB_CONST_U64 (0x2c67cbce14289d59)
-#define SE_U8           OB_CONST_U64 (0x9cdaf818f6756e1a)
-#define SE_VECTOR       OB_CONST_U64 (0x64fdc5a5ca6cd3c6)
+#define SE_NONSTD OB_CONST_U64 (0xd70c69f2b823fb40)
+#define SE_NULL OB_CONST_U64 (0x9e34c34e89b60f38)
+#define SE_OMAP OB_CONST_U64 (0x42443404839a2550)
+#define SE_PROTEIN OB_CONST_U64 (0xdf8a6b35e9acd602)
+#define SE_RUDE_DATA OB_CONST_U64 (0xf5cb44dedc2dd3d4)
+#define SE_SEQ OB_CONST_U64 (0xd7ec31d8a099ef3c)
+#define SE_STRING OB_CONST_U64 (0x2e7062203251384f)
+#define SE_STR OB_CONST_U64 (0x6e17023b1ba5ddbf)
+#define SE_U16 OB_CONST_U64 (0x2cdc5570e3b4f4c0)
+#define SE_U32 OB_CONST_U64 (0xa1d53e6f55db8ac8)
+#define SE_U64 OB_CONST_U64 (0x2c67cbce14289d59)
+#define SE_U8 OB_CONST_U64 (0x9cdaf818f6756e1a)
+#define SE_VECTOR OB_CONST_U64 (0x64fdc5a5ca6cd3c6)
 
 /* keep track of our element, position, and context
  * using a stack of v3unt64. */
-#define CURRENT_ELEMENT  x
+#define CURRENT_ELEMENT x
 #define CURRENT_POSITION y
-#define CURRENT_CONTEXT  z
+#define CURRENT_CONTEXT z
 
 /* All this does is call ob_city_hash64 on a NUL-terminated string. */
 static inline unt64 sly_hash (const yaml_char_t *s)
@@ -1348,9 +1344,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
               {
                 if (event.data.scalar.style == YAML_PLAIN_SCALAR_STYLE)
                   {
-                    plainTyp = sly_classify_plain ((const char *)
-                                                     event.data.scalar.value,
-                                                   event.data.scalar.length);
+                    plainTyp = sly_classify_plain (
+                      (const char *) event.data.scalar.value,
+                      event.data.scalar.length);
                     switch (plainTyp)
                       {
                         case SLY_SCALAR_NULL:
@@ -1386,8 +1382,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                 case SE_BINARY:
                   if (!prev || prev->CURRENT_CONTEXT != SE_RUDE_DATA)
                     {
-                      OB_LOG_ERROR_CODE (0x2000500d, "slaw yaml: got %s in "
-                                                     "unexpected place\n",
+                      OB_LOG_ERROR_CODE (0x2000500d,
+                                         "slaw yaml: got %s in "
+                                         "unexpected place\n",
                                          event.data.scalar.tag);
                       err = SLAW_PARSING_BADNESS;
                       break;
@@ -1401,10 +1398,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                     unt64 len;
                     unt8 *buf = (unt8 *) MAYBE_MALLOC (buflen);
                     memset (buf, 0, buflen);
-                    len = base64_to_bin_convert (event.data.scalar.length,
-                                                 (const char *)
-                                                   event.data.scalar.value,
-                                                 buflen, buf);
+                    len = base64_to_bin_convert (
+                      event.data.scalar.length,
+                      (const char *) event.data.scalar.value, buflen, buf);
                     if (h == SE_NONSTD)
                       err = handler->handle_nonstd_protein (cookie, buf, len);
                     else if (h == SE_BADUTF8)
@@ -1435,9 +1431,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                     buf[event.data.scalar.length] = 0;
 
                     if (plainTyp == SLY_SCALAR_UNDECIDED)
-                      plainTyp = sly_classify_plain ((const char *)
-                                                       event.data.scalar.value,
-                                                     event.data.scalar.length);
+                      plainTyp = sly_classify_plain (
+                        (const char *) event.data.scalar.value,
+                        event.data.scalar.length);
 
                     switch (plainTyp)
                       {
@@ -1480,9 +1476,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                     int bits = 8;
 
                     if (plainTyp == SLY_SCALAR_UNDECIDED)
-                      plainTyp = sly_classify_plain ((const char *)
-                                                       event.data.scalar.value,
-                                                     event.data.scalar.length);
+                      plainTyp = sly_classify_plain (
+                        (const char *) event.data.scalar.value,
+                        event.data.scalar.length);
 
                     parse_integer ((const char *) event.data.scalar.value,
                                    event.data.scalar.length, &number, plainTyp);
@@ -1499,14 +1495,11 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                         /* fall through */
                         case SE_I8:
                           if (number.negative)
-                            err =
-                              handler->handle_int (cookie,
-                                                   -(int64) number.magnitude,
-                                                   bits);
+                            err = handler->handle_int (
+                              cookie, -(int64) number.magnitude, bits);
                           else
-                            err = handler->handle_int (cookie,
-                                                       (int64) number.magnitude,
-                                                       bits);
+                            err = handler->handle_int (
+                              cookie, (int64) number.magnitude, bits);
                           break;
                         case SE_U64:
                           bits *= 2;
@@ -1543,11 +1536,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                           }
                         else
                           {
-                            slaw tmp =
-                              slaw_string_from_substring ((const char *) event
-                                                            .data.scalar.value,
-                                                          event.data.scalar
-                                                            .length);
+                            slaw tmp = slaw_string_from_substring (
+                              (const char *) event.data.scalar.value,
+                              event.data.scalar.length);
                             OB_LOG_ERROR_CODE (0x2000500e,
                                                "slaw yaml: expected 'ingests', "
                                                "'descrips',\n"
@@ -1559,10 +1550,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                       }
                     else
                       {
-                        err = handler->handle_string (cookie,
-                                                      (const char *)
-                                                        event.data.scalar.value,
-                                                      event.data.scalar.length);
+                        err = handler->handle_string (
+                          cookie, (const char *) event.data.scalar.value,
+                          event.data.scalar.length);
                       }
                   }
                   break;
@@ -1648,10 +1638,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
                         tag++;
                         bits = atoi (tag);
 
-                        err =
-                          handler->handle_empty_array (cookie, vecsize, isMVec,
-                                                       isComplex, isUnsigned,
-                                                       isFloat, bits);
+                        err = handler->handle_empty_array (
+                          cookie, vecsize, isMVec, isComplex, isUnsigned,
+                          isFloat, bits);
                         break;
                       }
                   }
@@ -1810,8 +1799,9 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
             // I don't think it should be possible for this to occur,
             // so I'm going to call it a programming error, rather than
             // a user error.
-            OB_LOG_BUG_CODE (0x20005011, "slaw yaml: yaml parser produced "
-                                         "strange event %d\n",
+            OB_LOG_BUG_CODE (0x20005011,
+                             "slaw yaml: yaml parser produced "
+                             "strange event %d\n",
                              event.type);
             err = SLAW_PARSING_BADNESS;
             break;
@@ -1845,7 +1835,7 @@ static ob_retort sly_parse (void *cookie, const slaw_handler *handler,
             }
         }
 
-    badness:
+badness:
       yaml_event_delete (&event);
 
       if (popped)
@@ -1906,8 +1896,9 @@ static ob_retort write_comment_header (slaw_write_handler h)
   char *gsv = ob_get_version (OB_VERSION_OF_GSPEAK);
   char *cfg = ob_get_version (OB_BUILD_CONFIGURATION);
   slaw s = NULL;
-  if (gsv && cfg && (s = slaw_string_format ("%s (%s), libYaml %s", gsv, cfg,
-                                             yaml_get_version_string ())))
+  if (gsv && cfg
+      && (s = slaw_string_format ("%s (%s), libYaml %s", gsv, cfg,
+                                  yaml_get_version_string ())))
     {
       slaw str = slaw_string_format ("# %s - %s\n", ob_get_prog_name (),
                                      slaw_string_emit (s));
@@ -2019,11 +2010,9 @@ static ob_retort yaml_output_write_slaw (slaw_output f, bslaw s)
 
   bool directives = holder->emitter.directives;
 
-  if (!(yaml_document_start_event_initialize (&event,
-                                              (directives ? &yvers : NULL),
-                                              (directives ? &tdir : NULL),
-                                              (directives ? (1 + &tdir) : NULL),
-                                              false)
+  if (!(yaml_document_start_event_initialize (
+          &event, (directives ? &yvers : NULL), (directives ? &tdir : NULL),
+          (directives ? (1 + &tdir) : NULL), false)
         && yaml_emitter_emit (&(holder->emitter.emitter), &event)))
     {
       return PRINT_YAML_EMIT_ERROR (&(holder->emitter.emitter));
@@ -2282,7 +2271,8 @@ void private_test_yaml_hash (void)
   return;
 
 fail:
-  OB_FATAL_BUG_CODE (0x2000500b, "for '%s', got %" OB_FMT_64 "u"
-                                 " but expected %" OB_FMT_64 "u\n",
+  OB_FATAL_BUG_CODE (0x2000500b,
+                     "for '%s', got %" OB_FMT_64 "u"
+                     " but expected %" OB_FMT_64 "u\n",
                      str, got, expected);
 }

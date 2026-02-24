@@ -14,12 +14,12 @@
 
 #include <stdlib.h>
 
-static const char *const words[] =
-  {"mortals",    "foolish",       "pallor",      "cadaverous",  "aura",
-   "foreboding", "metamorphosis", "disquieting", "observation", "dismaying",
-   "no",         "windows",       "no",          "doors",       "challenge",
-   "chilling",   "way",           "out",         "way",         "my",
-   "frighten",   "prematurely"};
+static const char *const words[] = {
+  "mortals",    "foolish",       "pallor",      "cadaverous",  "aura",
+  "foreboding", "metamorphosis", "disquieting", "observation", "dismaying",
+  "no",         "windows",       "no",          "doors",       "challenge",
+  "chilling",   "way",           "out",         "way",         "my",
+  "frighten",   "prematurely"};
 
 static const int nwords = sizeof (words) / sizeof (words[0]);
 #define NPAIRS ((sizeof (words) / sizeof (words[0])) / 2)
@@ -48,9 +48,8 @@ static void verify (const char *id, bool (*func) (bslaw s), slaw x, int n,
                          id);
 
   if ((c = slaw_list_count (x)) != n)
-    OB_FATAL_ERROR_CODE (0x20307004,
-                         "%s: expected count %d but got %" OB_FMT_64 "d\n", id,
-                         n, c);
+    OB_FATAL_ERROR_CODE (
+      0x20307004, "%s: expected count %d but got %" OB_FMT_64 "d\n", id, n, c);
 
   DO_CHECK ("mortals", "foolish");
   DO_CHECK ("pallor", "cadaverous");

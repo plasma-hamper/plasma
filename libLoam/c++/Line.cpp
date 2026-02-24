@@ -10,9 +10,7 @@ using namespace oblong::loam;
 static const Vect zaxis (0.0, 0.0, 1.0);
 
 
-Line::Line () : dir (zaxis)
-{
-}
+Line::Line () : dir (zaxis) {}
 
 Line::Line (const Vect &pointOnLine, const Vect &direction)
     : point (pointOnLine), dir (direction)

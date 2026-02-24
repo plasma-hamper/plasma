@@ -29,8 +29,9 @@
   expected = strlen (str);                                                     \
   really = slaw_string_emit_length (x);                                        \
   if (really != expected)                                                      \
-    OB_FATAL_ERROR_CODE (0x20315004, "length was %" OB_FMT_64                  \
-                                     "d, but expected %" OB_FMT_64 "d\n",      \
+    OB_FATAL_ERROR_CODE (0x20315004,                                           \
+                         "length was %" OB_FMT_64                              \
+                         "d, but expected %" OB_FMT_64 "d\n",                  \
                          really, expected);                                    \
   actual = slaw_string_emit (x);                                               \
   if (!actual)                                                                 \
@@ -157,18 +158,22 @@ int main (int argc, char **argv)
   EXPECT ("abcdefghijklmnopqrstuvwxyz7890123");
 
   // is_valid_utf8 tests
-  s = slaw_string_format("%s", "it was the best of times it was the blurst of times");
-  if (!slaw_string_is_valid_utf8((bslaw)s))
-    OB_FATAL_ERROR_CODE(0x20315010, "'%s' is incorrectly marked as an invalid utf8 string\n",
-                        slaw_string_emit(s));
-  slaw_free(s);
+  s = slaw_string_format (
+    "%s", "it was the best of times it was the blurst of times");
+  if (!slaw_string_is_valid_utf8 ((bslaw) s))
+    OB_FATAL_ERROR_CODE (
+      0x20315010, "'%s' is incorrectly marked as an invalid utf8 string\n",
+      slaw_string_emit (s));
+  slaw_free (s);
 
-  s = slaw_string_format("%s", "\xc3\x28 was the best of times it was the blurst of times");
+  s = slaw_string_format (
+    "%s", "\xc3\x28 was the best of times it was the blurst of times");
 
-  if (slaw_string_is_valid_utf8((bslaw)s))
-    OB_FATAL_ERROR_CODE(0x20315011, "'%s' is incorrectly marked as a valid utf8 string\n",
-                        slaw_string_emit(s));
-  slaw_free(s);
+  if (slaw_string_is_valid_utf8 ((bslaw) s))
+    OB_FATAL_ERROR_CODE (0x20315011,
+                         "'%s' is incorrectly marked as a valid utf8 string\n",
+                         slaw_string_emit (s));
+  slaw_free (s);
 
   return EXIT_SUCCESS;
 }

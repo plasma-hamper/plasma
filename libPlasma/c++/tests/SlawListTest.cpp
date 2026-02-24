@@ -40,8 +40,8 @@ class SlawListTest : public SlawTypesTest
     EXPECT_EQ (clst, cclst);
     EXPECT_TRUE (lst.Nth (c.Count ()).IsNull ());
     EXPECT_TRUE (lst.Nth (c.Count () + 10).IsNull ());
-    EXPECT_TRUE (lst.Nth (-int(c.Count () + 1)).IsNull ());
-    EXPECT_TRUE (lst.Nth (-int(c.Count () + 10)).IsNull ());
+    EXPECT_TRUE (lst.Nth (-int (c.Count () + 1)).IsNull ());
+    EXPECT_TRUE (lst.Nth (-int (c.Count () + 10)).IsNull ());
     c.CheckElements (lst);
     for (int64 i = 0, n = int64 (c.Count ()); i < n; ++i)
       {
@@ -301,13 +301,10 @@ TEST (SlawListBasicTest, Equality)
 
 TEST (SlawListBasicTest, ExplicitConstruction)
 {
-  slaw sls[7] = {make_slaw (3),
-                 make_slaw ("foo"),
-                 make_slaw (3.14),
-                 make_slaw ("bar"),
-                 make_slaw (int64 (2000)),
-                 make_slaw (unt32 (2)),
-                 make_slaw ("baz")};
+  slaw sls[7] = {
+    make_slaw (3),     make_slaw ("foo"),        make_slaw (3.14),
+    make_slaw ("bar"), make_slaw (int64 (2000)), make_slaw (unt32 (2)),
+    make_slaw ("baz")};
 
   Slaw Sls[7];
   for (size_t i = 0; i < 7; ++i)
