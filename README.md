@@ -57,13 +57,22 @@ This repo is mounted to `/work` within the shell. The plasma binaries are on the
 
 Natively building Plasma requires these dependencies:
 
-- ninja
-- cmake
-- libyaml
-- boost
-- icu4c
-- openssl
-- libavahi-client-dev (on linux)
+* Build system dependencies (mandatory)
+  - cmake
+  - ninja
+  - pkg-config
+* libLoam/c and libPlasma/c dependencies (optional)
+  - libyaml
+  - openssl
+* libLoam/c++ and libPlasma/c++ dependencies (mandatory if you want to build the c++ libraries)
+  - boost
+  - icu4c
+  - libavahi-client-dev (on linux)
+
+So, if you only want to build libLoam/c and libPlasma/c, and don't
+need support for YAML or TLS, then you don't need any dependencies,
+other than the build system dependencies (cmake, ninja, and
+pkg-config).
 
 Use your package manager (brew, apt, yum, zypper, etc) to install them.
 
