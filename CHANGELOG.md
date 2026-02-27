@@ -106,3 +106,7 @@
 
 * Replace uses of `sprintf()` with `snprintf()` instead.
   [#22](https://github.com/plasma-hamper/plasma/pull/22)
+
+* Make most dependencies optional, and change what is built accordingly.
+  Allow building the C libraries without the C++ libraries.
+  [#23](https://github.com/plasma-hamper/plasma/pull/23)

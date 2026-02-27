@@ -79,8 +79,8 @@ else()
   list(APPEND Plasma_SOURCES nossl.c)
 endif()
 
-if ("${YAML_LIB}" STREQUAL YAML_LIB-NOTFOUND)
-  message(WARNING "YAML not found, using stub")
+if(NOT YAML_LIB)
+  message(STATUS "libyaml not found, using YAML stub")
   list(APPEND Plasma_SOURCES slaw-yaml-stub.c)
 else()
   list(APPEND Plasma_SOURCES slaw-yaml.c)
@@ -160,12 +160,11 @@ set(
   p-info
   p-resize
 )
-if (NOT YAML_LIB_NOTFOUND)
-LIST(APPEND
-  Plasma_PROGRAMS
-  bin2yaml
-  yaml2bin
-)
+if(YAML_LIB)
+  list(APPEND Plasma_PROGRAMS
+    bin2yaml
+    yaml2bin
+  )
 endif()
 
 if (WIN32)

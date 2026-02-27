@@ -39,6 +39,10 @@ transported and diffused.
 
 Both loam and plasma consist of a core library written in C, and an optional library written in C++.  The C++ library provides a C++ interface to the C library, and in some cases also adds additional functionality.
 
+Building the C++ libraries is optional, based on the `BUILD_CXX_LIBS`
+CMake option.  `BUILD_CXX_LIBS` defaults to `ON`, unless the necessary
+dependencies for the C++ libraries are not found.
+
 # building the thing
 
 ## Docker and Make Build
@@ -57,13 +61,22 @@ This repo is mounted to `/work` within the shell. The plasma binaries are on the
 
 Natively building Plasma requires these dependencies:
 
-- ninja
-- cmake
-- libyaml
-- boost
-- icu4c
-- openssl
-- libavahi-client-dev (on linux)
+* Build system dependencies (mandatory)
+  - cmake
+  - ninja
+  - pkg-config
+* libLoam/c and libPlasma/c dependencies (optional)
+  - libyaml
+  - openssl
+* libLoam/c++ and libPlasma/c++ dependencies (mandatory if you want to build the c++ libraries)
+  - boost
+  - icu4c
+  - libavahi-client-dev (on linux)
+
+So, if you only want to build libLoam/c and libPlasma/c, and don't
+need support for YAML or TLS, then you don't need any dependencies,
+other than the build system dependencies (cmake, ninja, and
+pkg-config).
 
 Use your package manager (brew, apt, yum, zypper, etc) to install them.
 
