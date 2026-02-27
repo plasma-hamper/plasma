@@ -39,6 +39,10 @@ transported and diffused.
 
 Both loam and plasma consist of a core library written in C, and an optional library written in C++.  The C++ library provides a C++ interface to the C library, and in some cases also adds additional functionality.
 
+Building the C++ libraries is optional, based on the `BUILD_CXX_LIBS`
+CMake option.  `BUILD_CXX_LIBS` defaults to `ON`, unless the necessary
+dependencies for the C++ libraries are not found.
+
 # building the thing
 
 ## Docker and Make Build
