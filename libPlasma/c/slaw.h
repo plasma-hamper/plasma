@@ -1007,6 +1007,18 @@ OB_PLASMA_API void slaw_spew_overview (bslaw s, FILE *whither,
                                        const char *prolo);
 
 /**
+ * Same as slaw_spew_overview_to_string(), but with an additional
+ * \a flags argument.
+ *
+ * \a flags can be a combination of SLAW_SPEW_FLAG constants, "or"-ed
+ * together.
+ */
+OB_PLASMA_API void slaw_spew_overview_ex (bslaw       s,
+                                          FILE       *whither,
+                                          unt32       flags,
+                                          const char *prolo);
+
+/**
  * Print a human-readable representation of the specified slaw to stderr.
  */
 OB_PLASMA_API void slaw_spew_overview_to_stderr (bslaw s);
@@ -1016,6 +1028,73 @@ OB_PLASMA_API void slaw_spew_overview_to_stderr (bslaw s);
  * given slaw, as would be printed by slaw_spew_overview_to_stderr().
  */
 OB_PLASMA_API slaw slaw_spew_overview_to_string (bslaw s);
+
+/**
+ * Same as slaw_spew_overview_to_string(), but with two additional
+ * arguments.
+ *
+ * \a flags can be a combination of SLAW_SPEW_FLAG constants, "or"-ed
+ * together.
+ *
+ * If \a prolo is non-NULL, then every line of the spew is
+ * prefixed with \a prolo.  (NULL is the default used by the
+ * slaw_spew functions that don't take a \a prolo argument.)
+ */
+OB_PLASMA_API slaw slaw_spew_overview_to_string_ex (bslaw       s,
+                                                    unt32       flags,
+                                                    const char *prolo);
+
+/**
+ * User-supplied function which can be passed to
+ * slaw_spew_overview_to_func().
+ *
+ * The function is given a NUL-terminated string, and also the
+ * length of that string (not counting the NUL-terminator).
+ *
+ * If the function returns a failure retort, the function will not
+ * be called anymore, and the retort will be returned by
+ * slaw_spew_overview_to_func().
+ */
+typedef ob_retort (*slaw_spew_func) (void       *cookie,
+                                     const char *str,
+                                     size_t      len);
+
+/**
+ * Same as slaw_spew_overview_to_string_ex(), but instead of returning
+ * a string, it calls \a func on chunks of output.  The \a cookie
+ * argument is passed to \a func, as a way to keep track of whatever
+ * data the function wants to.
+ *
+ * \a size_hint is a hint about the size of chunks that \func would
+ * like to be called with.  However, this is only a hint, and \a func
+ * may be called with larger or smaller chunks, so \a func must be
+ * prepared to handle chunks of any size.  To use a default chunk
+ * size, specify 0.
+ */
+OB_PLASMA_API ob_retort slaw_spew_overview_to_func (bslaw          s,
+                                                    slaw_spew_func func,
+                                                    void          *cookie,
+                                                    size_t         size_hint,
+                                                    unt32          flags,
+                                                    const char    *prolo);
+
+/**
+ * Annotates subslawx with their byte offset relative to the top-level
+ * slaw, rather than the absolute address.
+ */
+#define SLAW_SPEW_FLAG_REL_OFF        0x0001
+
+/**
+ * When displaying rude data, include ASCII in addition to hex bytes,
+ * similar to the "hd" command.  Default is to display hex bytes only.
+ */
+#define SLAW_SPEW_FLAG_RUDE_ASCII     0x0002
+
+/**
+ * When displaying slaw strings, show escape sequences for unprintable
+ * characters.
+ */
+#define SLAW_SPEW_FLAG_ESCAPE_STRINGS 0x0004
 //@}
 
 #ifdef __cplusplus

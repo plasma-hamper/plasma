@@ -144,7 +144,7 @@ ninja install
 Currently, the following invocation should pass:
 
 ```
-YT_ONLY_FIXTURES="local;tcp;tcpo" ctest --progress -E spew-test
+YT_ONLY_FIXTURES="local;tcp;tcpo" ctest --progress
 ```
 
 For more information about running tests, see [TESTS.md](TESTS.md).

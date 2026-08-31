@@ -509,6 +509,34 @@ class OB_PLASMAXX_API Slaw
   };
 
   /**
+   * Options that can be specified to the "Spew" methods.
+   */
+  class SpewOptions
+  {
+   public:
+    SpewOptions ();
+    explicit SpewOptions (unt32 flags);
+
+    SpewOptions &RelativeOffset (bool use = true);
+    SpewOptions &RudeAscii      (bool use = true);
+    SpewOptions &EscapeStrings  (bool use = true);
+
+    SpewOptions &AddFlags (unt32 flags);
+    SpewOptions &RemoveFlags (unt32 flags);
+    SpewOptions &SetFlags (unt32 flags);
+    unt32        GetFlags () const;
+
+    SpewOptions &Prefix (const Str& prolo);
+    Str          GetPrefix () const;
+
+   private:
+    SpewOptions &ChangeFlag (unt32 flag, bool use);
+
+    unt32 flags_;
+    Str   prolo_;
+  };
+
+  /**
    * Serializes this Slaw to a file with the given @a path, whose old
    * contents is deleted if it already exists. By default, the output
    * is human readable YAML, but you can set @a format to @c
@@ -567,15 +595,37 @@ class OB_PLASMAXX_API Slaw
    * Slaw's contents to the given output stream.
    */
   void Spew (OStreamReference os) const;
+
+  /**
+   * Spew to an ostream, with options.
+   */
+  void Spew (OStreamReference os, const SpewOptions &opts) const;
+
   /**
    * and hey! how about a spew to olde-tyme unix files:
    */
   void Spew (FILE *ph) const;
+
+  /**
+   * Spew to a FILE*, with options.
+   */
+  void Spew (FILE *ph, const SpewOptions &opts) const;
+
   /**
    * Or even, because sometimes you're in the debugger and just
    * need this, straight to stderr?
    */
   void SpewToStderr () const;
+
+  /**
+   * Spew to a string.
+   */
+  Str SpewToString () const;
+
+  /**
+   * Spew to a string, with options.
+   */
+  Str SpewToString (const SpewOptions &opts) const;
   //@}
 
   /**

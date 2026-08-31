@@ -41,6 +41,7 @@ set(
   slaw-numerics.c
   slaw-ordering.c
   slaw-path.c
+  slaw-spew.c
   slaw-string.c
   slaw-v1.c
   slaw-walk.c

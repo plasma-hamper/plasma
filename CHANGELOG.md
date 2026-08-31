@@ -148,3 +148,20 @@
 
 * Fix bugs in `spew-test`, `aptest3`, and `diffGitStatusTest`.
   [#25](https://github.com/plasma-hamper/plasma/pull/25)
+
+* Add functions `slaw_spew_overview_ex()`,
+  `slaw_spew_overview_to_string_ex()`, and
+  `slaw_spew_overview_to_func()` to C Plasma, along with flags
+  `SLAW_SPEW_FLAG_REL_OFF`, `SLAW_SPEW_FLAG_RUDE_ASCII`, and
+  `SLAW_SPEW_FLAG_ESCAPE_STRINGS`.  These now allow more control over
+  spew output.
+  [#26](https://github.com/plasma-hamper/plasma/pull/26)
+
+* Add class `Slaw::SpewOptions` to C++ Plasma.  Add overloaded
+  `Spew()` methods which take `SpewOptions` as a second argument.
+  This exposes the new C Plasma capabilities to the C++ API.
+  [#26](https://github.com/plasma-hamper/plasma/pull/26)
+
+* Add `SpewToString()` methods to C++ Plasma.  This makes it easier to
+  spew directly to a `Str`.
+  [#26](https://github.com/plasma-hamper/plasma/pull/26)

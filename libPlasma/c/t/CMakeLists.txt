@@ -34,6 +34,7 @@ set(
   slumcat
   slypes
   spew-multi
+  test-spew-ex
   test_new_stuff
   test-boolean
   testcoerce

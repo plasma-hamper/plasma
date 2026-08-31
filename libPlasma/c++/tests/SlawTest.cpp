@@ -161,13 +161,39 @@ TEST (SlawTest1, Spew)
 {
   Slaw s = Slaw::Map ("type", Str ("Blank"), "num", (int32) 96);
   std::ostringstream silly_string;
-  s.Spew (silly_string);
+  s.Spew (silly_string, Slaw::SpewOptions (0));
   Str actual (silly_string.str ().c_str ());
-  Str expected ("#MAP(2)<\nKEY: slaw[xxx]: STR(4): \"type\"\n"
-                "VALUE: slaw[xxx]: STR(5): \"Blank\"\n"
-                "KEY: slaw[xxx]: STR(3): \"num\"\n"
-                "VALUE: slaw[xxx]: INT32 = 96\n>");
+  Str expected ("slaw[xxx]: MAP (2 elems): {\n"
+                " 1: slaw[xxx]: CONS:\n"
+                " 1:  L: slaw[xxx]: STR(4): \"type\"\n"
+                " 1:  R: slaw[xxx]: STR(5): \"Blank\"\n"
+                " 2: slaw[xxx]: CONS:\n"
+                " 2:  L: slaw[xxx]: STR(3): \"num\"\n"
+                " 2:  R: slaw[xxx]: INT32 = 96\n"
+                " }");
   actual.ReplaceAll ("slaw\\[\\d+[oq]\\.[0-9A-Fa-fxX]+\\]:", "slaw[xxx]:");
+  EXPECT_STREQ (expected, actual);
+}
+
+TEST (SlawTest1, SpewOptions)
+{
+  Slaw::SpewOptions opts;
+  opts.Prefix ("banana: ");
+
+  const char rude[] = "blech";
+  Slaw s (protein_from_ffr (slaw_nil(),
+                            slaw_nil(),
+                            rude, sizeof (rude)));
+
+  Str actual (s.SpewToString (opts));
+  Str expected ("banana: slaw[4o.0x00]: PROT: ((\n"
+                "banana: descrips:\n"
+                "banana: slaw[1o.0x10]: NIL.\n"
+                "banana: ingests:\n"
+                "banana: slaw[1o.0x18]: NIL.\n"
+                "banana: rude data: 6 bytes\n"
+                "banana:  62 6c 65 63 68 00                                 |blech.|\n"
+                "banana:  ))");
   EXPECT_STREQ (expected, actual);
 }
 
@@ -288,7 +314,7 @@ TEST (SlawTest1, Foreach)
   Slaw p (Slaw::List ("a", "b", "c"));
   for (const Slaw &descrip : p)
     {
-      descrip.Spew (os);
+      descrip.Spew (os, Slaw::SpewOptions (0));
       os << std::endl;
     }
   Str actual (os.str ().c_str ());

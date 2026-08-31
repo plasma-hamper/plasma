@@ -69,6 +69,7 @@ slaw tests:
 0x20318000 t/yaml-all-numeric.c
 0x20319000 t/yaml-options.c
 0x2031a000 t/test-pack.c
+0x2031b000 t/test-spew-ex.c
 
 pool tests:
 
