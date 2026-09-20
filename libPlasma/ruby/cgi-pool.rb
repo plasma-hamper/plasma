@@ -100,6 +100,15 @@ case path.size
 when 2
   pool = path[0]
   idx = path[1]
+# FIXME: these build a pool URI from path components, and assume the
+# host is a name or an IPv4 address.  A pool URI may also carry an IPv6
+# address, which has to be written in brackets so that the colons in it
+# aren't mistaken for the one before the port -- see parse_pseudo_uri()
+# in libPlasma/c/pool_tcp.c.  A v6 address arriving here would be
+# emitted bare, giving something like "tcp://::1:1234/foo", which won't
+# parse.  To fix, bracket the host when it contains a colon.  (Note
+# also that a bare address can't survive PATH_INFO's slash splitting
+# with a zone id, e.g. fe80::1%25eth0.)
 when 3
   pool = "tcp://#{path[0]}/#{path[1]}"
   idx = path[2]

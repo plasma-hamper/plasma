@@ -737,6 +737,13 @@ static ob_retort negotiate_version (pool_net_data *net,
     return OB_OK; /* this indicates a legacy connection */
   else if (net->net_version > POOL_TCP_VERSION_CURRENT)
     {
+      /* FIXME: these two messages join the host and the port with a
+       * colon, which reads badly for an IPv6 address, since it is
+       * made of colons itself: "::1:1234".  The bracketed form,
+       * "[::1]:1234", is what the rest of the world writes, and what
+       * get_socket_info() above already produces.  To fix, bracket
+       * the host here when it contains a colon.  Cosmetic: these are
+       * error messages, and nothing parses them. */
       if (net->net_version == 'H' && net->slaw_version == 'T')
         OB_LOG_ERROR_CODE (0x20108021, "%s:%s\n"
                                        "looks like it might be an http\n"

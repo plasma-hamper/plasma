@@ -100,6 +100,21 @@ int mainish (int argc, char **argv)
         slabu_of_strings_from_split (slaw_string_emit (slabu_list_nth (sb, 1)),
                                      "/");
       const char *host = slaw_string_emit (slabu_list_nth (sb2, 0));
+      /* FIXME: this takes the authority apart by splitting on ":" and
+       * expecting exactly two pieces, a host and a port.  That is only
+       * true of a name or an IPv4 address.  Pool URIs also accept an
+       * IPv6 address, written in brackets -- "tcp://[::1]:1234/foo" --
+       * which splits into five pieces, so the port comparison below is
+       * silently skipped, and then "host" is still "[" and the strcmp
+       * further down fails.
+       *
+       * Nothing hits this today, because get_url() in
+       * bld/cmake/yotest.in builds every fixture's TEST_POOL with the
+       * name "localhost".  But this is the first thing that would
+       * break if an IPv6 test fixture were ever added, so fix it then:
+       * split off the pool name, and if what's left starts with "[",
+       * take the host from inside the brackets and the port from after
+       * them. */
       slabu *sb3 = slabu_of_strings_from_split (host, ":");
       if (slabu_count (sb3) == 2)
         {

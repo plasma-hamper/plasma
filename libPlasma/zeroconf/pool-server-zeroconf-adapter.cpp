@@ -101,6 +101,18 @@ static Str CheckAndNormalizeAddress (const Str &addr)
 
   //  Must start with tcp://, have at least 3 characters' worth of hostname,
   //  some set of word chars and dots, and maybe a port at the end
+  //
+  //  FIXME: this pattern allows only a name or an IPv4 address.  Pool
+  //  URIs also accept an IPv6 address in brackets -- see
+  //  parse_pseudo_uri() in libPlasma/c/pool_tcp.c -- and this rejects
+  //  "tcp://[::1]:1234/" outright, since neither ':' nor '[' nor ']'
+  //  is a word character.  The ReplaceAll below, which strips the
+  //  port by matching ":\\d+" at the end, would also eat part of a
+  //  bare address.
+  //
+  //  The emitting side has the matching gap: PoolServer::MakePoolUri()
+  //  in PoolServer.cpp formats "%s://%s:%d/%s", so an IPv6 host would
+  //  come out unbracketed and ambiguous.  Fix both together.
   if (!a.Match ("^tcp://\\w{3,}[\\.\\w]*(:\\d+)?\\z"))
     return "";
 
