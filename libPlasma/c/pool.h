@@ -97,6 +97,7 @@ typedef struct pool_context_struct *pool_context;
  *   - pipeline/gripes
  *   - tcp://localhost/my_pool
  *   - tcp://mango:10000/my_pool
+ *   - tcp://[::1]:10000/my_pool   (an IPv6 address goes in brackets)
  *
  * The type string specifies what kind of pool you want to create,
  * e.g., "mmap".  This refers to the type of the pool on the host

@@ -57,9 +57,11 @@ int OREILLY_verify_callback (int ok, X509_STORE_CTX *store)
 // certificate like "*.example.com", but not a partial one like
 // "f*.example.com".
 //
-// "host" can also be an IPv4 literal, since pool URIs permit one; that's
-// what X509_check_ip_asc() is for.  A bracketed IPv6 literal never gets
-// this far, because parse_pseudo_uri() in pool_tcp.c can't parse one.
+// "host" can also be a literal address, IPv4 or IPv6, since pool URIs
+// permit either; that's what X509_check_ip_asc() is for.  An IPv6
+// literal is bracketed in the URI, but parse_pseudo_uri() in pool_tcp.c
+// strips the brackets, so what arrives here is the bare address, which
+// is the form X509_check_ip_asc() wants.
 //
 // Both functions return 1 on a match, 0 on a mismatch, and a negative
 // number if they couldn't tell (an internal error, or an argument that

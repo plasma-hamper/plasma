@@ -199,7 +199,9 @@ int main (int argc, char **argv)
           fprintf (stderr, "'%s' was not acceptable:\nA remote poolserver "
                            "URI should be of the form tcp://host[:port]/\n"
                            "e. g. tcp://redbean.oblong.com/ or "
-                           "tcp://squash.local:1234/\n",
+                           "tcp://squash.local:1234/\n"
+                           "An IPv6 address goes in brackets, "
+                           "e. g. tcp://[::1]:1234/\n",
                    server);
         }
       else

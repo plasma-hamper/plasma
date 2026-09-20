@@ -104,6 +104,12 @@ int main (int argc, char **argv)
   check (NULL, "IP:127.0.0.1", "127.0.0.2", false);
   check ("127.0.0.1", NULL, "127.0.0.1", true);
 
+  // Or by IPv6 address.  The brackets a pool URI puts around one of
+  // these are stripped by parse_pseudo_uri(), so what arrives here is
+  // the bare address.
+  check (NULL, "IP:::1", "::1", true);
+  check (NULL, "IP:::1", "::2", false);
+
   // Ordinary wildcards match one label, and only one.
   check (NULL, "DNS:*.example.com", "a.example.com", true);
   check (NULL, "DNS:*.example.com", "example.com", false);
