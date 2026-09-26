@@ -202,3 +202,8 @@
   routine for doing so, rather than using code taken from a book that
   is now 24 years old.
   [#30](https://github.com/plasma-hamper/plasma/pull/30)
+
+* Fix five places that didn't properly handle numeric IPv6 addresses
+  in a URI.  (They need to be in square brackets, to avoid the
+  ambiguity of the colons.)
+  [#31](https://github.com/plasma-hamper/plasma/pull/31)
