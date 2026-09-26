@@ -46,6 +46,7 @@ plasma_c_t_sources = [
   'test-string.c',
   'testvcoerce.c',
   'test-yaml.c',
+  'tls-hostname-test.c',
   'various-types.c',
   'yaml-all-numeric.c',
   'yaml-options.c',
@@ -114,6 +115,7 @@ plasma_c_ts = [
   'testcoerce.sh',
   'test-interop.sh',
   'testvcoerce.sh',
+  'tls-hostname-test',
   'yet-another-yaml-test.sh',
 ]
 

@@ -16,6 +16,10 @@
 #include "libLoam/c/ob-log.h"
 #include <openssl/x509v3.h>
 
+#if OPENSSL_VERSION_NUMBER < 0x10002000L
+#error "ob_ossl_cert_matches_host() needs X509_check_host(), OpenSSL >= 1.0.2"
+#endif
+
 int OREILLY_verify_callback (int ok, X509_STORE_CTX *store)
 {
   char issuer[256], subject[256];
@@ -40,104 +44,62 @@ int OREILLY_verify_callback (int ok, X509_STORE_CTX *store)
   return ok;
 }
 
+// Does "cert" actually belong to "host"?
+//
+// X509_check_host() implements the name matching described by RFC 6125:
+// it compares "host" against the certificate's subjectAltName dNSName
+// entries, and consults the commonName only when the certificate has no
+// subjectAltName at all.  (Which is the case for the certificates in
+// bld/cmake/fixtures/tcps, so don't be tempted by
+// X509_CHECK_FLAG_NEVER_CHECK_SUBJECT.)
+//
+// X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS accepts an ordinary wildcard
+// certificate like "*.example.com", but not a partial one like
+// "f*.example.com".
+//
+// "host" can also be an IPv4 literal, since pool URIs permit one; that's
+// what X509_check_ip_asc() is for.  A bracketed IPv6 literal never gets
+// this far, because parse_pseudo_uri() in pool_tcp.c can't parse one.
+//
+// Both functions return 1 on a match, 0 on a mismatch, and a negative
+// number if they couldn't tell (an internal error, or an argument that
+// isn't a well-formed name or address); only 1 means yes.
+bool ob_ossl_cert_matches_host (X509 *cert, const char *host)
+{
+  const unsigned int flags = X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS;
+
+  if (1 == X509_check_host (cert, host, 0, flags, NULL))
+    return true;
+
+  return (1 == X509_check_ip_asc (cert, host, 0));
+}
+
 long OREILLY_post_connection_check (SSL *ssl, const char *host, bool anon_ok)
 {
-  X509 *cert;
-  X509_NAME *subj;
-  char buf[256];
-  int extcount;
-  int ok = 0;
+  X509 *cert = SSL_get_peer_certificate (ssl);
 
-  if (!(cert = SSL_get_peer_certificate (ssl)))
+  if (!cert)
     {
       if (anon_ok)
         return X509_V_OK;
       OB_LOG_ERROR_CODE (0x20503001,
                          "certificate is required, but %s doesn't have one\n",
                          host);
-      goto err_occurred;
-    }
-  if ((extcount = X509_get_ext_count (cert)) > 0)
-    {
-      int i;
-
-      for (i = 0; i < extcount; i++)
-        {
-          char *extstr;
-          X509_EXTENSION *ext;
-
-          ext = X509_get_ext (cert, i);
-          extstr =
-            (char *) OBJ_nid2sn (OBJ_obj2nid (X509_EXTENSION_get_object (ext)));
-
-          if (!strcmp (extstr, "subjectAltName"))
-            {
-              int j;
-#if (OPENSSL_VERSION_NUMBER >= 0x00908000L)
-              const
-#endif
-                unsigned char *data;
-              STACK_OF (CONF_VALUE) * val;
-              CONF_VALUE *nval;
-#if (OPENSSL_VERSION_NUMBER >= 0x10000000L)
-              const
-#endif
-                X509V3_EXT_METHOD *meth;
-              void *ext_str = NULL;
-
-              if (!(meth = X509V3_EXT_get (ext)))
-                break;
-              data = X509_EXTENSION_get_data (ext)->data;
-
-#if (OPENSSL_VERSION_NUMBER > 0x00907000L)
-              if (meth->it)
-                ext_str = ASN1_item_d2i (NULL, &data,
-                                         X509_EXTENSION_get_data (ext)->length,
-                                         ASN1_ITEM_ptr (meth->it));
-              else
-                ext_str = meth->d2i (NULL, &data,
-                                     X509_EXTENSION_get_data (ext)->length);
-#else
-              ext_str =
-                meth->d2i (NULL, &data, X509_EXTENSION_get_data (ext)->length);
-#endif
-              val = meth->i2v (meth, ext_str, NULL);
-              for (j = 0; j < sk_CONF_VALUE_num (val); j++)
-                {
-                  nval = sk_CONF_VALUE_value (val, j);
-                  if (!strcmp (nval->name, "DNS")
-                      || !strcmp (nval->name, "IP Address"))
-                    {
-                      if (!strcmp (nval->value, host))
-                        {
-                          ok = 1;
-                          break;
-                        }
-                    }
-                }
-            }
-          if (ok)
-            break;
-        }
+      return X509_V_ERR_APPLICATION_VERIFICATION;
     }
 
-  if (!ok && (subj = X509_get_subject_name (cert))
-      && X509_NAME_get_text_by_NID (subj, NID_commonName, buf, sizeof (buf))
-           > 0)
+  if (!ob_ossl_cert_matches_host (cert, host))
     {
-      buf[sizeof (buf) - 1] = 0;
-      if (strcasecmp (buf, host) != 0)
-        {
-          OB_LOG_ERROR_CODE (0x20503002, "'%s' is not '%s'\n", buf, host);
-          goto err_occurred;
-        }
+      char subject[256];
+      X509_NAME_oneline (X509_get_subject_name (cert), subject,
+                         sizeof (subject));
+      OB_LOG_ERROR_CODE (0x20503002, "certificate does not identify '%s'\n"
+                                     "  subject  = %s\n",
+                         host, subject);
+      X509_free (cert);
+      return X509_V_ERR_APPLICATION_VERIFICATION;
     }
 
   X509_free (cert);
   return SSL_get_verify_result (ssl);
-
-err_occurred:
-  if (cert)
-    X509_free (cert);
-  return X509_V_ERR_APPLICATION_VERIFICATION;
 }

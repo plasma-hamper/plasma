@@ -24,6 +24,7 @@ int THREAD_setup (void);
 int THREAD_cleanup (void);
 void OREILLY_data_transfer (ob_sock_t A, SSL *B);
 int OREILLY_verify_callback (int ok, X509_STORE_CTX *store);
+bool ob_ossl_cert_matches_host (X509 *cert, const char *host);
 long OREILLY_post_connection_check (SSL *ssl, const char *host, bool anon_ok);
 
 ob_retort ob_ossl_create_context (method_func mfun, SSL_CTX **ctx_out);

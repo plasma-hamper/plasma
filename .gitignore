@@ -10,6 +10,10 @@
 .*.swp
 *.bak
 
+# Certificate signing requests, left behind by
+# bld/cmake/fixtures/tcps/generate.sh
+*.csr
+
 # pod2html, misc Makefile rules
 *.tmp
 

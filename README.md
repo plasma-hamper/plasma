@@ -185,7 +185,43 @@ ninja install
 Currently, the following invocation should pass:
 
 ```
-YT_ONLY_FIXTURES="local;tcp;tcpo" ctest --progress
+ctest --progress
 ```
 
 For more information about running tests, see [TESTS.md](TESTS.md).
+
+### Test certificates
+
+The `tcps` test fixture (and, to a lesser extent, `tcpo`) connects
+over TLS, using a throwaway certificate authority whose certificates
+are checked into `bld/cmake/fixtures/tcps/`. Those certificates have
+an expiration date, and when they expire, every test that runs
+against the `tcps` fixture fails with `certificate has expired`.
+
+Nothing in the build regenerates them, so periodically someone has to.
+To find out whether that time has come:
+
+```
+bld/cmake/fixtures/tcps/generate.sh --check
+```
+
+This prints each certificate's expiration date, and exits nonzero if
+any of them has expired or will expire within thirty days. To make a
+new set:
+
+```
+bld/cmake/fixtures/tcps/generate.sh
+git add bld/cmake/fixtures/tcps
+```
+
+The script can be run from any directory, and knows everything needed
+to do the job: it drives `libPlasma/c/ob-plasma-cert.sh` to create a
+certificate authority, a server certificate for `localhost`, and a
+client certificate, at openssl security level 3. The certificates are
+valid for ten years, which is only reasonable because they are fake
+credentials for `localhost` that everyone can already read — do not
+use them, or this script, for anything real.
+
+The fixtures also use a set of Diffie-Hellman parameters, which do
+*not* expire and so are left alone by an ordinary run. Pass `--dh` to
+regenerate those too; it adds about a minute.

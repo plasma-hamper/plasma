@@ -62,6 +62,12 @@ if(ICU_LIBRARIES AND BUILD_TESTS)
   generate_tests("spew-test" "${SpewTest_LINK_LIBS}")
 endif()
 
+# tls-hostname-test calls into libPlasma's OpenSSL binding directly, so
+# it only exists when there is an OpenSSL to bind to.
+if(OPENSSL_FOUND AND BUILD_TESTS)
+  generate_tests("tls-hostname-test" "${PlasmaT_LINK_LIBS}")
+endif()
+
 # Test programs needed by the scripts in the above list (and not already
 # inferred by generate_tests).  Usually only need to do this if the
 # tests are scripts that rely on an executable that doesn't have same

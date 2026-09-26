@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-set -x
+# Tracing is off by default; the "-v" option turns it on.
 
 usage() {
   cat <<"_EOF_"
@@ -171,7 +171,6 @@ do_mkserver() {
            -$md \
            -key $ps_confdir/server-private-key.pem \
            -out $ps_confdir/server.csr \
-           -sha256 \
            -subj "${server_subj}" \
            #
     # Show the request for debugging
@@ -211,7 +210,6 @@ do_mkclient() {
         -$md \
         -key $ps_confdir/client-private-key.pem \
         -out $ps_confdir/client.csr \
-        -sha256 \
         -subj "${client_subj}" \
         #
     openssl x509 -req \

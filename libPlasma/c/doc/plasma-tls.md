@@ -121,7 +121,7 @@ In order to create the `certificate-authorities.pem`, `server-certificate-chain.
 
 However, if you need to set up your own certificate authority to issue your own certificates, there are many ways to do this. OpenSSL can be used as a certificate authority from the command line, or there are various GUI or web-based tools you can set up to make the process easier. If you are already familiar with such a tool, it's probably easiest to use the tool you already know.
 
-See the script ob-plasma-certs.sh for one example of how to do this using openssl; 'ob-plasma-certs.sh demo' generates all those files and demonstrates starting and using a pool server with them. This may be the easiest way to get started during development.
+See the script ob-plasma-cert.sh for one example of how to do this using openssl; 'ob-plasma-cert.sh demo' generates all those files and demonstrates starting and using a pool server with them. This may be the easiest way to get started during development.
 
 # CERTIFICATE GENERATION USING GNOMINT #   {#Certificate-Generation-gnoMint}
 

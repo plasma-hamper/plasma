@@ -191,3 +191,14 @@
 * Report the CPU brand string on Apple Silicon, when
   `ob_get_version()` is called with `OB_VERSION_OF_CPU`.
   [#29](https://github.com/plasma-hamper/plasma/pull/29)
+
+* Get all tests working again, by updating the certificates that were
+  used by the tcps tests.  The certificates are now good for 10 years,
+  and there is now better documentation for how to regenerate them in
+  the future.
+  [#30](https://github.com/plasma-hamper/plasma/pull/30)
+
+* Fix some bugs in TLS certificate validation, by using OpenSSL's own
+  routine for doing so, rather than using code taken from a book that
+  is now 24 years old.
+  [#30](https://github.com/plasma-hamper/plasma/pull/30)
