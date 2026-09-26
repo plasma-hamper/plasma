@@ -45,4 +45,15 @@ TEST_F (PoolServerTest, Constructors)
   EXPECT_EQ (69, server_copy.Port ());
 }
 
+TEST_F (PoolServerTest, IPv6)
+{
+  PoolServer server ("::1", 69, "name", "type");
+  EXPECT_STREQ ("::1", server.Host ());
+  EXPECT_STREQ ("tcp://[::1]:69/", server.Address ());
+  EXPECT_STREQ ("tcp://[::1]:69/pool", server.MakePoolUri ("pool"));
+
+  PoolServer bracketed ("[fe80::1%eth0]", 69, "name", "type");
+  EXPECT_STREQ ("tcp://[fe80::1%eth0]:69/", bracketed.Address ());
+}
+
 }  // namespace

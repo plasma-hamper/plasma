@@ -94,26 +94,23 @@ class Jsonifier
   end
 end
 
+# An IPv6 address has to go in brackets in a pool URI, so that its
+# colons can't be mistaken for the one before the port.
+def uri_host(h)
+  (h.include?(":") && !h.start_with?("[")) ? "[#{h}]" : h
+end
+
 cgi = CGI.new
 path = ENV["PATH_INFO"].split(/\//).find_all {|s| s.size > 0}
 case path.size
 when 2
   pool = path[0]
   idx = path[1]
-# FIXME: these build a pool URI from path components, and assume the
-# host is a name or an IPv4 address.  A pool URI may also carry an IPv6
-# address, which has to be written in brackets so that the colons in it
-# aren't mistaken for the one before the port -- see parse_pseudo_uri()
-# in libPlasma/c/pool_tcp.c.  A v6 address arriving here would be
-# emitted bare, giving something like "tcp://::1:1234/foo", which won't
-# parse.  To fix, bracket the host when it contains a colon.  (Note
-# also that a bare address can't survive PATH_INFO's slash splitting
-# with a zone id, e.g. fe80::1%25eth0.)
 when 3
-  pool = "tcp://#{path[0]}/#{path[1]}"
+  pool = "tcp://#{uri_host(path[0])}/#{path[1]}"
   idx = path[2]
 when 4
-  pool = "tcp://#{path[0]}:#{path[1]}/#{path[2]}"
+  pool = "tcp://#{uri_host(path[0])}:#{path[1]}/#{path[2]}"
   idx = path[3]
 else
   cgi.out("text/plain") { "bad path!" }

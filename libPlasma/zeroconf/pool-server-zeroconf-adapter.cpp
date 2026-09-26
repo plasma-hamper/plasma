@@ -81,7 +81,7 @@ static Str MinimalHostName ()
 static int32 ExtractPort (const Str &addr)
 {
   Str a (addr);
-  if (a.Match ("\\w+:(\\d+)/?\\z"))
+  if (a.Match ("[\\w\\]]:(\\d+)/?\\z"))
     {
       Str portStr = a.MatchNthCaptureSlice (1);
       int32 port = atoi (portStr);
@@ -99,21 +99,14 @@ static Str CheckAndNormalizeAddress (const Str &addr)
   a.Strip ();
   a.Chomp ("/");
 
-  //  Must start with tcp://, have at least 3 characters' worth of hostname,
-  //  some set of word chars and dots, and maybe a port at the end
-  //
-  //  FIXME: this pattern allows only a name or an IPv4 address.  Pool
-  //  URIs also accept an IPv6 address in brackets -- see
-  //  parse_pseudo_uri() in libPlasma/c/pool_tcp.c -- and this rejects
-  //  "tcp://[::1]:1234/" outright, since neither ':' nor '[' nor ']'
-  //  is a word character.  The ReplaceAll below, which strips the
-  //  port by matching ":\\d+" at the end, would also eat part of a
-  //  bare address.
-  //
-  //  The emitting side has the matching gap: PoolServer::MakePoolUri()
-  //  in PoolServer.cpp formats "%s://%s:%d/%s", so an IPv6 host would
-  //  come out unbracketed and ambiguous.  Fix both together.
-  if (!a.Match ("^tcp://\\w{3,}[\\.\\w]*(:\\d+)?\\z"))
+  //  Must start with tcp://, then a host, and maybe a port at the end.
+  //  The host is either at least 3 characters' worth of word chars and
+  //  dots (a name or an IPv4 address), or an IPv6 address in brackets,
+  //  optionally with a zone id, as parse_pseudo_uri() in
+  //  libPlasma/c/pool_tcp.c accepts.  A bare IPv6 address is refused:
+  //  its colons can't be told from the one before the port.
+  if (!a.Match ("^tcp://(\\w{3,}[\\.\\w]*"
+                "|\\[[0-9A-Fa-f:.]+(%[\\w.-]+)?\\])(:\\d+)?\\z"))
     return "";
 
   int32 port = ExtractPort (a);

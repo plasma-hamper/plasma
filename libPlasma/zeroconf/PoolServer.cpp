@@ -88,8 +88,13 @@ const Str &PoolServer::Address () const
 
 Str PoolServer::MakePoolUri (const Str &pool_name) const
 {
-  return Str ().Sprintf ("%s://%s:%d/%s", Protocol ().utf8 (), Host ().utf8 (),
-                         Port (), pool_name.utf8 ());
+  //  An IPv6 address goes in brackets, so that its colons can't be
+  //  mistaken for the one before the port.
+  const Str &h = Host ();
+  const bool v6 = h.Contains (":") && h.Index ("[") != 0;
+  return Str ().Sprintf ("%s://%s%s%s:%d/%s", Protocol ().utf8 (),
+                         v6 ? "[" : "", h.utf8 (), v6 ? "]" : "", Port (),
+                         pool_name.utf8 ());
 }
 
 // ObUniqueTrove<Str> PoolServer::Pools () const
