@@ -72,6 +72,11 @@ endif()
 set(PlasmaTests_LINK_LIBS Plasma ${Plasma_LINK_LIBS})
 generate_tests("${PlasmaTests_TESTS}" "${PlasmaTests_LINK_LIBS}" "${PlasmaTests_FIXTURES}")
 
+# ipv6_pool_name reaches the server by address rather than by name, so
+# it wants the 'tcp' fixture alone: the TLS fixtures' certificate names
+# 'localhost', and would rightly be refused for '::1'.
+generate_tests("ipv6_pool_name" "${PlasmaTests_LINK_LIBS}" "tcp")
+
 # Not really manual; they're run indirectly by *_tests.sh
 set(
   PlasmaTests_MANUAL_C_TESTS

@@ -99,13 +99,38 @@ int mainish (int argc, char **argv)
       slabu *sb2 =
         slabu_of_strings_from_split (slaw_string_emit (slabu_list_nth (sb, 1)),
                                      "/");
-      const char *host = slaw_string_emit (slabu_list_nth (sb2, 0));
-      slabu *sb3 = slabu_of_strings_from_split (host, ":");
-      if (slabu_count (sb3) == 2)
+      /* The authority is "host", "host:port", or, for an IPv6 address,
+       * "[addr]" or "[addr]:port" -- the brackets keep the address's
+       * own colons apart from the one before the port.  The server
+       * reports the host without them. */
+      char *authority = strdup (slaw_string_emit (slabu_list_nth (sb2, 0)));
+      if (!authority)
+        OB_FATAL_ERROR_CODE (0x2041100d, "out of memory\n");
+      char *host = authority;
+      char *port_str = NULL;
+      if (*host == '[')
         {
-          host = slaw_string_emit (slabu_list_nth (sb3, 0));
+          char *closing = strchr (host, ']');
+          if (!closing)
+            OB_FATAL_ERROR_CODE (0x2041100e, "unclosed bracket in %s\n",
+                                 cmd.pool_name);
+          *closing = '\0';
+          host++;
+          if (closing[1] == ':')
+            port_str = closing + 2;
+        }
+      else
+        {
+          port_str = strchr (host, ':');
+          if (port_str)
+            *port_str++ = '\0';
+        }
+      if (port_str)
+        {
           unt64 port;
-          OB_DIE_ON_ERROR (slaw_to_unt64 (slabu_list_nth (sb3, 1), &port));
+          slaw port_slaw = slaw_string (port_str);
+          OB_DIE_ON_ERROR (slaw_to_unt64 (port_slaw, &port));
+          slaw_free (port_slaw);
           unt64 p = slaw_path_get_unt64 (transport_info, "port", 923);
           if (p != port)
             OB_FATAL_ERROR_CODE (0x20411006, "expected port %" OB_FMT_64
@@ -129,7 +154,7 @@ int mainish (int argc, char **argv)
         OB_FATAL_ERROR_CODE (0x20411009, "expected host %s, but got %s\n", host,
                              h);
 
-      slabu_free (sb3);
+      free (authority);
       slabu_free (sb2);
       slabu_free (sb);
     }

@@ -94,6 +94,12 @@ class Jsonifier
   end
 end
 
+# An IPv6 address has to go in brackets in a pool URI, so that its
+# colons can't be mistaken for the one before the port.
+def uri_host(h)
+  (h.include?(":") && !h.start_with?("[")) ? "[#{h}]" : h
+end
+
 cgi = CGI.new
 path = ENV["PATH_INFO"].split(/\//).find_all {|s| s.size > 0}
 case path.size
@@ -101,10 +107,10 @@ when 2
   pool = path[0]
   idx = path[1]
 when 3
-  pool = "tcp://#{path[0]}/#{path[1]}"
+  pool = "tcp://#{uri_host(path[0])}/#{path[1]}"
   idx = path[2]
 when 4
-  pool = "tcp://#{path[0]}:#{path[1]}/#{path[2]}"
+  pool = "tcp://#{uri_host(path[0])}:#{path[1]}/#{path[2]}"
   idx = path[3]
 else
   cgi.out("text/plain") { "bad path!" }

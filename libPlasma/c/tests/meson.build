@@ -172,3 +172,12 @@ foreach p : plasma_c_tests
           timeout: timeout)
    endforeach
 endforeach
+
+# ipv6_pool_name reaches the server by address rather than by name, so it
+# wants the 'tcp' rig alone: the TLS rigs' certificate names 'localhost',
+# and would rightly be refused for '::1'.  Hence its own test() rather
+# than a line in plasma_c_tests.
+test('ipv6_pool_name-tcp', yotest,
+     args : ['run', 'tcp', meson.current_source_dir() + '/ipv6_pool_name.sh'],
+     is_parallel : false, env : testenv,
+     suite : 'plasma', timeout : fasttimeout)
