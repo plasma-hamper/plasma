@@ -216,11 +216,17 @@ ob_retort slaw_output_open_binary_handler (slaw_write_handler h,
 
 ob_retort slaw_output_write (slaw_output f, bslaw s)
 {
+  if (!f || !s)
+    return OB_ARGUMENT_WAS_NULL;
+
   return f->wfunc (f, s);
 }
 
 ob_retort slaw_output_close (slaw_output f)
 {
+  if (!f)
+    return OB_OK;
+
   ob_retort err = f->cfunc (f->data);
   free (f);
   return err;
@@ -314,11 +320,17 @@ static ob_retort binary_input_read (slaw_input f, slaw *s)
 
 ob_retort slaw_input_read (slaw_input f, slaw *s)
 {
+  if (!f || !s)
+    return OB_ARGUMENT_WAS_NULL;
+
   return f->rfunc (f, s);
 }
 
 ob_retort slaw_input_close (slaw_input f)
 {
+  if (!f)
+    return OB_OK;
+
   ob_retort err = f->cfunc (f->data);
   free (f);
   return err;

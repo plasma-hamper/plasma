@@ -207,3 +207,9 @@
   in a URI.  (They need to be in square brackets, to avoid the
   ambiguity of the colons.)
   [#31](https://github.com/plasma-hamper/plasma/pull/31)
+
+* `slaw_output_close()` and `slaw_input_close()` now tolerate a `NULL`
+  argument gracefully, and return `OB_OK`.  `slaw_output_write()` and
+  `slaw_input_read()` now return `OB_ARGUMENT_WAS_NULL` if either
+  argument is `NULL`.
+  [#32](https://github.com/plasma-hamper/plasma/pull/32)
