@@ -483,6 +483,15 @@ typedef struct ob_log_file_rule ob_log_file_rule;
 #define OB_BACKGROUND_BLUE    0x0044
 #endif
 
+struct ob_log_level;
+
+typedef void (*ob_log_callback) (const struct ob_log_level    *lvl,
+                                 unt64       code, float64     t,
+                                 int64       lnum, int64       lcount,
+                                 const char *file, int         line,
+                                 const char *msg,  const char *fmtdmsg,
+                                 const char *stack);
+
 typedef struct ob_log_level
 {
   int32 flags;        // combination of OB_DST_* and OB_FLG_* flags
@@ -490,9 +499,7 @@ typedef struct ob_log_level
   int32 sl_priority;  // syslog facility and severity, for OB_DST_SYSLOG
   int32 fd;           // file desciptor for OB_DST_FD
   char prefix[24];    // prefix string to indicate log level
-  void (*callback) (const struct ob_log_level *lvl, unt64 code, float64 t,
-                    int64 lnum, int64 lcount, const char *file, int line,
-                    const char *msg, const char *fmtdmsg, const char *stack);
+  ob_log_callback callback;
   void *cookie;  // for use by callback
   ob_log_rule *rules;
   ob_log_file_rule *frules;
