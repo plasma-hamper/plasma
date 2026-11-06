@@ -213,3 +213,7 @@
   `slaw_input_read()` now return `OB_ARGUMENT_WAS_NULL` if either
   argument is `NULL`.
   [#32](https://github.com/plasma-hamper/plasma/pull/32)
+
+* The callback function in the `ob_log_level` struct is now defined as
+  a typedef, to make it easier to pass around.
+  [#33](https://github.com/plasma-hamper/plasma/pull/33)
