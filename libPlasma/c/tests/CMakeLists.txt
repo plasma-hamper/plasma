@@ -36,6 +36,7 @@ set(
   tcp_pool_name
   test-await-index
   test-bigger
+  test-fetch
   test-info
   test-multi-await
   test-p-stop
