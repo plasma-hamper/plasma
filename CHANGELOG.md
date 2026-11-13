@@ -217,3 +217,10 @@
 * The callback function in the `ob_log_level` struct is now defined as
   a typedef, to make it easier to pass around.
   [#33](https://github.com/plasma-hamper/plasma/pull/33)
+
+* Fixed a bug where `pool_fetch()` and `pool_fetch_ex()` would return
+  `POOL_CORRUPT` if the pool had checksums enabled and you were
+  requesting a partial protein.  It was computing the checksum for the
+  partial protein and then comparing it to the checksum for the full
+  protein, which would fail.
+  [#34](https://github.com/plasma-hamper/plasma/pull/34)
