@@ -2703,6 +2703,13 @@ static ob_retort pool_mmap_fetch (pool_hose ph, pool_fetch_op *ops, int64 nops,
     /* For old slaw formats, fall back to slow path. */
     return POOL_UNSUPPORTED_OPERATION;
 
+  const unt64 flags = get_flags (d);
+  if (0 != (flags & POOL_FLAG_CHECKSUM))
+    /* If pool has checksums enabled, fall back to the slow path,
+     * because we need to read the entire protein in order to check
+     * the checksum. */
+    return POOL_UNSUPPORTED_OPERATION;
+
   int64 i;
   for (i = 0; ops && i < nops; i++)
     {
